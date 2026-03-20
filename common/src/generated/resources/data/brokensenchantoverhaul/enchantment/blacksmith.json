@@ -1,0 +1,30 @@
+{
+  "anvil_cost": 8,
+  "description": {
+    "translate": "enchantment.brokensenchantoverhaul.blacksmith"
+  },
+  "effects": {
+    "brokensenchantoverhaul:on_kill_effect": [
+      {
+        "effect": {
+          "type": "brokensenchantoverhaul:blacksmith_repair"
+        }
+      }
+    ]
+  },
+  "exclusive_set": "#minecraft:exclusive_set/damage",
+  "max_cost": {
+    "base": 65,
+    "per_level_above_first": 0
+  },
+  "max_level": 1,
+  "min_cost": {
+    "base": 15,
+    "per_level_above_first": 0
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#minecraft:enchantable/mace",
+  "weight": 1
+}

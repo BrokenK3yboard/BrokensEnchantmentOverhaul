@@ -1,0 +1,8 @@
+// 1.21.1	2026-03-17T17:25:09.716748763	Tags for minecraft:enchantment mod id brokensenchantoverhaul
+fd4171192902603ea44aaf9de155cf200f2abfac data/brokensenchantoverhaul/tags/enchantment/exclusive_set/fishing.json
+298c921fb3571d6ed751d2930dc2173f3117fc3b data/brokensenchantoverhaul/tags/enchantment/exclusive_set/leggings.json
+e8cdb5bd50e762c4f4e1c2757eb6aa61d6ae2983 data/brokensenchantoverhaul/tags/enchantment/removed_enchantments.json
+e7171f9ba633364d25ca49219bab386fef85e7a4 data/minecraft/tags/enchantment/exclusive_set/armor.json
+ea9a3e7eae09bca44381777bd80a50fa36b5d370 data/minecraft/tags/enchantment/exclusive_set/mining.json
+3329b0185f92f8b54d04eb53f2bcdd4c0604ea1b data/minecraft/tags/enchantment/non_treasure.json
+b464b96bba3490b8e23ad3191f323ba496199332 data/minecraft/tags/enchantment/smelts_loot.json

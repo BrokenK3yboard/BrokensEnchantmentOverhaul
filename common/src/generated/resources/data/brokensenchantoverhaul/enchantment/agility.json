@@ -1,0 +1,44 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "translate": "enchantment.brokensenchantoverhaul.agility"
+  },
+  "effects": {
+    "brokensenchantoverhaul:conditional_attribute": [
+      {
+        "effect": {
+          "type": "brokensenchantoverhaul:agility_speed",
+          "baseAmount": 0.04,
+          "missingArmorScaling": {
+            "type": "minecraft:linear",
+            "base": 0.01,
+            "per_level_above_first": 0.0025
+          }
+        }
+      }
+    ],
+    "minecraft:attributes": [
+      {
+        "amount": 0.5,
+        "attribute": "minecraft:generic.step_height",
+        "id": "brokensenchantoverhaul:enchantment.agility_step_height",
+        "operation": "add_value"
+      }
+    ]
+  },
+  "exclusive_set": "#minecraft:exclusive_set/boots",
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 10
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 10
+  },
+  "slots": [
+    "feet"
+  ],
+  "supported_items": "#minecraft:enchantable/foot_armor",
+  "weight": 2
+}

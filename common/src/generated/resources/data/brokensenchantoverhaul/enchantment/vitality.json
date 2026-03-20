@@ -1,0 +1,45 @@
+{
+  "anvil_cost": 1,
+  "description": {
+    "translate": "enchantment.brokensenchantoverhaul.vitality"
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "amount": {
+          "type": "minecraft:linear",
+          "base": 8.0,
+          "per_level_above_first": 4.0
+        },
+        "attribute": "minecraft:generic.max_health",
+        "id": "brokensenchantoverhaul:enchantment.vitality",
+        "operation": "add_value"
+      },
+      {
+        "amount": {
+          "type": "minecraft:linear",
+          "base": 0.2,
+          "per_level_above_first": 0.1
+        },
+        "attribute": "brokensenchantoverhaul:generic.healing_efficiency",
+        "id": "brokensenchantoverhaul:enchantment.vitality_healing",
+        "operation": "add_multiplied_base"
+      }
+    ]
+  },
+  "exclusive_set": "#minecraft:exclusive_set/armor",
+  "max_cost": {
+    "base": 12,
+    "per_level_above_first": 11
+  },
+  "max_level": 4,
+  "min_cost": {
+    "base": 1,
+    "per_level_above_first": 11
+  },
+  "slots": [
+    "armor"
+  ],
+  "supported_items": "#minecraft:enchantable/chest_armor",
+  "weight": 10
+}

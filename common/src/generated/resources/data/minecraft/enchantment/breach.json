@@ -1,0 +1,80 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "translate": "enchantment.minecraft.breach"
+  },
+  "effects": {
+    "brokensenchantoverhaul:breach_ap_effect": [
+      {
+        "effect": {
+          "amount": {
+            "type": "minecraft:linear",
+            "base": -0.8,
+            "per_level_above_first": -0.8
+          }
+        }
+      }
+    ],
+    "brokensenchantoverhaul:conditional_attribute": [
+      {
+        "effect": {
+          "type": "brokensenchantoverhaul:breach_attack_speed",
+          "amount": {
+            "type": "minecraft:linear",
+            "base": 0.1,
+            "per_level_above_first": 0.1
+          }
+        }
+      }
+    ],
+    "brokensenchantoverhaul:glint_override": [
+      {
+        "effect": {
+          "itemPredicate": {
+            "predicates": {
+              "brokensenchantoverhaul:has_breach_uses": {}
+            }
+          }
+        }
+      }
+    ],
+    "minecraft:post_attack": [
+      {
+        "affected": "attacker",
+        "effect": {
+          "type": "brokensenchantoverhaul:breach",
+          "charges": 8.0
+        },
+        "enchanted": "attacker",
+        "requirements": {
+          "condition": "minecraft:entity_properties",
+          "entity": "direct_attacker",
+          "predicate": {
+            "flags": {
+              "is_flying": false
+            },
+            "movement": {
+              "fall_distance": {
+                "min": 1.5
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 65,
+    "per_level_above_first": 9
+  },
+  "max_level": 4,
+  "min_cost": {
+    "base": 15,
+    "per_level_above_first": 9
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#minecraft:enchantable/mace",
+  "weight": 2
+}

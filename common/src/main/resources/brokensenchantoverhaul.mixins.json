@@ -1,0 +1,36 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "brokenkeyboard.brokensenchantoverhaul.mixin",
+  "refmap": "${mod_id}.refmap.json",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AbstractArrowMixin",
+    "AnvilMenuMixin",
+    "CrossbowItemAccessor",
+    "EnchantBookForEmeraldsMixin",
+    "EnchantedCountIncreaseFunctionMixin",
+    "EnchantmentHelperMixin",
+    "EnchantmentInstanceMixin",
+    "EnchantmentMenuMixin",
+    "EnchantmentMixin",
+    "EnchantRandomlyMixin",
+    "EntityMixin",
+    "FishingHookMixin",
+    "ItemCombinerMenuAccessor",
+    "ItemMixin",
+    "ItemStackAccessor",
+    "LivingEntityMixin",
+    "PlayerMixin",
+    "ProjectileWeaponItemMixin",
+    "SetEnchantmentsFunctionMixin"
+  ],
+  "client": [
+    "EnchantmentScreenMixin",
+    "ItemRendererMixin"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

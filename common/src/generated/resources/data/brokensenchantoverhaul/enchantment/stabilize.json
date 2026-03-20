@@ -1,0 +1,36 @@
+{
+  "anvil_cost": 2,
+  "description": {
+    "translate": "enchantment.brokensenchantoverhaul.stabilize"
+  },
+  "effects": {
+    "brokensenchantoverhaul:stabilize_radius": {},
+    "minecraft:attributes": [
+      {
+        "amount": {
+          "type": "minecraft:linear",
+          "base": 0.1,
+          "per_level_above_first": 0.5
+        },
+        "attribute": "minecraft:generic.knockback_resistance",
+        "id": "brokensenchantoverhaul:enchantment.inertia_knockback",
+        "operation": "add_value"
+      }
+    ]
+  },
+  "exclusive_set": "#brokensenchantoverhaul:exclusive_set/leggings",
+  "max_cost": {
+    "base": 13,
+    "per_level_above_first": 8
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 5,
+    "per_level_above_first": 8
+  },
+  "slots": [
+    "legs"
+  ],
+  "supported_items": "#minecraft:enchantable/leg_armor",
+  "weight": 5
+}

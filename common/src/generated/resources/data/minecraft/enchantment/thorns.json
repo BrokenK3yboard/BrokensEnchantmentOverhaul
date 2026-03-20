@@ -1,0 +1,93 @@
+{
+  "anvil_cost": 8,
+  "description": {
+    "translate": "enchantment.minecraft.thorns"
+  },
+  "effects": {
+    "brokensenchantoverhaul:conditional_protection": [
+      {
+        "effect": {
+          "type": "brokensenchantoverhaul:deflect_damage",
+          "amount": 8.0,
+          "baseDamage": 2.0
+        },
+        "requirements": {
+          "condition": "minecraft:all_of",
+          "terms": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "direct_attacker",
+              "predicate": {
+                "type_specific": {
+                  "type": "brokensenchantoverhaul:is_low_health",
+                  "amount": 0.5
+                }
+              }
+            },
+            {
+              "chance": {
+                "type": "minecraft:enchantment_level",
+                "amount": {
+                  "type": "minecraft:linear",
+                  "base": 0.25,
+                  "per_level_above_first": 0.1
+                }
+              },
+              "condition": "minecraft:random_chance"
+            }
+          ]
+        }
+      },
+      {
+        "effect": {
+          "type": "brokensenchantoverhaul:deflect_damage",
+          "amount": 6.0,
+          "baseDamage": 1.0
+        },
+        "requirements": {
+          "condition": "minecraft:all_of",
+          "terms": [
+            {
+              "condition": "minecraft:inverted",
+              "term": {
+                "condition": "minecraft:entity_properties",
+                "entity": "direct_attacker",
+                "predicate": {
+                  "type_specific": {
+                    "type": "brokensenchantoverhaul:is_low_health",
+                    "amount": 0.5
+                  }
+                }
+              }
+            },
+            {
+              "chance": {
+                "type": "minecraft:enchantment_level",
+                "amount": {
+                  "type": "minecraft:linear",
+                  "base": 0.15,
+                  "per_level_above_first": 0.05
+                }
+              },
+              "condition": "minecraft:random_chance"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 60,
+    "per_level_above_first": 20
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 20
+  },
+  "slots": [
+    "armor"
+  ],
+  "supported_items": "#minecraft:enchantable/chest_armor",
+  "weight": 1
+}

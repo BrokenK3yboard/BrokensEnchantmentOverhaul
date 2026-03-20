@@ -1,0 +1,27 @@
+{
+  "values": [
+    "minecraft:protection",
+    "minecraft:fire_protection",
+    "minecraft:blast_protection",
+    "minecraft:projectile_protection",
+    "minecraft:feather_falling",
+    "minecraft:unbreaking",
+    "minecraft:efficiency",
+    "minecraft:mending",
+    "minecraft:fortune",
+    "minecraft:looting",
+    "minecraft:sharpness",
+    "minecraft:knockback",
+    "minecraft:bane_of_arthropods",
+    "minecraft:aqua_affinity",
+    "minecraft:respiration",
+    "minecraft:power",
+    "minecraft:punch",
+    "minecraft:infinity",
+    "minecraft:quick_charge",
+    "minecraft:lure",
+    "minecraft:loyalty",
+    "minecraft:binding_curse",
+    "minecraft:vanishing_curse"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "values": [
+    "brokensenchantoverhaul:filtered",
+    "brokensenchantoverhaul:insight",
+    "brokensenchantoverhaul:dexterity",
+    "brokensenchantoverhaul:vitality",
+    "brokensenchantoverhaul:barrier",
+    "brokensenchantoverhaul:adaptive",
+    "brokensenchantoverhaul:scavenger",
+    "brokensenchantoverhaul:stabilize",
+    "brokensenchantoverhaul:rush",
+    "brokensenchantoverhaul:agility",
+    "brokensenchantoverhaul:friction",
+    "brokensenchantoverhaul:power_shot",
+    "brokensenchantoverhaul:barrage",
+    "brokensenchantoverhaul:volley",
+    "brokensenchantoverhaul:excavate",
+    "brokensenchantoverhaul:tempered",
+    "brokensenchantoverhaul:harvest",
+    "brokensenchantoverhaul:grapple",
+    "brokensenchantoverhaul:deep_fryer",
+    "brokensenchantoverhaul:blacksmith"
+  ]
+}

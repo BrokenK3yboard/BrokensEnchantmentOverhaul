@@ -1,0 +1,5 @@
+// 1.21.1	2026-03-15T21:26:31.563035634	Tags for minecraft:damage_type mod id brokensenchantoverhaul
+7ad64c00fc10cb5932c562437bceb56e95d40427 data/minecraft/tags/damage_type/always_kills_armor_stands.json
+7ad64c00fc10cb5932c562437bceb56e95d40427 data/minecraft/tags/damage_type/bypasses_cooldown.json
+7ad64c00fc10cb5932c562437bceb56e95d40427 data/minecraft/tags/damage_type/is_projectile.json
+7ad64c00fc10cb5932c562437bceb56e95d40427 data/minecraft/tags/damage_type/panic_environmental_causes.json

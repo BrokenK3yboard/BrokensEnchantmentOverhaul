@@ -1,0 +1,57 @@
+{
+  "anvil_cost": 1,
+  "description": {
+    "translate": "enchantment.brokensenchantoverhaul.power_shot"
+  },
+  "effects": {
+    "brokensenchantoverhaul:glint_override": [
+      {
+        "effect": {
+          "itemPredicate": {
+            "predicates": {
+              "minecraft:enchantments": [
+                {
+                  "enchantments": "brokensenchantoverhaul:power_shot",
+                  "levels": {
+                    "min": 1
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "brokensenchantoverhaul:power_shot_damage": [
+      {
+        "effect": {
+          "type": "minecraft:multiply",
+          "factor": 0.0625
+        }
+      }
+    ],
+    "brokensenchantoverhaul:power_shot_knockback": [
+      {
+        "effect": {
+          "type": "minecraft:multiply",
+          "factor": 0.05
+        }
+      }
+    ]
+  },
+  "exclusive_set": "#minecraft:exclusive_set/bow",
+  "max_cost": {
+    "base": 16,
+    "per_level_above_first": 10
+  },
+  "max_level": 5,
+  "min_cost": {
+    "base": 1,
+    "per_level_above_first": 10
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#minecraft:enchantable/bow",
+  "weight": 10
+}

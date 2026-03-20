@@ -1,0 +1,60 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "translate": "enchantment.brokensenchantoverhaul.scavenger"
+  },
+  "effects": {
+    "brokensenchantoverhaul:conditional_attribute": [
+      {
+        "effect": {
+          "type": "brokensenchantoverhaul:scavenger_toughness",
+          "multiplier": {
+            "type": "minecraft:linear",
+            "base": 1.0,
+            "per_level_above_first": 0.5
+          }
+        }
+      }
+    ],
+    "brokensenchantoverhaul:loot_pickup_effect": [
+      {
+        "effect": {
+          "type": "minecraft:multiply",
+          "factor": 2.0
+        }
+      }
+    ],
+    "minecraft:tick": [
+      {
+        "effect": {
+          "type": "brokensenchantoverhaul:scavenger_magnet",
+          "pull_range": {
+            "type": "minecraft:linear",
+            "base": 3.0,
+            "per_level_above_first": 2.0
+          },
+          "pull_strength": {
+            "type": "minecraft:linear",
+            "base": 0.15,
+            "per_level_above_first": 0.1
+          }
+        }
+      }
+    ]
+  },
+  "exclusive_set": "#brokensenchantoverhaul:exclusive_set/leggings",
+  "max_cost": {
+    "base": 18,
+    "per_level_above_first": 8
+  },
+  "max_level": 2,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 8
+  },
+  "slots": [
+    "legs"
+  ],
+  "supported_items": "#minecraft:enchantable/leg_armor",
+  "weight": 5
+}
