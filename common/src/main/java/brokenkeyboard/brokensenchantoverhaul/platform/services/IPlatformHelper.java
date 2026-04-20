@@ -7,6 +7,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -57,6 +58,7 @@ public interface IPlatformHelper {
     <T extends EnchantmentEntityEffect> void createEntityEffectComponent(String name, MapCodec<T> codec);
     <T extends EntitySubPredicate> void createEntitySubPredicate(String name, MapCodec<T> codec);
     <T extends ItemSubPredicate> ItemSubPredicate.Type<T> createItemSubPredicate(String name, MapCodec<T> codec);
+    Holder<MobEffect> createEffectHolder(String name, MobEffect effect);
     Holder<Attribute> createAttribute(String name, Attribute attribute);
     void setWallSlideTicks(LivingEntity entity, int amount);
     int getWallSlideTicks(LivingEntity entity);

@@ -4,35 +4,46 @@
     "translate": "enchantment.minecraft.breach"
   },
   "effects": {
-    "brokensenchantoverhaul:breach_ap_effect": [
-      {
-        "effect": {
-          "amount": {
-            "type": "minecraft:linear",
-            "base": -0.8,
-            "per_level_above_first": -0.8
-          }
-        }
-      }
-    ],
     "brokensenchantoverhaul:conditional_attribute": [
       {
         "effect": {
-          "type": "brokensenchantoverhaul:breach_attack_speed",
+          "type": "brokensenchantoverhaul:fixed_attribute_effect",
           "amount": {
             "type": "minecraft:linear",
-            "base": 0.1,
-            "per_level_above_first": 0.1
+            "base": 0.3,
+            "per_level_above_first": 0.3
+          },
+          "attribute": "minecraft:generic.attack_speed",
+          "id": "brokensenchantoverhaul:enchantment.breach_attack_speed",
+          "operation": "add_value"
+        },
+        "requirements": {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "effects": {
+              "brokensenchantoverhaul:breach": {}
+            }
           }
         }
       }
     ],
-    "brokensenchantoverhaul:glint_override": [
+    "minecraft:armor_effectiveness": [
       {
         "effect": {
-          "itemPredicate": {
-            "predicates": {
-              "brokensenchantoverhaul:has_breach_uses": {}
+          "type": "minecraft:add",
+          "value": {
+            "type": "minecraft:linear",
+            "base": -0.1,
+            "per_level_above_first": -0.1
+          }
+        },
+        "requirements": {
+          "condition": "minecraft:entity_properties",
+          "entity": "attacker",
+          "predicate": {
+            "effects": {
+              "brokensenchantoverhaul:breach": {}
             }
           }
         }
@@ -42,8 +53,16 @@
       {
         "affected": "attacker",
         "effect": {
-          "type": "brokensenchantoverhaul:breach",
-          "charges": 8.0
+          "type": "minecraft:apply_mob_effect",
+          "max_amplifier": 1.0,
+          "max_duration": {
+            "type": "minecraft:linear",
+            "base": 1.5,
+            "per_level_above_first": 0.5
+          },
+          "min_amplifier": 1.0,
+          "min_duration": 1.5,
+          "to_apply": "brokensenchantoverhaul:breach"
         },
         "enchanted": "attacker",
         "requirements": {

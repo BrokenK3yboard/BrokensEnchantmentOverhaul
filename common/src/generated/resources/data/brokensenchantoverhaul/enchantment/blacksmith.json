@@ -4,10 +4,50 @@
     "translate": "enchantment.brokensenchantoverhaul.blacksmith"
   },
   "effects": {
-    "brokensenchantoverhaul:on_kill_effect": [
+    "minecraft:item_damage": [
       {
         "effect": {
-          "type": "brokensenchantoverhaul:blacksmith_repair"
+          "type": "minecraft:set",
+          "value": 0.0
+        }
+      }
+    ],
+    "minecraft:post_attack": [
+      {
+        "affected": "attacker",
+        "effect": {
+          "type": "brokensenchantoverhaul:repair_equipped_item",
+          "repair": 8.0
+        },
+        "enchanted": "attacker",
+        "requirements": {
+          "condition": "minecraft:all_of",
+          "terms": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "type_specific": {
+                  "type": "brokensenchantoverhaul:entity_killed",
+                  "hostileOrPlayer": true
+                }
+              }
+            },
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "direct_attacker",
+              "predicate": {
+                "flags": {
+                  "is_flying": false
+                },
+                "movement": {
+                  "fall_distance": {
+                    "min": 1.5
+                  }
+                }
+              }
+            }
+          ]
         }
       }
     ]

@@ -9,6 +9,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -82,6 +83,11 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
         ItemSubPredicate.Type<T> type = new ItemSubPredicate.Type<>(codec.codec());
         EnchantOverhaul.ITEM_SUBPREDICATES.register(name, () -> type);
         return type;
+    }
+
+    @Override
+    public Holder<MobEffect> createEffectHolder(String name, MobEffect effect) {
+        return EnchantOverhaul.EFFECTS.register(name, () -> effect);
     }
 
     @Override

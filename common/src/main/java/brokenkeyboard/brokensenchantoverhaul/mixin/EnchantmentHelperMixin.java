@@ -2,15 +2,11 @@ package brokenkeyboard.brokensenchantoverhaul.mixin;
 
 import brokenkeyboard.brokensenchantoverhaul.Config;
 import brokenkeyboard.brokensenchantoverhaul.ModRegistry;
-import brokenkeyboard.brokensenchantoverhaul.enchantment.BreachAPEffect;
 import com.google.common.collect.Lists;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.core.Holder;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantedItemInUse;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -18,8 +14,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -61,10 +55,5 @@ public class EnchantmentHelperMixin {
     @ModifyReturnValue(method = "getTridentReturnToOwnerAcceleration", at = @At(value = "RETURN"))
     private static int modifyLevel(int original) {
         return Config.TRIDENT_BUILTIN_LOYALTY.get() ? 3 : original;
-    }
-
-    @Inject(method = "modifyArmorEffectiveness", at = @At("RETURN"), cancellable = true)
-    private static void modifyArmor(ServerLevel level, ItemStack stack, Entity entity, DamageSource source, float amount, CallbackInfoReturnable<Float> cir) {
-        cir.setReturnValue(BreachAPEffect.modifyArmorPiercing(stack, cir.getReturnValue()));
     }
 }

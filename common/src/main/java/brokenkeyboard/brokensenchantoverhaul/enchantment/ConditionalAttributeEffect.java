@@ -9,6 +9,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.EnchantedItemInUse;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -133,15 +135,21 @@ public interface ConditionalAttributeEffect {
         }
     }
 
-    static void removeAttribute(ItemStack stack, LivingEntity entity, EquipmentSlot slot) {
+    static void removeAttribute(ServerLevel serverLevel, ItemStack stack, LivingEntity entity, EquipmentSlot slot) {
         EnchantmentHelper.runIterationOnItem(stack, (enchantment, enchantmentLevel) ->
-                enchantment.value().getEffects(ModRegistry.CONDITIONAL_ATTRIBUTE).forEach((effect) ->
-                        effect.effect().removeModifiers(new EnchantedItemInUse(stack, slot, entity), entity)));
+                enchantment.value().getEffects(ModRegistry.CONDITIONAL_ATTRIBUTE).forEach((effect) -> {
+                    if (!effect.matches(Enchantment.entityContext(serverLevel, enchantmentLevel, entity, entity.position()))) {
+                        effect.effect().removeModifiers(new EnchantedItemInUse(stack, slot, entity), entity);
+                    }
+                }));
     }
 
-    static void updateAttribute(LivingEntity entity) {
+    static void updateAttribute(ServerLevel serverLevel, LivingEntity entity) {
         EnchantmentHelper.runIterationOnEquipment(entity, (enchantment, enchantmentLevel, itemInUse) ->
-                enchantment.value().getEffects(ModRegistry.CONDITIONAL_ATTRIBUTE).forEach((effect) ->
-                        effect.effect().applyModifiers(itemInUse, entity, enchantmentLevel)));
+                enchantment.value().getEffects(ModRegistry.CONDITIONAL_ATTRIBUTE).forEach((effect) -> {
+                    if (effect.matches(Enchantment.entityContext(serverLevel, enchantmentLevel, entity, entity.position()))) {
+                        effect.effect().applyModifiers(itemInUse, entity, enchantmentLevel);
+                    }
+                }));
     }
 }

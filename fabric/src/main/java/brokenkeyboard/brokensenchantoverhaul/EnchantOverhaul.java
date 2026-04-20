@@ -22,6 +22,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -48,28 +49,27 @@ public class EnchantOverhaul implements ModInitializer {
         NeoForgeConfigRegistry.INSTANCE.register(Constants.MOD_ID, ModConfig.Type.COMMON, Config.SPEC);
         Registry.register(ModRegistry.PROTECTION_REGISTRY, ModRegistry.location("adaptive"), AdaptiveEffect.CODEC);
         Registry.register(ModRegistry.PROTECTION_REGISTRY, ModRegistry.location("deflect_damage"), DeflectDamageEffect.CODEC);
+        Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("fixed_attribute_effect"), FixedAttributeEffect.CODEC);
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("insight_luck"), InsightLuckEffect.CODEC);
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("insight_looting"), InsightLootingEffect.CODEC);
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("adaptive_fire_resistance"), AdaptiveFREffect.CODEC);
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("adaptive_blast_resistance"), AdaptiveBREffect.CODEC);
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("scavenger_toughness"), ScavengerToughnessEffect.CODEC);
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("inertia_knockback_resistance"), StabilizeKnockbackEffect.CODEC);
-        Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("breach_attack_speed"), BreachAttackSpeedEffect.CODEC);
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("dexterity_reach"), DexterityReachEffect.CODEC);
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("agility_speed"), AgilitySpeedEffect.CODEC);
         Registry.register(ModRegistry.HOOK_PULL_REGISTRY, ModRegistry.location("grapple"), GrappleEffect.CODEC);
         Registry.register(ModRegistry.HOOK_PULL_REGISTRY, ModRegistry.location("hook_burn"), HookBurnEffect.CODEC);
-        Registry.register(ModRegistry.ON_KILL_REGISTRY, ModRegistry.location("blacksmith_repair"), BlacksmithRepairEffect.CODEC);
 
         ServerEntityEvents.EQUIPMENT_CHANGE.register((livingEntity, equipmentSlot, previous, next) -> {
-            ConditionalAttributeEffect.removeAttribute(previous, livingEntity, equipmentSlot);
-            ConditionalAttributeEffect.updateAttribute(livingEntity);
+            if (livingEntity.level() instanceof ServerLevel serverLevel) {
+                ConditionalAttributeEffect.removeAttribute(serverLevel, previous, livingEntity, equipmentSlot);
+                ConditionalAttributeEffect.updateAttribute(serverLevel, livingEntity);
+            }
         });
 
         ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamageTaken, damageTaken, blocked) ->
                 ScavengerToughnessEffect.postHurt(source, damageTaken, entity));
-
-        ServerLivingEntityEvents.AFTER_DEATH.register(OnKillEffect::applyOnKillEffect);
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
                 server.registryAccess().registryOrThrow(Registries.ENCHANTMENT).entrySet().forEach(enchantment ->

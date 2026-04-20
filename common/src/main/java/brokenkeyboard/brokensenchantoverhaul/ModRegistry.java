@@ -4,13 +4,12 @@ import brokenkeyboard.brokensenchantoverhaul.component.Barrier;
 import brokenkeyboard.brokensenchantoverhaul.component.DamageTypeResist;
 import brokenkeyboard.brokensenchantoverhaul.enchantment.*;
 import brokenkeyboard.brokensenchantoverhaul.platform.Services;
-import brokenkeyboard.brokensenchantoverhaul.predicate.HasBreachUses;
+import brokenkeyboard.brokensenchantoverhaul.predicate.EntityKilledPredicate;
 import brokenkeyboard.brokensenchantoverhaul.predicate.HasNegativeEffectPredicate;
 import brokenkeyboard.brokensenchantoverhaul.predicate.IsLowHealthPredicate;
 import brokenkeyboard.brokensenchantoverhaul.predicate.PickupArrowPredicate;
 import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.advancements.critereon.ItemSubPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
@@ -22,6 +21,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.item.Item;
@@ -39,14 +40,12 @@ public class ModRegistry {
     public static final ResourceKey<Registry<MapCodec<? extends ConditionalProtectionEffect>>> CONDITIONAL_PROTECTION_EFFECT = ResourceKey.createRegistryKey(location("enchantment_conditional_protection"));
     public static final ResourceKey<Registry<MapCodec<? extends ConditionalAttributeEffect>>> CONDITIONAL_ATTRIBUTE_EFFECT = ResourceKey.createRegistryKey(location("enchantment_conditional_attribute"));
     public static final ResourceKey<Registry<MapCodec<? extends HookPullEffect>>> HOOK_PULL_EFFECT = ResourceKey.createRegistryKey(location("enchantment_hook_pull_effect"));
-    public static final ResourceKey<Registry<MapCodec<? extends OnKillEffect>>> ON_KILL_EFFECT = ResourceKey.createRegistryKey(location("enchantment_on_kill_effect"));
 
     public static final ResourceKey<DamageType> ARROW_MULTISHOT = ResourceKey.create(Registries.DAMAGE_TYPE, location("arrow_multishot"));
 
     public static final Registry<MapCodec<? extends ConditionalProtectionEffect>> PROTECTION_REGISTRY = Services.PLATFORM.createRegistry(CONDITIONAL_PROTECTION_EFFECT);
     public static final Registry<MapCodec<? extends ConditionalAttributeEffect>> ATTRIBUTE_REGISTRY = Services.PLATFORM.createRegistry(CONDITIONAL_ATTRIBUTE_EFFECT);
     public static final Registry<MapCodec<? extends HookPullEffect>> HOOK_PULL_REGISTRY = Services.PLATFORM.createRegistry(HOOK_PULL_EFFECT);
-    public static final Registry<MapCodec<? extends OnKillEffect>> ON_KILL_REGISTRY = Services.PLATFORM.createRegistry(ON_KILL_EFFECT);
 
     public static final TagKey<Block> TEMPERED_AFFECTS = TagKey.create(Registries.BLOCK, location("tempered_affects"));
     public static final TagKey<Item> MOLTEN_ENCHANTABLE = TagKey.create(Registries.ITEM, location("enchantable/molten"));
@@ -56,6 +55,8 @@ public class ModRegistry {
 
     public static final TagKey<Enchantment> LEGGINGS_EXCLUSIVE = TagKey.create(Registries.ENCHANTMENT, location("exclusive_set/leggings"));
     public static final TagKey<Enchantment> FISHING_EXCLUSIVE = TagKey.create(Registries.ENCHANTMENT, location("exclusive_set/fishing"));
+
+    public static final Holder<MobEffect> BREACH_EFFECT = Services.PLATFORM.createEffectHolder("breach", new EnchantmentMobEffect(MobEffectCategory.NEUTRAL, 3402751));
 
     public static final Holder<Attribute> HEALING_EFFICIENCY = Services.PLATFORM.createAttribute("generic.healing_efficiency",
             new RangedAttribute("attribute.name.generic.healing_efficiency", 1, 0, 1024)
@@ -148,23 +149,15 @@ public class ModRegistry {
 
     public static final DataComponentType<List<ConditionalEffect<ConditionalAttributeEffect>>> CONDITIONAL_ATTRIBUTE = Services.PLATFORM
             .createEnchantmentComponent("conditional_attribute", builder ->
-                    builder.persistent(ConditionalEffect.codec(ConditionalAttributeEffect.CODEC, LootContextParamSets.EMPTY).listOf()));
+                    builder.persistent(ConditionalEffect.codec(ConditionalAttributeEffect.CODEC, LootContextParamSets.ENCHANTED_ENTITY).listOf()));
 
     public static final DataComponentType<List<ConditionalEffect<HookPullEffect>>> HOOK_PULL = Services.PLATFORM
             .createEnchantmentComponent("hook_pull_effect", builder ->
                     builder.persistent(ConditionalEffect.codec(HookPullEffect.CODEC, LootContextParamSets.ENCHANTED_ENTITY).listOf()));
 
-    public static final DataComponentType<List<ConditionalEffect<OnKillEffect>>> ON_KILL = Services.PLATFORM
-            .createEnchantmentComponent("on_kill_effect", builder ->
-                    builder.persistent(ConditionalEffect.codec(OnKillEffect.CODEC, LootContextParamSets.ENCHANTED_ENTITY).listOf()));
-
     public static final DataComponentType<List<ConditionalEffect<BarrierEffect>>> BARRIER_EFFECT = Services.PLATFORM
             .createEnchantmentComponent("barrier", builder ->
                     builder.persistent(ConditionalEffect.codec(BarrierEffect.CODEC.codec(), LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
-
-    public static final DataComponentType<List<ConditionalEffect<BreachAPEffect>>> BREACH_AP_EFFECT = Services.PLATFORM
-            .createEnchantmentComponent("breach_ap_effect", builder ->
-                    builder.persistent(ConditionalEffect.codec(BreachAPEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
 
     public static final DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>> POWER_SHOT_DAMAGE = Services.PLATFORM
             .createEnchantmentComponent("power_shot_damage", builder ->
@@ -182,25 +175,30 @@ public class ModRegistry {
             .createEnchantmentComponent("glint_override", builder ->
                     builder.persistent(ConditionalEffect.codec(GlintModifier.CODEC.codec(), LootContextParamSets.ENCHANTED_ITEM).listOf()));
 
-    public static final ItemSubPredicate.Type<HasBreachUses> HAS_BREACH_USES = Services.PLATFORM
-            .createItemSubPredicate("has_breach_uses", HasBreachUses.CODEC);
-
     static {
         Services.PLATFORM.createEntityEffectComponent("return_arrows", ReturnArrowEffect.CODEC);
         Services.PLATFORM.createEntityEffectComponent("burn_stack", BurnStackEffect.CODEC);
         Services.PLATFORM.createEntityEffectComponent("volley", VolleyEffect.CODEC);
         Services.PLATFORM.createEntityEffectComponent("scavenger_magnet", ScavengerMagnetEffect.CODEC);
         Services.PLATFORM.createEntityEffectComponent("barrier_update", BarrierUpdateEffect.CODEC);
-        Services.PLATFORM.createEntityEffectComponent("wall_crawler_slide", WallSlideEffect.CODEC);
-        Services.PLATFORM.createEntityEffectComponent("breach", BreachEffect.CODEC);
+        Services.PLATFORM.createEntityEffectComponent("wall_slide", WallSlideEffect.CODEC);
+        Services.PLATFORM.createEntityEffectComponent("repair_equipped_item", RepairEquippedItem.CODEC);
 
         Services.PLATFORM.createEntitySubPredicate("arrow_pickup", PickupArrowPredicate.CODEC);
         Services.PLATFORM.createEntitySubPredicate("has_negative", HasNegativeEffectPredicate.CODEC);
         Services.PLATFORM.createEntitySubPredicate("is_low_health", IsLowHealthPredicate.CODEC);
+        Services.PLATFORM.createEntitySubPredicate("entity_killed", EntityKilledPredicate.CODEC);
     }
 
     public static ResourceLocation location(String name) {
         return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name);
+    }
+
+    private static class EnchantmentMobEffect extends MobEffect {
+
+        protected EnchantmentMobEffect(MobEffectCategory category, int color) {
+            super(category, color);
+        }
     }
 
     public static void bootstrap() {}

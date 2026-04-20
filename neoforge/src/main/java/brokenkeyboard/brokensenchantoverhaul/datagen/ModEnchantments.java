@@ -2,7 +2,7 @@ package brokenkeyboard.brokensenchantoverhaul.datagen;
 
 import brokenkeyboard.brokensenchantoverhaul.ModRegistry;
 import brokenkeyboard.brokensenchantoverhaul.enchantment.*;
-import brokenkeyboard.brokensenchantoverhaul.predicate.HasBreachUses;
+import brokenkeyboard.brokensenchantoverhaul.predicate.EntityKilledPredicate;
 import brokenkeyboard.brokensenchantoverhaul.predicate.HasNegativeEffectPredicate;
 import brokenkeyboard.brokensenchantoverhaul.predicate.IsLowHealthPredicate;
 import brokenkeyboard.brokensenchantoverhaul.predicate.PickupArrowPredicate;
@@ -95,10 +95,8 @@ public class ModEnchantments {
                         new AddValue(LevelBasedValue.constant(0.01F)),
                         LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER,
                         EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(EntityType.PLAYER))))
-                .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE,
-                        new InsightLuckEffect())
-                .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE,
-                        new InsightLootingEffect()));
+                .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE, new InsightLuckEffect())
+                .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE, new InsightLootingEffect()));
 
         register(context, ModRegistry.DEXTERITY, Enchantment.enchantment(
                 Enchantment.definition(helmet, 2, 1,
@@ -338,7 +336,19 @@ public class ModEnchantments {
                 .withEffect(ModRegistry.HOOK_PULL, new HookBurnEffect(LevelBasedValue.constant(100))));
 
         register(context, ModRegistry.BLACKSMITH, createSingleLevelEnch(mace, 8, damage_exclusive)
-                .withEffect(ModRegistry.ON_KILL, new BlacksmithRepairEffect()));
+                .withEffect(EnchantmentEffectComponents.POST_ATTACK,
+                        EnchantmentTarget.ATTACKER,
+                        EnchantmentTarget.ATTACKER,
+                        new RepairEquippedItem(LevelBasedValue.constant(8)),
+                        AllOfCondition.allOf(
+                            LootItemEntityPropertyCondition.hasProperties(
+                                    LootContext.EntityTarget.THIS,
+                                    EntityPredicate.Builder.entity().subPredicate(EntityKilledPredicate.entityKilled(true))),
+                            LootItemEntityPropertyCondition.hasProperties(
+                                    LootContext.EntityTarget.DIRECT_ATTACKER,
+                                    EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setIsFlying(false))
+                                            .moving(MovementPredicate.fallDistance(MinMaxBounds.Doubles.atLeast(1.5F))))))
+                .withEffect(EnchantmentEffectComponents.ITEM_DAMAGE, new SetValue(LevelBasedValue.constant(0))));
 
         register(context, Enchantments.IMPALING, Enchantment.enchantment(
                 Enchantment.definition(trident, 2, 5,
@@ -403,19 +413,28 @@ public class ModEnchantments {
                 .withEffect(EnchantmentEffectComponents.POST_ATTACK,
                         EnchantmentTarget.ATTACKER,
                         EnchantmentTarget.ATTACKER,
-                        new BreachEffect(LevelBasedValue.constant(8)),
+                        new ApplyMobEffect(HolderSet.direct(ModRegistry.BREACH_EFFECT),
+                                LevelBasedValue.constant(1.5F), LevelBasedValue.perLevel(1.5F, 0.5F),
+                                LevelBasedValue.constant(1.0F), LevelBasedValue.constant(1.0F)),
                         LootItemEntityPropertyCondition.hasProperties(
                                 LootContext.EntityTarget.DIRECT_ATTACKER,
                                 EntityPredicate.Builder.entity().flags(
                                         EntityFlagsPredicate.Builder.flags().setIsFlying(false))
                                         .moving(MovementPredicate.fallDistance(MinMaxBounds.Doubles.atLeast(1.5F)))))
-                .withEffect(ModRegistry.BREACH_AP_EFFECT,
-                        new BreachAPEffect(LevelBasedValue.perLevel(-0.8F)))
+                .withEffect(EnchantmentEffectComponents.ARMOR_EFFECTIVENESS,
+                        new AddValue(LevelBasedValue.perLevel(-0.1F)),
+                        LootItemEntityPropertyCondition.hasProperties(
+                                LootContext.EntityTarget.ATTACKER,
+                                EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(ModRegistry.BREACH_EFFECT))))
                 .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE,
-                        new BreachAttackSpeedEffect(LevelBasedValue.perLevel(0.1F)))
-                .withEffect(ModRegistry.GLINT_OVERRIDE, new GlintModifier(
-                        ItemPredicate.Builder.item().withSubPredicate(ModRegistry.HAS_BREACH_USES, HasBreachUses.hasBreachUses()).build())
-                ));
+                        new FixedAttributeEffect(
+                                ModRegistry.location("enchantment.breach_attack_speed"),
+                                Attributes.ATTACK_SPEED,
+                                LevelBasedValue.perLevel(0.1F),
+                                AttributeModifier.Operation.ADD_VALUE),
+                        LootItemEntityPropertyCondition.hasProperties(
+                                LootContext.EntityTarget.THIS,
+                                EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(ModRegistry.BREACH_EFFECT)))));
 
         register(context, Enchantments.SWEEPING_EDGE, Enchantment.enchantment(
                 Enchantment.definition(sword, 2, 3,

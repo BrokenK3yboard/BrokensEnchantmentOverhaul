@@ -7,7 +7,7 @@
     "minecraft:tick": [
       {
         "effect": {
-          "type": "brokensenchantoverhaul:wall_crawler_slide",
+          "type": "brokensenchantoverhaul:wall_slide",
           "slideTime": {
             "type": "minecraft:linear",
             "base": 60.0,

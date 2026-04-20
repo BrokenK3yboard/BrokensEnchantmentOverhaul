@@ -19,10 +19,10 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -43,9 +43,7 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterRenderBuffersEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
@@ -62,7 +60,6 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -75,6 +72,7 @@ public class EnchantOverhaul {
 
     public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MOD_ID);
     public static final DeferredRegister.DataComponents ENCHANTMENT_COMPONENTS = DeferredRegister.createDataComponents(Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, MOD_ID);
+    public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, MOD_ID);
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Registries.ATTRIBUTE, MOD_ID);
     public static final DeferredRegister<MapCodec<? extends EnchantmentLocationBasedEffect>> LOCATION_EFFECT_COMPONENTS = DeferredRegister.create(Registries.ENCHANTMENT_LOCATION_BASED_EFFECT_TYPE, MOD_ID);
     public static final DeferredRegister<MapCodec<? extends EnchantmentEntityEffect>> ENTITY_EFFECT_COMPONENTS = DeferredRegister.create(Registries.ENCHANTMENT_ENTITY_EFFECT_TYPE, MOD_ID);
@@ -92,6 +90,7 @@ public class EnchantOverhaul {
         container.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         DATA_COMPONENTS.register(bus);
         ENCHANTMENT_COMPONENTS.register(bus);
+        EFFECTS.register(bus);
         ATTRIBUTES.register(bus);
         LOCATION_EFFECT_COMPONENTS.register(bus);
         ENTITY_EFFECT_COMPONENTS.register(bus);
@@ -101,21 +100,19 @@ public class EnchantOverhaul {
         bus.addListener((NewRegistryEvent event) -> event.register(PROTECTION_REGISTRY));
         bus.addListener((NewRegistryEvent event) -> event.register(ATTRIBUTE_REGISTRY));
         bus.addListener((NewRegistryEvent event) -> event.register(HOOK_PULL_REGISTRY));
-        bus.addListener((NewRegistryEvent event) -> event.register(ON_KILL_REGISTRY));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_PROTECTION_EFFECT, registry -> registry.register(location("adaptive"), AdaptiveEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_PROTECTION_EFFECT, registry -> registry.register(location("deflect_damage"), DeflectDamageEffect.CODEC)));
+        bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("fixed_attribute_effect"), FixedAttributeEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("insight_luck"), InsightLuckEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("insight_looting"), InsightLootingEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("adaptive_fire_resistance"), AdaptiveFREffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("adaptive_blast_resistance"), AdaptiveBREffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("scavenger_toughness"), ScavengerToughnessEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("inertia_knockback_resistance"), StabilizeKnockbackEffect.CODEC)));
-        bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("breach_attack_speed"), BreachAttackSpeedEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("dexterity_reach"), DexterityReachEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("agility_speed"), AgilitySpeedEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(HOOK_PULL_EFFECT, registry -> registry.register(location("grapple"), GrappleEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(HOOK_PULL_EFFECT, registry -> registry.register(location("hook_burn"), HookBurnEffect.CODEC)));
-        bus.addListener((RegisterEvent event) -> event.register(ON_KILL_EFFECT, registry -> registry.register(location("blacksmith_repair"), BlacksmithRepairEffect.CODEC)));
 
         // Use NeoForge to bootstrap the Common mod.
         Constants.LOG.info("Hello NeoForge world!");
@@ -154,8 +151,10 @@ public class EnchantOverhaul {
 
         @SubscribeEvent
         public static void equipmentChanged(LivingEquipmentChangeEvent event) {
-            ConditionalAttributeEffect.removeAttribute(event.getFrom(), event.getEntity(), event.getSlot());
-            ConditionalAttributeEffect.updateAttribute(event.getEntity());
+            if (event.getEntity().level() instanceof ServerLevel serverLevel) {
+                ConditionalAttributeEffect.removeAttribute(serverLevel, event.getFrom(), event.getEntity(), event.getSlot());
+                ConditionalAttributeEffect.updateAttribute(serverLevel, event.getEntity());
+            }
         }
 
         @SubscribeEvent
@@ -182,11 +181,6 @@ public class EnchantOverhaul {
             event.getServer().registryAccess().registryOrThrow(Registries.ENCHANTMENT).entrySet().forEach(enchantment ->
                     ModRegistry.MAX_LEVELS.put(enchantment.getKey(), enchantment.getValue().getMaxLevel()));
             ModRegistry.updateMaxLevels = false;
-        }
-
-        @SubscribeEvent
-        public static void entityKilled(LivingDeathEvent event) {
-            OnKillEffect.applyOnKillEffect(event.getEntity(), event.getSource());
         }
 
         @SubscribeEvent
