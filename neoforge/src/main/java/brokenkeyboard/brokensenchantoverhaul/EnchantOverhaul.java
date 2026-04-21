@@ -109,7 +109,6 @@ public class EnchantOverhaul {
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("adaptive_blast_resistance"), AdaptiveBREffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("scavenger_toughness"), ScavengerToughnessEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("inertia_knockback_resistance"), StabilizeKnockbackEffect.CODEC)));
-        bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("dexterity_reach"), DexterityReachEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("agility_speed"), AgilitySpeedEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(HOOK_PULL_EFFECT, registry -> registry.register(location("grapple"), GrappleEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(HOOK_PULL_EFFECT, registry -> registry.register(location("hook_burn"), HookBurnEffect.CODEC)));
@@ -151,10 +150,7 @@ public class EnchantOverhaul {
 
         @SubscribeEvent
         public static void equipmentChanged(LivingEquipmentChangeEvent event) {
-            if (event.getEntity().level() instanceof ServerLevel serverLevel) {
-                ConditionalAttributeEffect.removeAttribute(serverLevel, event.getFrom(), event.getEntity(), event.getSlot());
-                ConditionalAttributeEffect.updateAttribute(serverLevel, event.getEntity());
-            }
+            ConditionalAttributeEffect.removeAttribute(event.getFrom(), event.getEntity(), event.getSlot());
         }
 
         @SubscribeEvent

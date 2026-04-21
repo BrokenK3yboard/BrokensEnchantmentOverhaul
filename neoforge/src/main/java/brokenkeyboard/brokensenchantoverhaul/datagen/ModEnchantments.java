@@ -106,12 +106,15 @@ public class ModEnchantments {
                         EquipmentSlotGroup.HEAD))
                 .withEffect(EnchantmentEffectComponents.ATTRIBUTES,
                         new EnchantmentAttributeEffect(
-                                ResourceLocation.withDefaultNamespace("enchantment.dexterity_mining"),
+                                ModRegistry.location("enchantment.dexterity_mining"),
                                 Attributes.SUBMERGED_MINING_SPEED,
-                                LevelBasedValue.perLevel(4.0F),
+                                LevelBasedValue.constant(4.0F),
                                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
                 .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE,
-                        new DexterityReachEffect(LevelBasedValue.constant(1F))));
+                        new FixedAttributeEffect(ModRegistry.location("enchantment.dexterity_range"),
+                                Attributes.BLOCK_INTERACTION_RANGE,
+                                LevelBasedValue.constant(1F),
+                                AttributeModifier.Operation.ADD_VALUE)));
 
         register(context, ModRegistry.VITALITY, Enchantment.enchantment(
                 Enchantment.definition(chestplate, 10, 4,
@@ -414,8 +417,8 @@ public class ModEnchantments {
                         EnchantmentTarget.ATTACKER,
                         EnchantmentTarget.ATTACKER,
                         new ApplyMobEffect(HolderSet.direct(ModRegistry.BREACH_EFFECT),
-                                LevelBasedValue.constant(1.5F), LevelBasedValue.perLevel(1.5F, 0.5F),
-                                LevelBasedValue.constant(1.0F), LevelBasedValue.constant(1.0F)),
+                                LevelBasedValue.constant(20F), LevelBasedValue.constant(20F),
+                                LevelBasedValue.constant(0F), LevelBasedValue.constant(0F)),
                         LootItemEntityPropertyCondition.hasProperties(
                                 LootContext.EntityTarget.DIRECT_ATTACKER,
                                 EntityPredicate.Builder.entity().flags(
@@ -430,7 +433,7 @@ public class ModEnchantments {
                         new FixedAttributeEffect(
                                 ModRegistry.location("enchantment.breach_attack_speed"),
                                 Attributes.ATTACK_SPEED,
-                                LevelBasedValue.perLevel(0.1F),
+                                LevelBasedValue.perLevel(0.15F),
                                 AttributeModifier.Operation.ADD_VALUE),
                         LootItemEntityPropertyCondition.hasProperties(
                                 LootContext.EntityTarget.THIS,

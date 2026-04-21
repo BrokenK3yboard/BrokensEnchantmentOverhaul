@@ -7,20 +7,19 @@
     "brokensenchantoverhaul:conditional_attribute": [
       {
         "effect": {
-          "type": "brokensenchantoverhaul:dexterity_reach",
-          "amount": 1.0
+          "type": "brokensenchantoverhaul:fixed_attribute_effect",
+          "amount": 1.0,
+          "attribute": "minecraft:player.block_interaction_range",
+          "id": "brokensenchantoverhaul:enchantment.dexterity_range",
+          "operation": "add_value"
         }
       }
     ],
     "minecraft:attributes": [
       {
-        "amount": {
-          "type": "minecraft:linear",
-          "base": 4.0,
-          "per_level_above_first": 4.0
-        },
+        "amount": 4.0,
         "attribute": "minecraft:player.submerged_mining_speed",
-        "id": "minecraft:enchantment.dexterity_mining",
+        "id": "brokensenchantoverhaul:enchantment.dexterity_mining",
         "operation": "add_multiplied_total"
       }
     ]

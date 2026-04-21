@@ -10,8 +10,8 @@
           "type": "brokensenchantoverhaul:fixed_attribute_effect",
           "amount": {
             "type": "minecraft:linear",
-            "base": 0.3,
-            "per_level_above_first": 0.3
+            "base": 0.15,
+            "per_level_above_first": 0.15
           },
           "attribute": "minecraft:generic.attack_speed",
           "id": "brokensenchantoverhaul:enchantment.breach_attack_speed",
@@ -54,14 +54,10 @@
         "affected": "attacker",
         "effect": {
           "type": "minecraft:apply_mob_effect",
-          "max_amplifier": 1.0,
-          "max_duration": {
-            "type": "minecraft:linear",
-            "base": 1.5,
-            "per_level_above_first": 0.5
-          },
-          "min_amplifier": 1.0,
-          "min_duration": 1.5,
+          "max_amplifier": 0.0,
+          "max_duration": 20.0,
+          "min_amplifier": 0.0,
+          "min_duration": 20.0,
           "to_apply": "brokensenchantoverhaul:breach"
         },
         "enchanted": "attacker",

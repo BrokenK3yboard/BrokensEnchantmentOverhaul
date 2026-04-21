@@ -3,6 +3,7 @@ package brokenkeyboard.brokensenchantoverhaul.mixin;
 import brokenkeyboard.brokensenchantoverhaul.ModRegistry;
 import brokenkeyboard.brokensenchantoverhaul.enchantment.AdaptiveEffect;
 import brokenkeyboard.brokensenchantoverhaul.enchantment.BarrierEffect;
+import brokenkeyboard.brokensenchantoverhaul.enchantment.ConditionalAttributeEffect;
 import brokenkeyboard.brokensenchantoverhaul.enchantment.ConditionalProtectionEffect;
 import brokenkeyboard.brokensenchantoverhaul.platform.Services;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
@@ -39,6 +40,11 @@ public abstract class LivingEntityMixin {
     @Shadow
     @Nullable
     public abstract AttributeInstance getAttribute(Holder<Attribute> attribute);
+
+    @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;tickEffects(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;)V"))
+    private void runConditionalAttributeEffect(CallbackInfo ci, @Local(ordinal = 0) ServerLevel serverLevel) {
+        ConditionalAttributeEffect.updateAttribute(serverLevel ,(LivingEntity) (Object) this);
+    }
 
     @ModifyExpressionValue(method = "getDamageAfterMagicAbsorb", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getDamageProtection(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/damagesource/DamageSource;)F"))
