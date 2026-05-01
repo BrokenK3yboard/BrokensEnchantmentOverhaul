@@ -14,7 +14,7 @@
             "per_level_above_first": 0.15
           },
           "attribute": "minecraft:generic.attack_speed",
-          "id": "brokensenchantoverhaul:enchantment.breach_attack_speed",
+          "id": "brokensenchantoverhaul:enchantment.breach",
           "operation": "add_value"
         },
         "requirements": {

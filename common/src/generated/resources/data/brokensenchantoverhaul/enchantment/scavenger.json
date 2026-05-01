@@ -7,11 +7,23 @@
     "brokensenchantoverhaul:conditional_attribute": [
       {
         "effect": {
-          "type": "brokensenchantoverhaul:scavenger_toughness",
-          "multiplier": {
+          "type": "brokensenchantoverhaul:fixed_attribute_effect",
+          "amount": {
             "type": "minecraft:linear",
-            "base": 1.0,
-            "per_level_above_first": 0.5
+            "base": 2.0,
+            "per_level_above_first": 2.0
+          },
+          "attribute": "minecraft:generic.armor_toughness",
+          "id": "brokensenchantoverhaul:enchantment.scavenger",
+          "operation": "add_value"
+        },
+        "requirements": {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "effects": {
+              "brokensenchantoverhaul:scavenger": {}
+            }
           }
         }
       }
@@ -19,8 +31,12 @@
     "brokensenchantoverhaul:loot_pickup_effect": [
       {
         "effect": {
-          "type": "minecraft:multiply",
-          "factor": 2.0
+          "type": "minecraft:apply_mob_effect",
+          "max_amplifier": 0.0,
+          "max_duration": 30.0,
+          "min_amplifier": 0.0,
+          "min_duration": 30.0,
+          "to_apply": "brokensenchantoverhaul:scavenger"
         }
       }
     ],

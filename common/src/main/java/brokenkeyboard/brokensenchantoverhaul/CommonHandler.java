@@ -37,6 +37,15 @@ public class CommonHandler {
         return damage - toReduce;
     }
 
+    public static void postLootPickup(ServerLevel level, Player player) {
+        EnchantmentHelper.runIterationOnEquipment(player, (enchantHolder, enchantLevel, itemInUse) ->
+                enchantHolder.value().getEffects(ModRegistry.LOOT_PICKUP_BONUS).forEach(effect -> {
+                    if (effect.matches(Enchantment.entityContext(level, enchantLevel, player, player.position()))) {
+                        effect.effect().apply(level, enchantLevel, itemInUse, player, player.position());
+                    }
+                }));
+    }
+
     public static void handleWallJump(ServerLevel level, ServerPlayer player) {
         Holder<Enchantment> holder = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ModRegistry.FRICTION);
         if (WallSlideEffect.shouldSlide(level, player) && EnchantmentHelper.getEnchantmentLevel(holder, player) > 0) {

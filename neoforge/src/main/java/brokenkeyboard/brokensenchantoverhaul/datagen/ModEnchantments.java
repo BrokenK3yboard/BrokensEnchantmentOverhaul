@@ -7,7 +7,6 @@ import brokenkeyboard.brokensenchantoverhaul.predicate.HasNegativeEffectPredicat
 import brokenkeyboard.brokensenchantoverhaul.predicate.IsLowHealthPredicate;
 import brokenkeyboard.brokensenchantoverhaul.predicate.PickupArrowPredicate;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.particles.ParticleTypes;
@@ -19,7 +18,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.*;
 import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.util.valueproviders.UniformFloat;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -226,9 +224,17 @@ public class ModEnchantments {
                                 LevelBasedValue.perLevel(3F, 2F),
                                 LevelBasedValue.perLevel(0.15F, 0.1F)))
                 .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE,
-                        new ScavengerToughnessEffect(LevelBasedValue.perLevel(1F, 0.5F)))
+                        new FixedAttributeEffect(
+                                ModRegistry.location("enchantment.scavenger"),
+                                Attributes.ARMOR_TOUGHNESS,
+                                LevelBasedValue.perLevel(2F, 2F),
+                                AttributeModifier.Operation.ADD_VALUE),
+                        LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
+                                EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(ModRegistry.SCAVENGER_EFFECT))))
                 .withEffect(ModRegistry.LOOT_PICKUP_BONUS,
-                        new MultiplyValue(LevelBasedValue.constant(2F))));
+                        new ApplyMobEffect(HolderSet.direct(ModRegistry.SCAVENGER_EFFECT),
+                                LevelBasedValue.constant(30F), LevelBasedValue.constant(30F),
+                                LevelBasedValue.constant(0F), LevelBasedValue.constant(0F))));
 
         register(context, ModRegistry.STABILIZE, Enchantment.enchantment(
                         Enchantment.definition(leggings, 5, 3,
@@ -431,7 +437,7 @@ public class ModEnchantments {
                                 EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(ModRegistry.BREACH_EFFECT))))
                 .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE,
                         new FixedAttributeEffect(
-                                ModRegistry.location("enchantment.breach_attack_speed"),
+                                ModRegistry.location("enchantment.breach"),
                                 Attributes.ATTACK_SPEED,
                                 LevelBasedValue.perLevel(0.15F),
                                 AttributeModifier.Operation.ADD_VALUE),
@@ -519,11 +525,10 @@ public class ModEnchantments {
                                 Attributes.MOVEMENT_SPEED,
                                 LevelBasedValue.perLevel(0.2F),
                                 AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
-                        AllOfCondition.allOf(
-                                LootItemEntityPropertyCondition.hasProperties(
-                                        LootContext.EntityTarget.THIS,
-                                        EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setSwimming(false))),
-                                effectCondition(MobEffects.DOLPHINS_GRACE)))
+                                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
+                                        EntityPredicate.Builder.entity()
+                                                .flags(EntityFlagsPredicate.Builder.flags().setSwimming(false))
+                                                .effects(MobEffectsPredicate.Builder.effects().and(MobEffects.DOLPHINS_GRACE))))
                 .withEffect(ModRegistry.CHANGE_WATER_EFFECTS));
 
         EntityPredicate.Builder soul_speed_sand = EntityPredicate.Builder.entity().periodicTick(5)
@@ -582,8 +587,7 @@ public class ModEnchantments {
                                 Attributes.MOVEMENT_EFFICIENCY,
                                 LevelBasedValue.constant(1.0F),
                                 AttributeModifier.Operation.ADD_VALUE),
-                        LootItemEntityPropertyCondition.hasProperties(
-                                LootContext.EntityTarget.THIS,
+                        LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
                                 EntityPredicate.Builder.entity().movementAffectedBy(
                                         LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.SOUL_SPEED_BLOCKS)))))
                 .withEffect(EnchantmentEffectComponents.TICK,
@@ -616,11 +620,6 @@ public class ModEnchantments {
     public static Enchantment.Builder createArrowEnch(HolderSet.Named<Item> holder, HolderSet<Enchantment> exclusive) {
         return Enchantment.enchantment(Enchantment.definition(holder, 1, 1,
                 Enchantment.constantCost(20), Enchantment.constantCost(50), 8, EquipmentSlotGroup.MAINHAND, EquipmentSlotGroup.OFFHAND)).exclusiveWith(exclusive);
-    }
-
-    public static LootItemCondition.Builder effectCondition(Holder<MobEffect> effect) {
-        return LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
-                EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(effect)));
     }
 
     private static void register(BootstrapContext<Enchantment> registry, ResourceKey<Enchantment> key, Enchantment.Builder builder) {

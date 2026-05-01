@@ -107,7 +107,6 @@ public class EnchantOverhaul {
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("insight_looting"), InsightLootingEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("adaptive_fire_resistance"), AdaptiveFREffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("adaptive_blast_resistance"), AdaptiveBREffect.CODEC)));
-        bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("scavenger_toughness"), ScavengerToughnessEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("inertia_knockback_resistance"), StabilizeKnockbackEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("agility_speed"), AgilitySpeedEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(HOOK_PULL_EFFECT, registry -> registry.register(location("grapple"), GrappleEffect.CODEC)));
@@ -143,8 +142,8 @@ public class EnchantOverhaul {
         @SubscribeEvent
         public static void itemPickupEvent(ItemEntityPickupEvent.Post event) {
             Player player = event.getPlayer();
-            if (Optional.of(event.getItemEntity().getData(SCAVENGER_LOOT)).get().equals(player.getStringUUID())) {
-                ScavengerToughnessEffect.postLootPickup(player, event.getOriginalStack().getCount());
+            if (player.level() instanceof ServerLevel serverLevel && Optional.of(event.getItemEntity().getData(SCAVENGER_LOOT)).get().equals(player.getStringUUID())) {
+                CommonHandler.postLootPickup(serverLevel, player);
             }
         }
 
@@ -156,11 +155,6 @@ public class EnchantOverhaul {
         @SubscribeEvent
         public static void preHurtEvent(LivingDamageEvent.Pre event) {
             event.setNewDamage(BarrierEffect.modifyDamage(event.getEntity(), event.getSource(), event.getNewDamage()));
-        }
-
-        @SubscribeEvent
-        public static void postHurtEvent(LivingDamageEvent.Post event) {
-            ScavengerToughnessEffect.postHurt(event.getSource(), event.getNewDamage(), event.getEntity());
         }
 
         @SubscribeEvent

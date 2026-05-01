@@ -14,11 +14,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
@@ -28,6 +26,7 @@ import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -57,6 +56,7 @@ public class ModRegistry {
     public static final TagKey<Enchantment> FISHING_EXCLUSIVE = TagKey.create(Registries.ENCHANTMENT, location("exclusive_set/fishing"));
 
     public static final Holder<MobEffect> BREACH_EFFECT = Services.PLATFORM.createEffectHolder("breach", new EnchantmentMobEffect(MobEffectCategory.NEUTRAL, 3402751));
+    public static final Holder<MobEffect> SCAVENGER_EFFECT = Services.PLATFORM.createEffectHolder("scavenger", new EnchantmentMobEffect(MobEffectCategory.NEUTRAL, 3402751));
 
     public static final Holder<Attribute> HEALING_EFFICIENCY = Services.PLATFORM.createAttribute("generic.healing_efficiency",
             new RangedAttribute("attribute.name.generic.healing_efficiency", 1, 0, 1024)
@@ -111,14 +111,6 @@ public class ModRegistry {
 
     public static boolean updateMaxLevels = true;
 
-    public static final DataComponentType<Integer> SCAVENGER_STACKS = Services.PLATFORM
-            .createDataComponent("scavenger_stacks", builder ->
-                    builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
-
-    public static final DataComponentType<Integer> BREACH_USES = Services.PLATFORM
-            .createDataComponent("breach_uses", builder ->
-                    builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
-
     public static final DataComponentType<Barrier> BARRIER_INSTANCE = Services.PLATFORM
             .createDataComponent("barrier_instance", builder ->
                     builder.persistent(Barrier.CODEC).networkSynchronized(Barrier.STREAM_CODEC));
@@ -139,9 +131,9 @@ public class ModRegistry {
             .createEnchantmentComponent("area_mining", builder ->
                     builder.persistent(Unit.CODEC));
 
-    public static final DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>> LOOT_PICKUP_BONUS = Services.PLATFORM
+    public static final DataComponentType<List<ConditionalEffect<EnchantmentEntityEffect>>> LOOT_PICKUP_BONUS = Services.PLATFORM
             .createEnchantmentComponent("loot_pickup_effect", builder ->
-                    builder.persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_ITEM).listOf()));
+                    builder.persistent(ConditionalEffect.codec(EnchantmentEntityEffect.CODEC, LootContextParamSets.ENCHANTED_ENTITY).listOf()));
 
     public static final DataComponentType<List<ConditionalEffect<ConditionalProtectionEffect>>> CONDITIONAL_PROTECTION = Services.PLATFORM
             .createEnchantmentComponent("conditional_protection", builder ->

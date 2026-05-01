@@ -7,7 +7,6 @@ import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeConfigRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -37,7 +36,6 @@ public class EnchantOverhaul implements ModInitializer {
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("insight_looting"), InsightLootingEffect.CODEC);
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("adaptive_fire_resistance"), AdaptiveFREffect.CODEC);
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("adaptive_blast_resistance"), AdaptiveBREffect.CODEC);
-        Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("scavenger_toughness"), ScavengerToughnessEffect.CODEC);
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("inertia_knockback_resistance"), StabilizeKnockbackEffect.CODEC);
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("agility_speed"), AgilitySpeedEffect.CODEC);
         Registry.register(ModRegistry.HOOK_PULL_REGISTRY, ModRegistry.location("grapple"), GrappleEffect.CODEC);
@@ -45,9 +43,6 @@ public class EnchantOverhaul implements ModInitializer {
 
         ServerEntityEvents.EQUIPMENT_CHANGE.register((livingEntity, equipmentSlot, previous, next) ->
                 ConditionalAttributeEffect.removeAttribute(previous, livingEntity, equipmentSlot));
-
-        ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamageTaken, damageTaken, blocked) ->
-                ScavengerToughnessEffect.postHurt(source, damageTaken, entity));
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
                 server.registryAccess().registryOrThrow(Registries.ENCHANTMENT).entrySet().forEach(enchantment ->
