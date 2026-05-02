@@ -4,24 +4,7 @@
     "translate": "enchantment.brokensenchantoverhaul.power_shot"
   },
   "effects": {
-    "brokensenchantoverhaul:glint_override": [
-      {
-        "effect": {
-          "itemPredicate": {
-            "predicates": {
-              "minecraft:enchantments": [
-                {
-                  "enchantments": "brokensenchantoverhaul:power_shot",
-                  "levels": {
-                    "min": 1
-                  }
-                }
-              ]
-            }
-          }
-        }
-      }
-    ],
+    "brokensenchantoverhaul:glint_override": {},
     "brokensenchantoverhaul:power_shot_damage": [
       {
         "effect": {

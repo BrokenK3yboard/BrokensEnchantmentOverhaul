@@ -39,7 +39,7 @@ public class ItemRendererMixin {
             target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;getFoilBufferDirect(Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/renderer/RenderType;ZZ)Lcom/mojang/blaze3d/vertex/VertexConsumer;"))
     private VertexConsumer getFoilBufferDirect(MultiBufferSource bufferSource, RenderType type, boolean noEntity, boolean withGlint, Operation<VertexConsumer> original, @Local(argsOnly = true) ItemStack stack) {
         try {
-            if (GlintModifier.shouldUseGlint(stack, enchantmentMod$LIVING.get())) {
+            if (stack.isEnchanted() && GlintModifier.overrideGlint(stack, enchantmentMod$LIVING.get())) {
                 return withGlint ? VertexMultiConsumer.create(bufferSource.getBuffer(noEntity ? RenderHelper.ALTERNATE_GLINT : RenderType.entityGlintDirect()), bufferSource.getBuffer(type)) : bufferSource.getBuffer(type);
             }
         } finally {
@@ -52,7 +52,7 @@ public class ItemRendererMixin {
             target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;getFoilBuffer(Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/renderer/RenderType;ZZ)Lcom/mojang/blaze3d/vertex/VertexConsumer;"))
     private VertexConsumer getEntityGlintDirect(MultiBufferSource bufferSource, RenderType type, boolean isItem, boolean glint, Operation<VertexConsumer> original, @Local(argsOnly = true) ItemStack stack) {
         try {
-            if (GlintModifier.shouldUseGlint(stack, enchantmentMod$LIVING.get())) {
+            if (stack.isEnchanted() && GlintModifier.overrideGlint(stack, enchantmentMod$LIVING.get())) {
                 if (!glint) {
                     return bufferSource.getBuffer(type);
                 } else {

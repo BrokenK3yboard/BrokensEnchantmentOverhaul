@@ -131,6 +131,9 @@ public class ModRegistry {
             .createEnchantmentComponent("area_mining", builder ->
                     builder.persistent(Unit.CODEC));
 
+    public static final DataComponentType<Unit> GLINT_OVERRIDE = Services.PLATFORM
+            .createEnchantmentComponent("glint_override", builder ->builder.persistent(Unit.CODEC));
+
     public static final DataComponentType<List<ConditionalEffect<EnchantmentEntityEffect>>> LOOT_PICKUP_BONUS = Services.PLATFORM
             .createEnchantmentComponent("loot_pickup_effect", builder ->
                     builder.persistent(ConditionalEffect.codec(EnchantmentEntityEffect.CODEC, LootContextParamSets.ENCHANTED_ENTITY).listOf()));
@@ -162,10 +165,6 @@ public class ModRegistry {
     public static final DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>> SWEEPING_DAMAGE_BONUS = Services.PLATFORM
             .createEnchantmentComponent("sweeping_damage_multiplier", builder ->
                     builder.persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
-
-    public static final DataComponentType<List<ConditionalEffect<GlintModifier>>> GLINT_OVERRIDE = Services.PLATFORM
-            .createEnchantmentComponent("glint_override", builder ->
-                    builder.persistent(ConditionalEffect.codec(GlintModifier.CODEC.codec(), LootContextParamSets.ENCHANTED_ITEM).listOf()));
 
     static {
         Services.PLATFORM.createEntityEffectComponent("return_arrows", ReturnArrowEffect.CODEC);

@@ -31,8 +31,6 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.EnchantmentLevelProvider;
 
-import java.util.List;
-
 public class ModEnchantments {
 
     @SuppressWarnings("deprecation")
@@ -294,15 +292,9 @@ public class ModEnchantments {
                         1,
                         EquipmentSlotGroup.MAINHAND))
                 .exclusiveWith(bow_exclusive)
-                .withEffect(ModRegistry.POWER_SHOT_DAMAGE,
-                        new MultiplyValue(LevelBasedValue.constant(0.0625F)))
-                .withEffect(ModRegistry.POWER_SHOT_KNOCKBACK,
-                        new MultiplyValue(LevelBasedValue.constant(0.05F)))
-                .withEffect(ModRegistry.GLINT_OVERRIDE,
-                        new GlintModifier(ItemPredicate.Builder.item().withSubPredicate(ItemSubPredicates.ENCHANTMENTS,
-                                ItemEnchantmentsPredicate.enchantments(
-                                        List.of(new EnchantmentPredicate(enchantments.getOrThrow(ModRegistry.POWER_SHOT), MinMaxBounds.Ints.atLeast(1)))
-                                )).build())));
+                .withEffect(ModRegistry.POWER_SHOT_DAMAGE, new MultiplyValue(LevelBasedValue.constant(0.0625F)))
+                .withEffect(ModRegistry.POWER_SHOT_KNOCKBACK, new MultiplyValue(LevelBasedValue.constant(0.05F)))
+                .withEffect(ModRegistry.GLINT_OVERRIDE));
 
         register(context, ModRegistry.BARRAGE, createArrowEnch(bow, bow_exclusive)
                 .withEffect(EnchantmentEffectComponents.POST_ATTACK,
@@ -443,7 +435,8 @@ public class ModEnchantments {
                                 AttributeModifier.Operation.ADD_VALUE),
                         LootItemEntityPropertyCondition.hasProperties(
                                 LootContext.EntityTarget.THIS,
-                                EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(ModRegistry.BREACH_EFFECT)))));
+                                EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(ModRegistry.BREACH_EFFECT))))
+                .withEffect(ModRegistry.GLINT_OVERRIDE));
 
         register(context, Enchantments.SWEEPING_EDGE, Enchantment.enchantment(
                 Enchantment.definition(sword, 2, 3,

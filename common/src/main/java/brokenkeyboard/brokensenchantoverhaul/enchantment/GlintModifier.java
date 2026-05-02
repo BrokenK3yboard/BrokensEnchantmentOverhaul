@@ -2,40 +2,36 @@ package brokenkeyboard.brokensenchantoverhaul.enchantment;
 
 import brokenkeyboard.brokensenchantoverhaul.ModRegistry;
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.function.BiPredicate;
 
-public record GlintModifier(ItemPredicate itemPredicate) {
+public record GlintModifier() {
 
-    public static final MapCodec<GlintModifier> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ItemPredicate.CODEC.fieldOf("itemPredicate").forGetter(GlintModifier::itemPredicate)
-    ).apply(instance, GlintModifier::new));
+    public static final MapCodec<GlintModifier> CODEC = MapCodec.unit(new GlintModifier());
 
-    public boolean apply(ItemStack stack) {
-        return itemPredicate.test(stack);
-    }
+    private static final Map<ResourceKey<Enchantment>, BiPredicate<LivingEntity, ItemStack>> GLINT_OVERRIDES = Map.of(
+            Enchantments.BREACH, (livingEntity, itemStack) -> livingEntity.hasEffect(ModRegistry.BREACH_EFFECT),
+            ModRegistry.POWER_SHOT, (livingEntity, itemStack) -> livingEntity.getUseItem().equals(itemStack) && itemStack.getUseDuration(livingEntity) - livingEntity.getUseItemRemainingTicks() >= 60);
 
-    public static boolean shouldUseGlint(ItemStack stack, @Nullable LivingEntity entity) {
+    public static boolean overrideGlint(ItemStack stack, @Nullable LivingEntity entity) {
         if (entity == null) return false;
         MutableBoolean bool = new MutableBoolean(false);
 
-        EnchantmentHelper.runIterationOnItem(stack, (enchantment, enchantmentLevel) ->
-                enchantment.value().getEffects(ModRegistry.GLINT_OVERRIDE).forEach(effect -> {
-                    boolean useGlint = effect.effect().itemPredicate.test(stack);
-
-                    if (useGlint) {
-                        bool.setValue(true);
-                    }
-                }));
-        return stack.getItem() instanceof BowItem
-                ? (entity.getUseItem().equals(stack) && stack.getUseDuration(entity) - entity.getUseItemRemainingTicks() >= 60 && bool.getValue())
-                : bool.getValue();
+        EnchantmentHelper.runIterationOnItem(stack, (enchantHolder, enchantLevel) -> {
+            if (bool.isTrue()) return;
+            if (enchantHolder.value().effects().has(ModRegistry.GLINT_OVERRIDE) && GLINT_OVERRIDES.getOrDefault(enchantHolder.unwrap().left().orElse(null), (livingEntity, itemStack) -> false).test(entity, stack)) {
+                bool.setTrue();
+            }
+        });
+        return bool.getValue();
     }
 }

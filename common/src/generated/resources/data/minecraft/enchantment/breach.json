@@ -28,6 +28,7 @@
         }
       }
     ],
+    "brokensenchantoverhaul:glint_override": {},
     "minecraft:armor_effectiveness": [
       {
         "effect": {
