@@ -103,7 +103,6 @@ public class EnchantOverhaul {
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_PROTECTION_EFFECT, registry -> registry.register(location("adaptive"), AdaptiveEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_PROTECTION_EFFECT, registry -> registry.register(location("deflect_damage"), DeflectDamageEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("fixed_attribute_effect"), FixedAttributeEffect.CODEC)));
-        bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("insight_luck"), InsightLuckEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("insight_looting"), InsightLootingEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("adaptive_fire_resistance"), AdaptiveFREffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("adaptive_blast_resistance"), AdaptiveBREffect.CODEC)));

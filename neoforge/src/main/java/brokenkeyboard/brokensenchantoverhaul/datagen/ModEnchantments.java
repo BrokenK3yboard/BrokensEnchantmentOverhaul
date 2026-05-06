@@ -89,7 +89,6 @@ public class ModEnchantments {
                         new AddValue(LevelBasedValue.constant(0.01F)),
                         LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER,
                         EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(EntityType.PLAYER))))
-                .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE, new InsightLuckEffect())
                 .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE, new InsightLootingEffect()));
 
         register(context, ModRegistry.DEXTERITY, Enchantment.enchantment(

@@ -1,4 +1,4 @@
-// 1.21.1	2026-05-02T12:45:24.787138247	Registries
+// 1.21.1	2026-05-05T20:08:48.183403359	Registries
 f95d8c725961dc45cc25a379727ee90899a62af2 data/brokensenchantoverhaul/damage_type/arrow_multishot.json
 7f637742bcc13f0c2c9d543a90ea771cf4d9a4a0 data/brokensenchantoverhaul/enchantment/adaptive.json
 58db66be7fd1b37f18123278cba0f5a053ffdc66 data/brokensenchantoverhaul/enchantment/agility.json
@@ -12,7 +12,7 @@ ca0f7ca872974ff207c2f4491db65db0e7d0f305 data/brokensenchantoverhaul/enchantment
 cdc7342ca478b2470dce37f965a11666b2a33079 data/brokensenchantoverhaul/enchantment/friction.json
 7d372344d9f746db109f080ae5b04e6c827909b6 data/brokensenchantoverhaul/enchantment/grapple.json
 601744fd3d3ba80d9c518ea3f537b225d60dbb9d data/brokensenchantoverhaul/enchantment/harvest.json
-4ebfbdd4fdc6e27bc71e8e10687eba85e7ba3c68 data/brokensenchantoverhaul/enchantment/insight.json
+687d0b8798cff0fd41524d0d862ea4cc887db4e0 data/brokensenchantoverhaul/enchantment/insight.json
 ee797f0af2fdefb0c6d8f5c118f29926c572faa0 data/brokensenchantoverhaul/enchantment/molten.json
 f8acbd86aa78d9b1dac0e7a41ba0678378590f8c data/brokensenchantoverhaul/enchantment/power_shot.json
 f64b449983806cd523ef84dd14971c6ae34cfbcb data/brokensenchantoverhaul/enchantment/rush.json

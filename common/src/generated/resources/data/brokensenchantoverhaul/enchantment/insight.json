@@ -7,11 +7,6 @@
     "brokensenchantoverhaul:conditional_attribute": [
       {
         "effect": {
-          "type": "brokensenchantoverhaul:insight_luck"
-        }
-      },
-      {
-        "effect": {
           "type": "brokensenchantoverhaul:insight_looting"
         }
       }
