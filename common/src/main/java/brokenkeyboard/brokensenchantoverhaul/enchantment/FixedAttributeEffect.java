@@ -40,7 +40,7 @@ public record FixedAttributeEffect(ResourceLocation id, Holder<Attribute> attrib
     }
 
     @Override
-    public double getModifierValue(int enchantmentLevel, ItemStack item, LivingEntity entity) {
-        return amount.calculate(enchantmentLevel);
+    public double getModifierValue(int enchantLevel, ItemStack item, LivingEntity entity) {
+        return amount.calculate(enchantLevel);
     }
 }

@@ -14,7 +14,7 @@ public record VolleyEffect() implements EnchantmentEntityEffect {
     public static final MapCodec<VolleyEffect> CODEC = MapCodec.unit(VolleyEffect::new);
 
     @Override
-    public void apply(ServerLevel serverLevel, int enchantLevel, EnchantedItemInUse item, Entity entity, Vec3 vec3) {
+    public void apply(ServerLevel level, int enchantLevel, EnchantedItemInUse item, Entity entity, Vec3 vec3) {
         LivingEntity living = item.owner();
         if (living != null && item.inSlot() != null) {
             CrossbowItemAccessor.callTryLoadProjectiles(living, living.getItemBySlot(item.inSlot()));

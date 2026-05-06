@@ -24,20 +24,20 @@ public record BarrierEffect() {
         Map<ItemStack, Barrier> barrierItems = new HashMap<>();
         MutableFloat mutableFloat = new MutableFloat(amount);
 
-        EnchantmentHelper.runIterationOnEquipment(entity, (enchant, enchantLevel, item) ->
-                enchant.value().getEffects(ModRegistry.BARRIER_EFFECT).forEach(effect -> {
-            if (entity.level() instanceof ServerLevel serverLevel && effect.matches(Enchantment.damageContext(serverLevel, enchantLevel, entity, source))) {
-                ItemStack stack = item.itemStack();
-                int tickCount = entity.tickCount;
-                int charges = Optional.ofNullable(stack.get(ModRegistry.BARRIER_INSTANCE)).map(Barrier::charges).orElse(0);
-                Barrier newBarrier = new Barrier(tickCount, charges);
-                stack.update(ModRegistry.BARRIER_INSTANCE, new Barrier(tickCount, 0), component -> newBarrier);
+        EnchantmentHelper.runIterationOnEquipment(entity, (enchantHolder, enchantLevel, item) ->
+                enchantHolder.value().getEffects(ModRegistry.BARRIER_EFFECT).forEach(effect -> {
+                    if (entity.level() instanceof ServerLevel level && effect.matches(Enchantment.damageContext(level, enchantLevel, entity, source))) {
+                        ItemStack stack = item.itemStack();
+                        int tickCount = entity.tickCount;
+                        int charges = Optional.ofNullable(stack.get(ModRegistry.BARRIER_INSTANCE)).map(Barrier::charges).orElse(0);
+                        Barrier newBarrier = new Barrier(tickCount, charges);
+                        stack.update(ModRegistry.BARRIER_INSTANCE, new Barrier(tickCount, 0), component -> newBarrier);
 
-                if (charges > 0) {
-                    barrierItems.put(stack, newBarrier);
-                }
-            }
-        }));
+                        if (charges > 0) {
+                            barrierItems.put(stack, newBarrier);
+                        }
+                    }
+                }));
 
         Util.getRandomSafe(barrierItems.keySet().stream().toList(), entity.getRandom()).ifPresent(stack -> {
             Barrier barrier = barrierItems.get(stack);

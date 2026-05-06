@@ -35,7 +35,7 @@ public record InsightLootingEffect() implements ConditionalAttributeEffect {
     }
 
     @Override
-    public double getModifierValue(int enchantmentLevel, ItemStack item, LivingEntity entity) {
+    public double getModifierValue(int enchantLevel, ItemStack item, LivingEntity entity) {
         double enchantmentValue = 0;
         for (ItemStack stack : entity.getArmorSlots()) {
             if (stack.getItem() instanceof ArmorItem armor) {

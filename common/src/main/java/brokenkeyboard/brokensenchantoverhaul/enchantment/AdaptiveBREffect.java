@@ -37,7 +37,7 @@ public record AdaptiveBREffect(ResourceLocation id, AttributeModifier.Operation 
     }
 
     @Override
-    public double getModifierValue(int enchantmentLevel, ItemStack item, LivingEntity entity) {
+    public double getModifierValue(int enchantLevel, ItemStack item, LivingEntity entity) {
         Optional<DamageTypeResist> resist = Optional.ofNullable(item.get(ModRegistry.DAMAGETYPE_RESIST));
         return resist.isPresent() && resist.get().damageType().equals("EXPLOSIVE") ? resist.get().stacks() * 0.1F : 0F;
     }

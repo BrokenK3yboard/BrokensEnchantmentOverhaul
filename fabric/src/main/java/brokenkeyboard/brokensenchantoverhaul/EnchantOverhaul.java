@@ -36,7 +36,6 @@ public class EnchantOverhaul implements ModInitializer {
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("insight_looting"), InsightLootingEffect.CODEC);
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("adaptive_fire_resistance"), AdaptiveFREffect.CODEC);
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("adaptive_blast_resistance"), AdaptiveBREffect.CODEC);
-        Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("inertia_knockback_resistance"), StabilizeKnockbackEffect.CODEC);
         Registry.register(ModRegistry.ATTRIBUTE_REGISTRY, ModRegistry.location("agility_speed"), AgilitySpeedEffect.CODEC);
         Registry.register(ModRegistry.HOOK_PULL_REGISTRY, ModRegistry.location("grapple"), GrappleEffect.CODEC);
         Registry.register(ModRegistry.HOOK_PULL_REGISTRY, ModRegistry.location("hook_burn"), HookBurnEffect.CODEC);

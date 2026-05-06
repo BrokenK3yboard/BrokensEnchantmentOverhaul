@@ -7,7 +7,6 @@ import brokenkeyboard.brokensenchantoverhaul.predicate.HasNegativeEffectPredicat
 import brokenkeyboard.brokensenchantoverhaul.predicate.IsLowHealthPredicate;
 import brokenkeyboard.brokensenchantoverhaul.predicate.PickupArrowPredicate;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
@@ -35,7 +34,6 @@ public class ModEnchantments {
 
     @SuppressWarnings("deprecation")
     public static void bootstrap(BootstrapContext<Enchantment> context) {
-        HolderGetter<Enchantment> enchantments = context.lookup(Registries.ENCHANTMENT);
         HolderSet<Enchantment> armor_exclusive = context.lookup(Registries.ENCHANTMENT).getOrThrow(EnchantmentTags.ARMOR_EXCLUSIVE);
         HolderSet<Enchantment> mining_exclusive = context.lookup(Registries.ENCHANTMENT).getOrThrow(EnchantmentTags.MINING_EXCLUSIVE);
         HolderSet.Named<Enchantment> damage_exclusive = context.lookup(Registries.ENCHANTMENT).getOrThrow(EnchantmentTags.DAMAGE_EXCLUSIVE);

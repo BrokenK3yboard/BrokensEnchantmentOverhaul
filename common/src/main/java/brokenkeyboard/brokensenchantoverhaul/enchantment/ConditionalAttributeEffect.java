@@ -29,15 +29,15 @@ public interface ConditionalAttributeEffect {
 
     AttributeModifier.Operation operation();
 
-    double getModifierValue(int enchantmentLevel, ItemStack item, LivingEntity entity);
+    double getModifierValue(int enchantLevel, ItemStack item, LivingEntity entity);
 
     MapCodec<? extends ConditionalAttributeEffect> codec();
 
-    private void applyModifiers(EnchantedItemInUse item, LivingEntity entity, int enchantmentLevel) {
+    private void applyModifiers(EnchantedItemInUse item, LivingEntity entity, int enchantLevel) {
         if (item.inSlot() == null) return;
         ResourceLocation slotID = ConditionalAttributeEffect.idForSlot(id(), item.inSlot());
         boolean hasModifier = entity.getAttributes().hasModifier(attribute(), slotID);
-        double value = getModifierValue(enchantmentLevel, item.itemStack(), entity);
+        double value = getModifierValue(enchantLevel, item.itemStack(), entity);
 
         if (value > 0 && (!hasModifier || entity.getAttributes().getModifierValue(attribute(), slotID) != value)) {
             entity.getAttributes().addTransientAttributeModifiers(ConditionalAttributeEffect.attributeMap(attribute(), slotID, value, operation()));
@@ -67,18 +67,18 @@ public interface ConditionalAttributeEffect {
     }
 
     static void removeAttribute(ItemStack stack, LivingEntity entity, EquipmentSlot slot) {
-        EnchantmentHelper.runIterationOnItem(stack, (enchantment, enchantmentLevel) ->
-                enchantment.value().getEffects(ModRegistry.CONDITIONAL_ATTRIBUTE).forEach((effect) ->
+        EnchantmentHelper.runIterationOnItem(stack, (enchantHolder, enchantLevel) ->
+                enchantHolder.value().getEffects(ModRegistry.CONDITIONAL_ATTRIBUTE).forEach((effect) ->
                         effect.effect().removeModifiers(new EnchantedItemInUse(stack, slot, entity), entity)));
     }
 
-    static void updateAttribute(ServerLevel serverLevel, LivingEntity entity) {
-        EnchantmentHelper.runIterationOnEquipment(entity, (enchantment, enchantmentLevel, itemInUse) ->
-                enchantment.value().getEffects(ModRegistry.CONDITIONAL_ATTRIBUTE).forEach((effect) -> {
-                    if (effect.matches(Enchantment.entityContext(serverLevel, enchantmentLevel, entity, entity.position()))) {
-                        effect.effect().applyModifiers(itemInUse, entity, enchantmentLevel);
+    static void updateAttribute(ServerLevel level, LivingEntity entity) {
+        EnchantmentHelper.runIterationOnEquipment(entity, (enchantHolder, enchantLevel, item) ->
+                enchantHolder.value().getEffects(ModRegistry.CONDITIONAL_ATTRIBUTE).forEach((effect) -> {
+                    if (effect.matches(Enchantment.entityContext(level, enchantLevel, entity, entity.position()))) {
+                        effect.effect().applyModifiers(item, entity, enchantLevel);
                     } else {
-                        effect.effect().removeModifiers(itemInUse, entity);
+                        effect.effect().removeModifiers(item, entity);
                     }
                 }));
     }

@@ -19,11 +19,11 @@ public record WallSlideEffect(LevelBasedValue slideTime) implements EnchantmentE
     ).apply(instance, WallSlideEffect::new));
 
     @Override
-    public void apply(ServerLevel serverLevel, int enchantmentLevel, EnchantedItemInUse item, Entity entity, Vec3 pos) {
-        if (!(entity instanceof LivingEntity living) || !shouldSlide(serverLevel, living)) return;
+    public void apply(ServerLevel level, int enchantLevel, EnchantedItemInUse item, Entity entity, Vec3 pos) {
+        if (!(entity instanceof LivingEntity living) || !shouldSlide(level, living)) return;
 
         int time = Services.PLATFORM.getWallSlideTicks(living);
-        Services.PLATFORM.setWallSlideTicks(living, slideTime.calculate(enchantmentLevel) > time ? time + 1 : -1);
+        Services.PLATFORM.setWallSlideTicks(living, slideTime.calculate(enchantLevel) > time ? time + 1 : -1);
         Vec3 movement = entity.getDeltaMovement();
         entity.setDeltaMovement(movement.x(), -0.05, movement.z());
 

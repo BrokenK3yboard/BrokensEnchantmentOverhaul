@@ -23,7 +23,7 @@ public record PickupArrowPredicate() implements EntitySubPredicate {
     }
 
     @Override
-    public boolean matches(Entity entity, ServerLevel serverLevel, @Nullable Vec3 vec3) {
+    public boolean matches(Entity entity, ServerLevel level, @Nullable Vec3 vec3) {
         return entity instanceof AbstractArrow arrow && arrow.pickup == AbstractArrow.Pickup.ALLOWED && arrow.getPickupItemStackOrigin().is(Items.ARROW);
     }
 }

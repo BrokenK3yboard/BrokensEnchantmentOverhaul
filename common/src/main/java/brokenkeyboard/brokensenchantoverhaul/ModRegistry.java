@@ -132,7 +132,7 @@ public class ModRegistry {
                     builder.persistent(Unit.CODEC));
 
     public static final DataComponentType<Unit> GLINT_OVERRIDE = Services.PLATFORM
-            .createEnchantmentComponent("glint_override", builder ->builder.persistent(Unit.CODEC));
+            .createEnchantmentComponent("glint_override", builder -> builder.persistent(Unit.CODEC));
 
     public static final DataComponentType<List<ConditionalEffect<EnchantmentEntityEffect>>> LOOT_PICKUP_BONUS = Services.PLATFORM
             .createEnchantmentComponent("loot_pickup_effect", builder ->

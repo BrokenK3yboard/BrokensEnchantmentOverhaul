@@ -20,7 +20,7 @@ public record RepairEquippedItem(LevelBasedValue repair) implements EnchantmentE
             LevelBasedValue.CODEC.fieldOf("repair").forGetter(RepairEquippedItem::repair)).apply(instance, RepairEquippedItem::new));
 
     @Override
-    public void apply(ServerLevel serverLevel, int enchantLevel, EnchantedItemInUse enchantedItemInUse, Entity entity, Vec3 vec3) {
+    public void apply(ServerLevel level, int enchantLevel, EnchantedItemInUse item, Entity entity, Vec3 vec3) {
         if (!(entity instanceof LivingEntity living)) return;
 
         ArrayList<ItemStack> equippedItems = new ArrayList<>();
@@ -33,7 +33,7 @@ public record RepairEquippedItem(LevelBasedValue repair) implements EnchantmentE
         }
 
         if (!equippedItems.isEmpty()) {
-            ItemStack stack = equippedItems.get(serverLevel.random.nextInt(equippedItems.size()));
+            ItemStack stack = equippedItems.get(level.random.nextInt(equippedItems.size()));
             stack.setDamageValue((int) (stack.getDamageValue() - repair.calculate(enchantLevel)));
         }
     }

@@ -26,16 +26,16 @@ public interface ConditionalProtectionEffect {
 
     static float modifyEnchantmentProtection(ServerLevel level, LivingEntity entity, float damageAmount, DamageSource source) {
         MutableFloat mutableFloat = new MutableFloat(0F);
-        EnchantmentHelper.runIterationOnEquipment(entity, (enchantment, enchantmentLevel, item) -> {
+        EnchantmentHelper.runIterationOnEquipment(entity, (enchantHolder, enchantLevel, item) -> {
             ItemStack stack = item.itemStack();
 
             if (Config.OVERHAUL_ENCHANTMENTS.get() && stack.isEnchanted() && stack.getItem() instanceof ArmorItem armorItem) {
                 mutableFloat.add(armorItem.getMaterial().value().enchantmentValue() * 0.1F);
             }
 
-            enchantment.value().getEffects(ModRegistry.CONDITIONAL_PROTECTION).forEach(effect -> {
-                if (effect.matches(Enchantment.damageContext(level, enchantmentLevel, entity, source))) {
-                    mutableFloat.setValue(effect.effect().apply(level, enchantmentLevel, item, entity, damageAmount, source, mutableFloat.floatValue()));
+            enchantHolder.value().getEffects(ModRegistry.CONDITIONAL_PROTECTION).forEach(effect -> {
+                if (effect.matches(Enchantment.damageContext(level, enchantLevel, entity, source))) {
+                    mutableFloat.setValue(effect.effect().apply(level, enchantLevel, item, entity, damageAmount, source, mutableFloat.floatValue()));
                 }
             });
         });

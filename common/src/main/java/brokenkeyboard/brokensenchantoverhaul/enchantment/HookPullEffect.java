@@ -15,14 +15,14 @@ public interface HookPullEffect {
 
     Codec<HookPullEffect> CODEC = ModRegistry.HOOK_PULL_REGISTRY.byNameCodec().dispatch(HookPullEffect::codec, Function.identity());
 
-    int apply(ServerLevel serverLevel, int enchantmentLevel, ItemStack stack, FishingHook hook, int value);
+    int apply(ServerLevel level, int enchantLevel, ItemStack stack, FishingHook hook, int value);
 
     MapCodec<? extends HookPullEffect> codec();
 
     static int applyHookPullEffect(ServerLevel level, ItemStack stack, FishingHook hook, MutableInt value) {
-        EnchantmentHelper.runIterationOnItem(stack, (holder, enchantmentLevel) ->
-                holder.value().getEffects(ModRegistry.HOOK_PULL).forEach(effect ->
-                        value.setValue(Math.min(effect.effect().apply(level, enchantmentLevel, stack, hook, value.getValue()), value.intValue()))));
+        EnchantmentHelper.runIterationOnItem(stack, (enchantHolder, enchantLevel) ->
+                enchantHolder.value().getEffects(ModRegistry.HOOK_PULL).forEach(effect ->
+                        value.setValue(Math.min(effect.effect().apply(level, enchantLevel, stack, hook, value.getValue()), value.intValue()))));
         return value.intValue();
     }
 }

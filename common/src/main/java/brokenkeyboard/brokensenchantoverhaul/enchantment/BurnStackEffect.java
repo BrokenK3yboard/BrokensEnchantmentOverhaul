@@ -19,7 +19,7 @@ public record BurnStackEffect(LevelBasedValue stackIncrease, LevelBasedValue max
     ).apply(instance, BurnStackEffect::new));
 
     @Override
-    public void apply(ServerLevel serverLevel, int enchantLevel, EnchantedItemInUse enchantedItemInUse, Entity entity, Vec3 vec3) {
+    public void apply(ServerLevel level, int enchantLevel, EnchantedItemInUse item, Entity entity, Vec3 vec3) {
         if (entity instanceof LivingEntity living) {
             int burnStacks = Services.PLATFORM.getBurnStacks(living);
             Services.PLATFORM.setBurnStacks(living, (int) Math.min(burnStacks + stackIncrease.calculate(enchantLevel), maxStacks.calculate(enchantLevel)));

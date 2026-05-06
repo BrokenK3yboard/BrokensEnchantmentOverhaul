@@ -107,7 +107,6 @@ public class EnchantOverhaul {
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("insight_looting"), InsightLootingEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("adaptive_fire_resistance"), AdaptiveFREffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("adaptive_blast_resistance"), AdaptiveBREffect.CODEC)));
-        bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("inertia_knockback_resistance"), StabilizeKnockbackEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(CONDITIONAL_ATTRIBUTE_EFFECT, registry -> registry.register(location("agility_speed"), AgilitySpeedEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(HOOK_PULL_EFFECT, registry -> registry.register(location("grapple"), GrappleEffect.CODEC)));
         bus.addListener((RegisterEvent event) -> event.register(HOOK_PULL_EFFECT, registry -> registry.register(location("hook_burn"), HookBurnEffect.CODEC)));
@@ -142,8 +141,8 @@ public class EnchantOverhaul {
         @SubscribeEvent
         public static void itemPickupEvent(ItemEntityPickupEvent.Post event) {
             Player player = event.getPlayer();
-            if (player.level() instanceof ServerLevel serverLevel && Optional.of(event.getItemEntity().getData(SCAVENGER_LOOT)).get().equals(player.getStringUUID())) {
-                CommonHandler.postLootPickup(serverLevel, player);
+            if (player.level() instanceof ServerLevel level && Optional.of(event.getItemEntity().getData(SCAVENGER_LOOT)).get().equals(player.getStringUUID())) {
+                CommonHandler.postLootPickup(level, player);
             }
         }
 

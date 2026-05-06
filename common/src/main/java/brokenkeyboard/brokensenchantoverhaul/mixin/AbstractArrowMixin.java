@@ -25,9 +25,9 @@ public class AbstractArrowMixin {
     @WrapOperation(method = "onHitEntity", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/damagesource/DamageSources;arrow(Lnet/minecraft/world/entity/projectile/AbstractArrow;Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/damagesource/DamageSource;"))
     private DamageSource modifyDamageSource(DamageSources instance, AbstractArrow arrow, Entity shooter, Operation<DamageSource> original) {
-        return (firedFromWeapon != null && arrow.level() instanceof ServerLevel serverLevel &&
-                EnchantmentHelper.processProjectileCount(serverLevel, firedFromWeapon, shooter, 1) > 1)
-                ? serverLevel.damageSources().source(ModRegistry.ARROW_MULTISHOT, arrow, shooter) : original.call(instance, arrow, shooter);
+        return (firedFromWeapon != null && arrow.level() instanceof ServerLevel level &&
+                EnchantmentHelper.processProjectileCount(level, firedFromWeapon, shooter, 1) > 1)
+                ? level.damageSources().source(ModRegistry.ARROW_MULTISHOT, arrow, shooter) : original.call(instance, arrow, shooter);
     }
 
     @WrapOperation(method = "onHitEntity", at = @At(value = "INVOKE",
@@ -39,7 +39,7 @@ public class AbstractArrowMixin {
 
     @WrapOperation(method = "doKnockback", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;modifyKnockback(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;F)F"))
-    private float modifyKnock(ServerLevel level, ItemStack tool, Entity entity, DamageSource damageSource, float knockback, Operation<Float> original) {
+    private float modifyKnockback(ServerLevel level, ItemStack tool, Entity entity, DamageSource damageSource, float knockback, Operation<Float> original) {
         int powerShotTicks = Services.PLATFORM.getPowerShotTicks((AbstractArrow) (Object) this);
         return original.call(level, tool, entity, damageSource, knockback) + CommonHandler.getPowerShotKnockback(firedFromWeapon, entity, powerShotTicks);
     }

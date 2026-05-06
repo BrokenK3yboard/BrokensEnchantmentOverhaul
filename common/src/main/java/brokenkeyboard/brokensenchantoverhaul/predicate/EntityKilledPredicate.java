@@ -29,7 +29,7 @@ public record EntityKilledPredicate(boolean hostileOrPlayer) implements EntitySu
     }
 
     @Override
-    public boolean matches(Entity entity, ServerLevel serverLevel, @Nullable Vec3 vec3) {
+    public boolean matches(Entity entity, ServerLevel level, @Nullable Vec3 vec3) {
         if (!(entity instanceof LivingEntity living && living.isDeadOrDying())) return false;
         return !hostileOrPlayer || (living instanceof Player || living instanceof Monster || living instanceof NeutralMob);
     }

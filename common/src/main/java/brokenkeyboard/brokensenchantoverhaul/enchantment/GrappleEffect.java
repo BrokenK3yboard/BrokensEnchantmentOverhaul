@@ -18,12 +18,12 @@ public record GrappleEffect(LevelBasedValue strength) implements HookPullEffect 
     ).apply(instance, GrappleEffect::new));
 
     @Override
-    public int apply(ServerLevel serverLevel, int enchantmentLevel, ItemStack stack, FishingHook hook, int value) {
+    public int apply(ServerLevel level, int enchantLevel, ItemStack stack, FishingHook hook, int value) {
         if (!(hook.getOwner() instanceof LivingEntity living)) return value;
         if (hook.getHookedIn() != null) {
-            pullEntity(strength.calculate(enchantmentLevel), living.position(), hook.getHookedIn());
+            pullEntity(strength.calculate(enchantLevel), living.position(), hook.getHookedIn());
         } else if (hook.onGround()) {
-            pullEntity(strength.calculate(enchantmentLevel), hook.position(), living);
+            pullEntity(strength.calculate(enchantLevel), hook.position(), living);
         }
         return 1;
     }

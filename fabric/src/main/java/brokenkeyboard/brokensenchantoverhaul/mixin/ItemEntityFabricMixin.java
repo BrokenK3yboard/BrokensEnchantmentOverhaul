@@ -18,10 +18,10 @@ public class ItemEntityFabricMixin {
 
     @Inject(method = "playerTouch", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;take(Lnet/minecraft/world/entity/Entity;I)V"))
     private void pickupItem(Player player, CallbackInfo ci) {
-        if (player.level() instanceof ServerLevel serverLevel) {
+        if (player.level() instanceof ServerLevel level) {
             Optional<String> attachment = Optional.ofNullable(((ItemEntity) (Object) this).getAttached(EnchantOverhaul.SCAVENGER_LOOT));
             if (attachment.isPresent() && attachment.get().equals(player.getName().getString())) {
-                CommonHandler.postLootPickup(serverLevel, player);
+                CommonHandler.postLootPickup(level, player);
             }
         }
     }

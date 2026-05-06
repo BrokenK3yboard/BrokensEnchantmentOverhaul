@@ -15,8 +15,8 @@ public record ReturnArrowEffect() implements EnchantmentEntityEffect {
     public static final MapCodec<ReturnArrowEffect> CODEC = MapCodec.unit(ReturnArrowEffect::new);
 
     @Override
-    public void apply(ServerLevel serverLevel, int enchantLevel, EnchantedItemInUse itemInUse, Entity entity, Vec3 vec3) {
-        if (itemInUse.owner() instanceof Player player && !player.getInventory().add(new ItemStack(Items.ARROW))) {
+    public void apply(ServerLevel level, int enchantLevel, EnchantedItemInUse item, Entity entity, Vec3 vec3) {
+        if (item.owner() instanceof Player player && !player.getInventory().add(new ItemStack(Items.ARROW))) {
             player.drop(new ItemStack(Items.ARROW), false);
         }
     }

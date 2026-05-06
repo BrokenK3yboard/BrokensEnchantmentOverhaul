@@ -15,9 +15,9 @@ public record HookBurnEffect(LevelBasedValue duration) implements HookPullEffect
     ).apply(instance, HookBurnEffect::new));
 
     @Override
-    public int apply(ServerLevel serverLevel, int enchantmentLevel, ItemStack stack, FishingHook hook, int value) {
+    public int apply(ServerLevel level, int enchantLevel, ItemStack stack, FishingHook hook, int value) {
         if (hook.getHookedIn() instanceof LivingEntity living) {
-            living.setRemainingFireTicks((int) duration.calculate(enchantmentLevel));
+            living.setRemainingFireTicks((int) duration.calculate(enchantLevel));
             return 1;
         }
         return value;

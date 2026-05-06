@@ -31,8 +31,8 @@ public class FishingHookMixin {
     @Inject(method = "retrieve", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/FishingHook;discard()V"))
     private void runHookPull(ItemStack stack, CallbackInfoReturnable<Integer> cir, @Local LocalIntRef durabilityLoss) {
         FishingHook hook = (FishingHook) (Object) this;
-        if (hook.level() instanceof ServerLevel serverLevel) {
-            durabilityLoss.set(HookPullEffect.applyHookPullEffect(serverLevel, stack, hook, new MutableInt(durabilityLoss.get())));
+        if (hook.level() instanceof ServerLevel level) {
+            durabilityLoss.set(HookPullEffect.applyHookPullEffect(level, stack, hook, new MutableInt(durabilityLoss.get())));
         }
     }
 

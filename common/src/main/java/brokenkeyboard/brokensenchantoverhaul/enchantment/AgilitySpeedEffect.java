@@ -42,9 +42,9 @@ public record AgilitySpeedEffect(LevelBasedValue baseAmount, LevelBasedValue mis
     }
 
     @Override
-    public double getModifierValue(int enchantmentLevel, ItemStack item, LivingEntity entity) {
+    public double getModifierValue(int enchantLevel, ItemStack item, LivingEntity entity) {
         double missingArmor = Math.max(0, 20 - Optional.of(entity.getAttributeValue(Attributes.ARMOR)).orElse(0D));
-        double bonusAmount = missingArmorScaling.calculate(enchantmentLevel) * missingArmor;
-        return baseAmount.calculate(enchantmentLevel) + bonusAmount;
+        double bonusAmount = missingArmorScaling.calculate(enchantLevel) * missingArmor;
+        return baseAmount.calculate(enchantLevel) + bonusAmount;
     }
 }

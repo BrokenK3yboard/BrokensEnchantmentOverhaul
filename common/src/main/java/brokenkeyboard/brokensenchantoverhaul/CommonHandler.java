@@ -69,8 +69,8 @@ public class CommonHandler {
     public static float getSweepingEdgeBonus(List<LivingEntity> entities, Player attacker, Entity target, ItemStack weapon, DamageSource source, float damage) {
         MutableFloat damageBonus = new MutableFloat(damage);
         if (attacker.level() instanceof ServerLevel level) {
-            EnchantmentHelper.runIterationOnItem(weapon, (enchantment, enchantLevel) ->
-                    enchantment.value().getEffects(ModRegistry.SWEEPING_DAMAGE_BONUS).forEach(effect -> {
+            EnchantmentHelper.runIterationOnItem(weapon, (enchantHolder, enchantLevel) ->
+                    enchantHolder.value().getEffects(ModRegistry.SWEEPING_DAMAGE_BONUS).forEach(effect -> {
                         if (effect.matches(Enchantment.damageContext(level, enchantLevel, target, source))) {
                             long entityCount = entities.stream().filter(target1 -> !target1.is(attacker) && !target1.isAlliedTo(attacker) &&
                                     (!(target1 instanceof ArmorStand) || !((ArmorStand) target1).isMarker()) && attacker.distanceToSqr(target1) < 9.0D).count();
@@ -87,9 +87,9 @@ public class CommonHandler {
         if (powerShotTicks == 0) return 0;
 
         MutableFloat damage = new MutableFloat(0);
-        EnchantmentHelper.runIterationOnItem(weapon, (enchantment, enchantmentLevel) ->
-                enchantment.value().getEffects(ModRegistry.POWER_SHOT_DAMAGE).forEach(effect ->
-                        damage.setValue(effect.effect().process(enchantmentLevel, target.getRandom(), powerShotTicks))));
+        EnchantmentHelper.runIterationOnItem(weapon, (enchantHolder, enchantLevel) ->
+                enchantHolder.value().getEffects(ModRegistry.POWER_SHOT_DAMAGE).forEach(effect ->
+                        damage.setValue(effect.effect().process(enchantLevel, target.getRandom(), powerShotTicks))));
         return damage.floatValue();
     }
 
@@ -98,9 +98,9 @@ public class CommonHandler {
         if (powerShotTicks == 0) return 0;
 
         MutableFloat knockback = new MutableFloat(0);
-        EnchantmentHelper.runIterationOnItem(weapon, (enchantment, enchantmentLevel) ->
-                enchantment.value().getEffects(ModRegistry.POWER_SHOT_KNOCKBACK).forEach(effect ->
-                        knockback.setValue(effect.effect().process(enchantmentLevel, target.getRandom(), powerShotTicks))));
+        EnchantmentHelper.runIterationOnItem(weapon, (enchantHolder, enchantLevel) ->
+                enchantHolder.value().getEffects(ModRegistry.POWER_SHOT_KNOCKBACK).forEach(effect ->
+                        knockback.setValue(effect.effect().process(enchantLevel, target.getRandom(), powerShotTicks))));
         return knockback.floatValue();
     }
 

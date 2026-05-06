@@ -23,7 +23,7 @@ public record BarrierUpdateEffect(LevelBasedValue refreshDelay, LevelBasedValue 
     ).apply(instance, BarrierUpdateEffect::new));
 
     @Override
-    public void apply(ServerLevel serverLevel, int enchantLevel, EnchantedItemInUse item, Entity entity, Vec3 pos) {
+    public void apply(ServerLevel level, int enchantLevel, EnchantedItemInUse item, Entity entity, Vec3 pos) {
         ItemStack stack = item.itemStack();
         int tickCount = entity.tickCount;
         float maxUses = maxBarriers.calculate(enchantLevel);

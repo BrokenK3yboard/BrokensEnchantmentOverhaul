@@ -42,8 +42,8 @@ public abstract class LivingEntityMixin {
     public abstract AttributeInstance getAttribute(Holder<Attribute> attribute);
 
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;tickEffects(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;)V"))
-    private void runConditionalAttributeEffect(CallbackInfo ci, @Local(ordinal = 0) ServerLevel serverLevel) {
-        ConditionalAttributeEffect.updateAttribute(serverLevel ,(LivingEntity) (Object) this);
+    private void runConditionalAttributeEffect(CallbackInfo ci, @Local(ordinal = 0) ServerLevel level) {
+        ConditionalAttributeEffect.updateAttribute(level ,(LivingEntity) (Object) this);
     }
 
     @ModifyExpressionValue(method = "getDamageAfterMagicAbsorb", at = @At(value = "INVOKE",
