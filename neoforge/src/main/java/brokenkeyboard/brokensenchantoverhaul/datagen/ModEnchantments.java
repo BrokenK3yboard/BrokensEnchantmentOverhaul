@@ -246,6 +246,12 @@ public class ModEnchantments {
                                 AttributeModifier.Operation.ADD_VALUE))
                 .withEffect(ModRegistry.EXPLOSION_DEFUSE));
 
+        AnyOfCondition.Builder agilityCondition = AnyOfCondition.anyOf(
+                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
+                        EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(MobEffects.MOVEMENT_SPEED))),
+                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
+                        EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(MobEffects.JUMP))));
+
         register(context, ModRegistry.AGILITY, Enchantment.enchantment(
                 Enchantment.definition(boots, 2, 3,
                         Enchantment.dynamicCost(10, 10),
@@ -255,14 +261,36 @@ public class ModEnchantments {
                 .exclusiveWith(boots_exclusive)
                 .withEffect(EnchantmentEffectComponents.ATTRIBUTES,
                         new EnchantmentAttributeEffect(
+                                ModRegistry.location("enchantment.agility_speed"),
+                                Attributes.MOVEMENT_SPEED,
+                                LevelBasedValue.constant(0.05F),
+                                AttributeModifier.Operation.ADD_MULTIPLIED_BASE))
+                .withEffect(EnchantmentEffectComponents.ATTRIBUTES,
+                        new EnchantmentAttributeEffect(
                                 ModRegistry.location("enchantment.agility_step_height"),
                                 Attributes.STEP_HEIGHT,
                                 LevelBasedValue.constant(0.5F),
                                 AttributeModifier.Operation.ADD_VALUE))
+                .withEffect(EnchantmentEffectComponents.ATTRIBUTES,
+                        new EnchantmentAttributeEffect(
+                                ModRegistry.location("enchantment.jump_strength"),
+                                Attributes.JUMP_STRENGTH,
+                                LevelBasedValue.constant(0.3F),
+                                AttributeModifier.Operation.ADD_MULTIPLIED_BASE))
                 .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE,
-                        new AgilitySpeedEffect(
-                                LevelBasedValue.constant(0.04F),
-                                LevelBasedValue.perLevel(0.01F, 0.0025F))));
+                        new FixedAttributeEffect(
+                                ModRegistry.location("enchantment.agility_speed_active"),
+                                Attributes.MOVEMENT_SPEED,
+                                LevelBasedValue.perLevel(0.025F),
+                                AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                        agilityCondition)
+                .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE,
+                        new FixedAttributeEffect(
+                                ModRegistry.location("enchantment.agility_jump_strength_active"),
+                                Attributes.JUMP_STRENGTH,
+                                LevelBasedValue.perLevel(0.1F),
+                                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),
+                        agilityCondition));
 
         register(context, ModRegistry.FRICTION, Enchantment.enchantment(
                         Enchantment.definition(boots, 1, 3,
