@@ -18,13 +18,13 @@ public class ItemProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        tag(ModRegistry.MOLTEN_ENCHANTABLE)
-                .addOptionalTag(ItemTags.AXES);
         this.tag(ModRegistry.WEAPON_DURABILITY_BONUS)
                 .add(Items.BOW, Items.CROSSBOW, Items.MACE, Items.TRIDENT)
                 .addOptionalTag(ItemTags.SWORDS);
         this.tag(ModRegistry.TOOL_EFFICIENCY_BONUS)
                 .addOptionalTag(ItemTags.PICKAXES).addOptionalTag(ItemTags.AXES)
                 .addOptionalTag(ItemTags.SHOVELS).addOptionalTag(ItemTags.HOES);
+        this.tag(ModRegistry.EXCAVATE_ENCHANTABLE)
+                .addOptionalTag(ItemTags.PICKAXES).addOptionalTag(ItemTags.SHOVELS);
     }
 }

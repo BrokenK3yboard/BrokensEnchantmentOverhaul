@@ -47,9 +47,9 @@ public class ModRegistry {
     public static final Registry<MapCodec<? extends HookPullEffect>> HOOK_PULL_REGISTRY = Services.PLATFORM.createRegistry(HOOK_PULL_EFFECT);
 
     public static final TagKey<Block> TEMPERED_AFFECTS = TagKey.create(Registries.BLOCK, location("tempered_affects"));
-    public static final TagKey<Item> MOLTEN_ENCHANTABLE = TagKey.create(Registries.ITEM, location("enchantable/molten"));
     public static final TagKey<Item> WEAPON_DURABILITY_BONUS = TagKey.create(Registries.ITEM, location("weapon_durability_bonus"));
     public static final TagKey<Item> TOOL_EFFICIENCY_BONUS = TagKey.create(Registries.ITEM, location("tool_efficiency_bonus"));
+    public static final TagKey<Item> EXCAVATE_ENCHANTABLE = TagKey.create(Registries.ITEM, location("enchantable/excavate"));
     public static final TagKey<Enchantment> REMOVED_ENCHANTMENTS = TagKey.create(Registries.ENCHANTMENT, location("removed_enchantments"));
 
     public static final TagKey<Enchantment> LEGGINGS_EXCLUSIVE = TagKey.create(Registries.ENCHANTMENT, location("exclusive_set/leggings"));
@@ -96,7 +96,6 @@ public class ModRegistry {
     public static final ResourceKey<Enchantment> TEMPERED = ResourceKey.create(Registries.ENCHANTMENT, location("tempered"));
     public static final ResourceKey<Enchantment> EXCAVATE = ResourceKey.create(Registries.ENCHANTMENT, location("excavate"));
     public static final ResourceKey<Enchantment> HARVEST = ResourceKey.create(Registries.ENCHANTMENT, location("harvest"));
-    public static final ResourceKey<Enchantment> MOLTEN = ResourceKey.create(Registries.ENCHANTMENT, location("molten"));
 
     public static final ResourceKey<Enchantment> POWER_SHOT = ResourceKey.create(Registries.ENCHANTMENT, location("power_shot"));
     public static final ResourceKey<Enchantment> BARRAGE = ResourceKey.create(Registries.ENCHANTMENT, location("barrage"));

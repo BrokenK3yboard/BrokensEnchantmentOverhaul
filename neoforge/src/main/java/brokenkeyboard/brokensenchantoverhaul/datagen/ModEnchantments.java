@@ -43,7 +43,6 @@ public class ModEnchantments {
         HolderSet.Named<Enchantment> trident_exclusive = context.lookup(Registries.ENCHANTMENT).getOrThrow(EnchantmentTags.RIPTIDE_EXCLUSIVE);
         HolderSet.Named<Enchantment> leggings_exclusive = context.lookup(Registries.ENCHANTMENT).getOrThrow(ModRegistry.LEGGINGS_EXCLUSIVE);
         HolderSet.Named<Enchantment> boots_exclusive = context.lookup(Registries.ENCHANTMENT).getOrThrow(EnchantmentTags.BOOTS_EXCLUSIVE);
-        HolderSet.Named<Item> molten = context.lookup(Registries.ITEM).getOrThrow(ModRegistry.MOLTEN_ENCHANTABLE);
         HolderSet.Named<Item> helmet = context.lookup(Registries.ITEM).getOrThrow(ItemTags.HEAD_ARMOR_ENCHANTABLE);
         HolderSet.Named<Item> chestplate = context.lookup(Registries.ITEM).getOrThrow(ItemTags.CHEST_ARMOR_ENCHANTABLE);
         HolderSet.Named<Item> leggings = context.lookup(Registries.ITEM).getOrThrow(ItemTags.LEG_ARMOR_ENCHANTABLE);
@@ -56,7 +55,8 @@ public class ModEnchantments {
         HolderSet.Named<Item> fishing = context.lookup(Registries.ITEM).getOrThrow(ItemTags.FISHING_ENCHANTABLE);
         HolderSet.Named<Item> mace = context.lookup(Registries.ITEM).getOrThrow(ItemTags.MACE_ENCHANTABLE);
         HolderSet.Named<Item> trident = context.lookup(Registries.ITEM).getOrThrow(ItemTags.TRIDENT_ENCHANTABLE);
-        HolderSet.Named<Item> fire_aspect = context.lookup(Registries.ITEM).getOrThrow(ItemTags.FIRE_ASPECT_ENCHANTABLE);
+        HolderSet.Named<Item> sharp_weapon = context.lookup(Registries.ITEM).getOrThrow(ItemTags.SHARP_WEAPON_ENCHANTABLE);
+        HolderSet.Named<Item> excavate = context.lookup(Registries.ITEM).getOrThrow(ModRegistry.EXCAVATE_ENCHANTABLE);
 
         register(context, ModRegistry.FILTERED, Enchantment.enchantment(
                 Enchantment.definition(helmet, 2, 3,
@@ -301,11 +301,9 @@ public class ModEnchantments {
                 .withEffect(EnchantmentEffectComponents.TICK,
                         new WallSlideEffect(LevelBasedValue.perLevel(60, 40))));
 
-        register(context, ModRegistry.MOLTEN, createSingleLevelEnch(molten, 8, mining_exclusive).exclusiveWith(mining_exclusive));
-
         register(context, ModRegistry.TEMPERED, createSingleLevelEnch(tools, 8, mining_exclusive).exclusiveWith(mining_exclusive));
 
-        register(context, ModRegistry.EXCAVATE, createSingleLevelEnch(tools, 8, mining_exclusive).exclusiveWith(mining_exclusive)
+        register(context, ModRegistry.EXCAVATE, createSingleLevelEnch(excavate, 8, mining_exclusive).exclusiveWith(mining_exclusive)
                 .withEffect(ModRegistry.AREA_MINING));
 
         register(context, ModRegistry.HARVEST, createSingleLevelEnch(hoe, 8, mining_exclusive).exclusiveWith(mining_exclusive));
@@ -486,7 +484,7 @@ public class ModEnchantments {
                                         EntityPredicate.Builder.entity().subPredicate(HasNegativeEffectPredicate.hasNegativeEffect())))));
 
         register(context, Enchantments.FIRE_ASPECT, Enchantment.enchantment(
-                Enchantment.definition(fire_aspect, sword, 2, 2,
+                Enchantment.definition(sharp_weapon, 2, 2,
                         Enchantment.dynamicCost(10, 20),
                         Enchantment.dynamicCost(60, 20),
                         4,

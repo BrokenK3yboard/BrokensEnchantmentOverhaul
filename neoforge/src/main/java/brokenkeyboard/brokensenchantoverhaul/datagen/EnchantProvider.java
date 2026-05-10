@@ -34,13 +34,11 @@ public class EnchantProvider extends EnchantmentTagsProvider {
         tag(EnchantmentTags.ARMOR_EXCLUSIVE)
                 .add(ModRegistry.VITALITY).add(ModRegistry.BARRIER).add(ModRegistry.ADAPTIVE).add(Enchantments.THORNS);
         tag(EnchantmentTags.MINING_EXCLUSIVE)
-                .add(ModRegistry.MOLTEN).add(ModRegistry.EXCAVATE);
+                .add(ModRegistry.EXCAVATE);
         tag(ModRegistry.LEGGINGS_EXCLUSIVE)
                 .add(ModRegistry.RUSH).add(ModRegistry.SCAVENGER).add(ModRegistry.STABILIZE);
         tag(ModRegistry.FISHING_EXCLUSIVE)
                 .add(ModRegistry.GRAPPLE).add(ModRegistry.DEEP_FRYER);
-        tag(EnchantmentTags.SMELTS_LOOT)
-                .add(ModRegistry.MOLTEN);
 
         tag(ModRegistry.REMOVED_ENCHANTMENTS)
                 .add(Enchantments.PROTECTION).add(Enchantments.FIRE_PROTECTION).add(Enchantments.BLAST_PROTECTION)

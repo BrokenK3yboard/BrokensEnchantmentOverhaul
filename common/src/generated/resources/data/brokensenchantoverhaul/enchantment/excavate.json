@@ -19,6 +19,6 @@
   "slots": [
     "mainhand"
   ],
-  "supported_items": "#minecraft:enchantable/mining_loot",
+  "supported_items": "#brokensenchantoverhaul:enchantable/excavate",
   "weight": 1
 }
