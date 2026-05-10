@@ -57,7 +57,7 @@
   "enchantment.minecraft.fire_aspect.desc": "Attacks ignite targets, with consecutive hits increasing burn damage.",
   "enchantment.minecraft.impaling.desc": "Attacks deal increased damage to targets in water or rain.",
   "enchantment.minecraft.channeling.desc": "Thrown tridents summon lightning on impact if the sky is visible.",
-  "enchantment.minecraft.breach.desc": "Smash attacks boost armor piercing and speed of the next few attacks.",
+  "enchantment.minecraft.breach.desc": "Smash attacks temporarily boost armor piercing and attack speed.",
   "enchantment.minecraft.flame.desc": "Arrows set targets on fire, with consecutive hits increasing burn damage.",
   "enchantment.minecraft.luck_of_the_sea.desc": "Increases chance of treasure drops and fishing speed."
 }

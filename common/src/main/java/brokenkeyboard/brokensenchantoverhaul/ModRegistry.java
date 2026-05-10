@@ -55,8 +55,8 @@ public class ModRegistry {
     public static final TagKey<Enchantment> LEGGINGS_EXCLUSIVE = TagKey.create(Registries.ENCHANTMENT, location("exclusive_set/leggings"));
     public static final TagKey<Enchantment> FISHING_EXCLUSIVE = TagKey.create(Registries.ENCHANTMENT, location("exclusive_set/fishing"));
 
-    public static final Holder<MobEffect> BREACH_EFFECT = Services.PLATFORM.createEffectHolder("breach", new EnchantmentMobEffect(MobEffectCategory.NEUTRAL, 3402751));
-    public static final Holder<MobEffect> SCAVENGER_EFFECT = Services.PLATFORM.createEffectHolder("scavenger", new EnchantmentMobEffect(MobEffectCategory.NEUTRAL, 3402751));
+    public static final Holder<MobEffect> BREACH_EFFECT = Services.PLATFORM.createEffectHolder("breach", new EnchantmentMobEffect(8028612));
+    public static final Holder<MobEffect> SCAVENGER_EFFECT = Services.PLATFORM.createEffectHolder("scavenger", new EnchantmentMobEffect(5525848));
 
     public static final Holder<Attribute> HEALING_EFFICIENCY = Services.PLATFORM.createAttribute("generic.healing_efficiency",
             new RangedAttribute("attribute.name.generic.healing_efficiency", 1, 0, 1024)
@@ -187,8 +187,8 @@ public class ModRegistry {
 
     private static class EnchantmentMobEffect extends MobEffect {
 
-        protected EnchantmentMobEffect(MobEffectCategory category, int color) {
-            super(category, color);
+        protected EnchantmentMobEffect(int color) {
+            super(MobEffectCategory.NEUTRAL, color);
         }
     }
 
