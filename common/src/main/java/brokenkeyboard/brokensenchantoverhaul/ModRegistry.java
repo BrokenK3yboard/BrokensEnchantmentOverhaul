@@ -21,15 +21,20 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -54,9 +59,6 @@ public class ModRegistry {
 
     public static final TagKey<Enchantment> LEGGINGS_EXCLUSIVE = TagKey.create(Registries.ENCHANTMENT, location("exclusive_set/leggings"));
     public static final TagKey<Enchantment> FISHING_EXCLUSIVE = TagKey.create(Registries.ENCHANTMENT, location("exclusive_set/fishing"));
-
-    public static final Holder<MobEffect> BREACH_EFFECT = Services.PLATFORM.createEffectHolder("breach", new EnchantmentMobEffect(8028612));
-    public static final Holder<MobEffect> SCAVENGER_EFFECT = Services.PLATFORM.createEffectHolder("scavenger", new EnchantmentMobEffect(5525848));
 
     public static final Holder<Attribute> HEALING_EFFICIENCY = Services.PLATFORM.createAttribute("generic.healing_efficiency",
             new RangedAttribute("attribute.name.generic.healing_efficiency", 1, 0, 1024)
@@ -105,6 +107,9 @@ public class ModRegistry {
     public static final ResourceKey<Enchantment> DEEP_FRYER = ResourceKey.create(Registries.ENCHANTMENT, location("deep_fryer"));
 
     public static final ResourceKey<Enchantment> BLACKSMITH = ResourceKey.create(Registries.ENCHANTMENT, location("blacksmith"));
+
+    public static final Holder<MobEffect> BREACH_EFFECT = Services.PLATFORM.createEffectHolder("breach", new EnchantmentMobEffect(Enchantments.BREACH, 8028612));
+    public static final Holder<MobEffect> SCAVENGER_EFFECT = Services.PLATFORM.createEffectHolder("scavenger", new EnchantmentMobEffect(SCAVENGER, 5525848));
 
     public static final Map<ResourceKey<Enchantment>, Integer> MAX_LEVELS = new Object2IntOpenHashMap<>();
 
@@ -186,8 +191,22 @@ public class ModRegistry {
 
     private static class EnchantmentMobEffect extends MobEffect {
 
-        protected EnchantmentMobEffect(int color) {
+        private final ResourceKey<Enchantment> ENCHANTMENT;
+
+        protected EnchantmentMobEffect(ResourceKey<Enchantment> enchantment, int color) {
             super(MobEffectCategory.NEUTRAL, color);
+            this.ENCHANTMENT = enchantment;
+        }
+
+        @Override
+        public boolean applyEffectTick(@NotNull LivingEntity entity, int amplifier) {
+            Level level = entity.level();
+            return EnchantmentHelper.getEnchantmentLevel(level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(ENCHANTMENT), entity) > 0;
+        }
+
+        @Override
+        public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+            return true;
         }
     }
 
