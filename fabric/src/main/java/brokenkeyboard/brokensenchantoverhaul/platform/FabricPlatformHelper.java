@@ -119,6 +119,16 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    public void setBarrierAmount(LivingEntity entity, int amount) {
+        entity.setAttached(EnchantOverhaul.BARRIER_AMOUNT, amount);
+    }
+
+    @Override
+    public int getBarrierAmount(LivingEntity entity) {
+        return Optional.ofNullable(entity.getAttached(EnchantOverhaul.BARRIER_AMOUNT)).orElse(0);
+    }
+
+    @Override
     public void markScavengerLoot(ItemEntity entity, Entity breaker) {
         entity.setAttached(EnchantOverhaul.SCAVENGER_LOOT, breaker.getName().getString());
     }

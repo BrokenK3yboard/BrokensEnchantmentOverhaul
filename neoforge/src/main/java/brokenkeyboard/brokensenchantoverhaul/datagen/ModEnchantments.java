@@ -154,15 +154,12 @@ public class ModEnchantments {
                         Enchantment.dynamicCost(25, 10),
                         2,
                         EquipmentSlotGroup.ARMOR))
-                .withEffect(ModRegistry.BARRIER_EFFECT,
-                        new BarrierEffect(),
-                        DamageSourceCondition.hasDamageSource(
-                                DamageSourcePredicate.Builder.damageType().tag(TagPredicate.isNot(DamageTypeTags.BYPASSES_INVULNERABILITY))))
-                .withEffect(EnchantmentEffectComponents.TICK,
-                        new BarrierUpdateEffect(
-                                LevelBasedValue.constant(80),
-                                LevelBasedValue.constant(1),
-                                LevelBasedValue.constant(4))));
+                .withEffect(EnchantmentEffectComponents.ATTRIBUTES,
+                        new EnchantmentAttributeEffect(
+                                ModRegistry.location("enchantment.barrier"),
+                                ModRegistry.BARRIER_STRENGTH,
+                                LevelBasedValue.perLevel(2),
+                                AttributeModifier.Operation.ADD_VALUE)));
 
         register(context, Enchantments.THORNS, Enchantment.enchantment(
                 Enchantment.definition(chestplate, 1, 3,

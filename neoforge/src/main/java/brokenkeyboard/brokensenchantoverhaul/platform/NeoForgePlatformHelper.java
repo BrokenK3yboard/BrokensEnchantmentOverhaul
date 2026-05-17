@@ -126,6 +126,16 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    public void setBarrierAmount(LivingEntity entity, int amount) {
+        entity.setData(EnchantOverhaul.BARRIER_AMOUNT, amount);
+    }
+
+    @Override
+    public int getBarrierAmount(LivingEntity entity) {
+        return Optional.of(entity.getData(EnchantOverhaul.BARRIER_AMOUNT)).orElse(0);
+    }
+
+    @Override
     public void markScavengerLoot(ItemEntity entity, Entity breaker) {
         entity.setData(EnchantOverhaul.SCAVENGER_LOOT, breaker.getStringUUID());
     }

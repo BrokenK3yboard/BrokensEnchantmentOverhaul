@@ -1,7 +1,6 @@
 package brokenkeyboard.brokensenchantoverhaul.render;
 
-import brokenkeyboard.brokensenchantoverhaul.ModRegistry;
-import brokenkeyboard.brokensenchantoverhaul.component.Barrier;
+import brokenkeyboard.brokensenchantoverhaul.platform.Services;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -15,9 +14,6 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.Optional;
 
 public class BarrierLayer<T extends LivingEntity, M extends HumanoidModel<T>> extends RenderLayer<T, M> {
 
@@ -33,7 +29,7 @@ public class BarrierLayer<T extends LivingEntity, M extends HumanoidModel<T>> ex
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float partialAgeTicks, float netHeadYaw, float headPitch) {
-        if (hasBarrier(entity)) {
+        if (Services.PLATFORM.getBarrierAmount(entity) > 0) {
             float tick = (float) entity.tickCount + partialTicks;
             EntityModel<T> model = MODEL;
             model.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
@@ -49,13 +45,5 @@ public class BarrierLayer<T extends LivingEntity, M extends HumanoidModel<T>> ex
             poseStack.popPose();
             this.MODEL.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, -8355712);
         }
-    }
-
-    public static boolean hasBarrier(LivingEntity entity) {
-        for (ItemStack stack : entity.getArmorSlots()) {
-            Optional<Barrier> barrier = Optional.ofNullable(stack.get(ModRegistry.BARRIER_INSTANCE));
-            if (barrier.isPresent() && barrier.get().charges() > 0) return true;
-        }
-        return false;
     }
 }

@@ -66,5 +66,7 @@ public interface IPlatformHelper {
     int getPowerShotTicks(AbstractArrow arrow);
     void setBurnStacks(Entity entity, int stacks);
     int getBurnStacks(Entity entity);
+    void setBarrierAmount(LivingEntity entity, int amount);
+    int getBarrierAmount(LivingEntity entity);
     void markScavengerLoot(ItemEntity entity, Entity breaker);
 }

@@ -84,6 +84,7 @@ public class EnchantOverhaul {
     public static final Supplier<AttachmentType<Integer>> WALL_SLIDE_TICKS = ATTACHMENT_TYPES.register("wall_slide_ticks", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Integer>> POWER_SHOT_TICKS = ATTACHMENT_TYPES.register("power_shot_ticks", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Integer>> BURN_STACKS = ATTACHMENT_TYPES.register("burn_stacks", () -> AttachmentType.builder(() -> 0).serialize(ExtraCodecs.NON_NEGATIVE_INT).build());
+    public static final Supplier<AttachmentType<Integer>> BARRIER_AMOUNT = ATTACHMENT_TYPES.register("barrier_amount", () -> AttachmentType.builder(() -> 0).serialize(ExtraCodecs.NON_NEGATIVE_INT).build());
 
     public EnchantOverhaul(ModContainer container, IEventBus bus) {
         ModRegistry.bootstrap();
@@ -151,7 +152,7 @@ public class EnchantOverhaul {
 
         @SubscribeEvent
         public static void preHurtEvent(LivingDamageEvent.Pre event) {
-            event.setNewDamage(BarrierEffect.modifyDamage(event.getEntity(), event.getSource(), event.getNewDamage()));
+            event.setNewDamage(CommonHandler.handleBarrierDamage(event.getEntity(), event.getOriginalDamage()));
         }
 
         @SubscribeEvent
@@ -211,6 +212,10 @@ public class EnchantOverhaul {
 
                 if (!event.has(livingEntity, ModRegistry.MONSTER_AWARENESS_RANGE)) {
                     event.add(livingEntity, ModRegistry.MONSTER_AWARENESS_RANGE);
+                }
+
+                if (!event.has(livingEntity, BARRIER_STRENGTH)) {
+                    event.add(livingEntity, BARRIER_STRENGTH);
                 }
             });
 

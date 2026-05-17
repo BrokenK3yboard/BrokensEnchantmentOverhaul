@@ -2,7 +2,6 @@ package brokenkeyboard.brokensenchantoverhaul.mixin;
 
 import brokenkeyboard.brokensenchantoverhaul.ModRegistry;
 import brokenkeyboard.brokensenchantoverhaul.enchantment.AdaptiveEffect;
-import brokenkeyboard.brokensenchantoverhaul.enchantment.BarrierEffect;
 import brokenkeyboard.brokensenchantoverhaul.enchantment.ConditionalAttributeEffect;
 import brokenkeyboard.brokensenchantoverhaul.enchantment.ConditionalProtectionEffect;
 import brokenkeyboard.brokensenchantoverhaul.platform.Services;
@@ -12,6 +11,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.CombatTracker;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -41,9 +41,42 @@ public abstract class LivingEntityMixin {
     @Nullable
     public abstract AttributeInstance getAttribute(Holder<Attribute> attribute);
 
+    @Shadow public abstract CombatTracker getCombatTracker();
+
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;tickEffects(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;)V"))
     private void runConditionalAttributeEffect(CallbackInfo ci, @Local(ordinal = 0) ServerLevel level) {
         ConditionalAttributeEffect.updateAttribute(level ,(LivingEntity) (Object) this);
+    }
+
+    @Inject(method = "aiStep", at = @At(value = "TAIL"))
+    private void updateBarrier(CallbackInfo ci) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+        int barrierStrength = (int) entity.getAttributeValue(ModRegistry.BARRIER_STRENGTH);
+
+        if (barrierStrength > 0) {
+            int timeSinceDamage = entity.tickCount - ((CombatTrackerAccessor) getCombatTracker()).getLastDamageTime();
+
+            if (timeSinceDamage > 0 && timeSinceDamage % 100 == 0) {
+                int barrierAmount = Math.min(Services.PLATFORM.getBarrierAmount(entity) + 1, barrierStrength);
+                Services.PLATFORM.setBarrierAmount(entity, barrierAmount);
+
+                if (Services.PLATFORM.getBarrierAmount(entity) > 0 && !entity.hasEffect(ModRegistry.BARRIER_EFFECT)) {
+                    entity.addEffect(new MobEffectInstance(ModRegistry.BARRIER_EFFECT, -1, 0));
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    @Inject(method = "onAttributeUpdated", at = @At("TAIL"))
+    private void updateBarrierStrengthAttribute(Holder<Attribute> attribute, CallbackInfo ci) {
+        if (attribute.is(ModRegistry.BARRIER_STRENGTH)) {
+            LivingEntity entity = (LivingEntity) (Object) this;
+
+            if (entity.getAttributeValue(ModRegistry.BARRIER_STRENGTH) < Services.PLATFORM.getBarrierAmount(entity)) {
+                Services.PLATFORM.setBarrierAmount(entity, (int) entity.getAttributeValue(ModRegistry.BARRIER_STRENGTH));
+            }
+        }
     }
 
     @ModifyExpressionValue(method = "getDamageAfterMagicAbsorb", at = @At(value = "INVOKE",
@@ -56,7 +89,6 @@ public abstract class LivingEntityMixin {
     @Inject(method = "onEquipItem", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/item/Equipable;get(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/item/Equipable;"))
     private void removeEffect(EquipmentSlot slot, ItemStack oldItem, ItemStack newItem, CallbackInfo ci) {
-        BarrierEffect.equipmentChanged(newItem);
         AdaptiveEffect.equipmentChanged(newItem);
     }
 

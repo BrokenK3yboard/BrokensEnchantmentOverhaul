@@ -24,6 +24,7 @@ public class EnchantOverhaul implements ModInitializer {
     public static final AttachmentType<Integer> WALL_SLIDE_TICKS = AttachmentRegistry.createPersistent(ModRegistry.location("wall_side_ticks"), Codec.INT);
     public static final AttachmentType<Integer> POWER_SHOT_TICKS = AttachmentRegistry.createPersistent(ModRegistry.location("power_shot_ticks"), Codec.INT);
     public static final AttachmentType<Integer> BURN_STACKS = AttachmentRegistry.createPersistent(ModRegistry.location("burn_stacks"), ExtraCodecs.NON_NEGATIVE_INT);
+    public static final AttachmentType<Integer> BARRIER_AMOUNT = AttachmentRegistry.createPersistent(ModRegistry.location("barrier_amount"), ExtraCodecs.NON_NEGATIVE_INT);
 
     @Override
     public void onInitialize() {

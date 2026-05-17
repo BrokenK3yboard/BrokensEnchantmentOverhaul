@@ -7,6 +7,7 @@
   "mixins": [
     "AbstractArrowMixin",
     "AnvilMenuMixin",
+    "CombatTrackerAccessor",
     "ConduitBlockEntityMixin",
     "CrossbowItemAccessor",
     "EnchantBookForEmeraldsMixin",
@@ -20,7 +21,6 @@
     "FishingHookMixin",
     "ItemCombinerMenuAccessor",
     "ItemMixin",
-    "ItemStackAccessor",
     "LivingEntityMixin",
     "PlayerMixin",
     "ProjectileWeaponItemMixin",

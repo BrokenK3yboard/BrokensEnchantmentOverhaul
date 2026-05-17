@@ -1,7 +1,8 @@
 package brokenkeyboard.brokensenchantoverhaul;
 
-import brokenkeyboard.brokensenchantoverhaul.component.Barrier;
 import brokenkeyboard.brokensenchantoverhaul.component.DamageTypeResist;
+import brokenkeyboard.brokensenchantoverhaul.effect.BarrierMobEffect;
+import brokenkeyboard.brokensenchantoverhaul.effect.EnchantmentMobEffect;
 import brokenkeyboard.brokensenchantoverhaul.enchantment.*;
 import brokenkeyboard.brokensenchantoverhaul.platform.Services;
 import brokenkeyboard.brokensenchantoverhaul.predicate.EntityKilledPredicate;
@@ -20,21 +21,16 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -80,6 +76,10 @@ public class ModRegistry {
             new RangedAttribute("attribute.name.generic.monster_awareness_range", 1, 0, 1024)
                     .setSentiment(Attribute.Sentiment.NEGATIVE).setSyncable(true));
 
+    public static final Holder<Attribute> BARRIER_STRENGTH = Services.PLATFORM.createAttribute("generic.barrier_strength",
+            new RangedAttribute("attribute.name.generic.barrier_strength", 0, 0, 2048)
+                    .setSentiment(Attribute.Sentiment.POSITIVE).setSyncable(true));
+
     public static final ResourceKey<Enchantment> FILTERED = ResourceKey.create(Registries.ENCHANTMENT, location("filtered"));
     public static final ResourceKey<Enchantment> INSIGHT = ResourceKey.create(Registries.ENCHANTMENT, location("insight"));
     public static final ResourceKey<Enchantment> DEXTERITY = ResourceKey.create(Registries.ENCHANTMENT, location("dexterity"));
@@ -110,14 +110,11 @@ public class ModRegistry {
 
     public static final Holder<MobEffect> BREACH_EFFECT = Services.PLATFORM.createEffectHolder("breach", new EnchantmentMobEffect(Enchantments.BREACH, 8028612));
     public static final Holder<MobEffect> SCAVENGER_EFFECT = Services.PLATFORM.createEffectHolder("scavenger", new EnchantmentMobEffect(SCAVENGER, 5525848));
+    public static final Holder<MobEffect> BARRIER_EFFECT = Services.PLATFORM.createEffectHolder("barrier", new BarrierMobEffect(BARRIER, 16775869));
 
     public static final Map<ResourceKey<Enchantment>, Integer> MAX_LEVELS = new Object2IntOpenHashMap<>();
 
     public static boolean updateMaxLevels = true;
-
-    public static final DataComponentType<Barrier> BARRIER_INSTANCE = Services.PLATFORM
-            .createDataComponent("barrier_instance", builder ->
-                    builder.persistent(Barrier.CODEC).networkSynchronized(Barrier.STREAM_CODEC));
 
     public static final DataComponentType<DamageTypeResist> DAMAGETYPE_RESIST = Services.PLATFORM
             .createDataComponent("damagetype_resist", builder ->
@@ -154,10 +151,6 @@ public class ModRegistry {
             .createEnchantmentComponent("hook_pull_effect", builder ->
                     builder.persistent(ConditionalEffect.codec(HookPullEffect.CODEC, LootContextParamSets.ENCHANTED_ENTITY).listOf()));
 
-    public static final DataComponentType<List<ConditionalEffect<BarrierEffect>>> BARRIER_EFFECT = Services.PLATFORM
-            .createEnchantmentComponent("barrier", builder ->
-                    builder.persistent(ConditionalEffect.codec(BarrierEffect.CODEC.codec(), LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
-
     public static final DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>> POWER_SHOT_DAMAGE = Services.PLATFORM
             .createEnchantmentComponent("power_shot_damage", builder ->
                     builder.persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
@@ -175,7 +168,6 @@ public class ModRegistry {
         Services.PLATFORM.createEntityEffectComponent("burn_stack", BurnStackEffect.CODEC);
         Services.PLATFORM.createEntityEffectComponent("volley", VolleyEffect.CODEC);
         Services.PLATFORM.createEntityEffectComponent("scavenger_magnet", ScavengerMagnetEffect.CODEC);
-        Services.PLATFORM.createEntityEffectComponent("barrier_update", BarrierUpdateEffect.CODEC);
         Services.PLATFORM.createEntityEffectComponent("wall_slide", WallSlideEffect.CODEC);
         Services.PLATFORM.createEntityEffectComponent("repair_equipped_item", RepairEquippedItem.CODEC);
 
@@ -187,27 +179,6 @@ public class ModRegistry {
 
     public static ResourceLocation location(String name) {
         return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name);
-    }
-
-    private static class EnchantmentMobEffect extends MobEffect {
-
-        private final ResourceKey<Enchantment> ENCHANTMENT;
-
-        protected EnchantmentMobEffect(ResourceKey<Enchantment> enchantment, int color) {
-            super(MobEffectCategory.NEUTRAL, color);
-            this.ENCHANTMENT = enchantment;
-        }
-
-        @Override
-        public boolean applyEffectTick(@NotNull LivingEntity entity, int amplifier) {
-            Level level = entity.level();
-            return EnchantmentHelper.getEnchantmentLevel(level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(ENCHANTMENT), entity) > 0;
-        }
-
-        @Override
-        public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
-            return true;
-        }
     }
 
     public static void bootstrap() {}

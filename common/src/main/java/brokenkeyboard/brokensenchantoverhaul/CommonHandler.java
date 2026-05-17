@@ -46,6 +46,16 @@ public class CommonHandler {
                 }));
     }
 
+    public static float handleBarrierDamage(LivingEntity entity, float damage) {
+        int barrierAmount = Services.PLATFORM.getBarrierAmount(entity);
+
+        if (barrierAmount > 0) {
+            Services.PLATFORM.setBarrierAmount(entity, barrierAmount - 1);
+            return 1;
+        }
+        return damage;
+    }
+
     public static void handleWallJump(ServerLevel level, ServerPlayer player) {
         Holder<Enchantment> holder = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ModRegistry.FRICTION);
         if (WallSlideEffect.shouldSlide(level, player) && EnchantmentHelper.getEnchantmentLevel(holder, player) > 0) {

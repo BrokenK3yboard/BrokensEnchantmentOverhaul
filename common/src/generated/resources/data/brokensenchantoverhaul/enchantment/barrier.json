@@ -4,30 +4,16 @@
     "translate": "enchantment.brokensenchantoverhaul.barrier"
   },
   "effects": {
-    "brokensenchantoverhaul:barrier": [
+    "minecraft:attributes": [
       {
-        "effect": {},
-        "requirements": {
-          "condition": "minecraft:damage_source_properties",
-          "predicate": {
-            "tags": [
-              {
-                "expected": false,
-                "id": "minecraft:bypasses_invulnerability"
-              }
-            ]
-          }
-        }
-      }
-    ],
-    "minecraft:tick": [
-      {
-        "effect": {
-          "type": "brokensenchantoverhaul:barrier_update",
-          "maxBarriers": 4.0,
-          "refreshAmount": 1.0,
-          "refreshDelay": 80.0
-        }
+        "amount": {
+          "type": "minecraft:linear",
+          "base": 2.0,
+          "per_level_above_first": 2.0
+        },
+        "attribute": "brokensenchantoverhaul:generic.barrier_strength",
+        "id": "brokensenchantoverhaul:enchantment.barrier",
+        "operation": "add_value"
       }
     ]
   },
