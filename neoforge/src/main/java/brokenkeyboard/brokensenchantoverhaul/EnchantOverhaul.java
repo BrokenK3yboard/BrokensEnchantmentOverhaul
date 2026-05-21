@@ -1,67 +1,28 @@
 package brokenkeyboard.brokensenchantoverhaul;
 
 import brokenkeyboard.brokensenchantoverhaul.enchantment.*;
-import brokenkeyboard.brokensenchantoverhaul.network.EnchantmentSyncPayload;
-import brokenkeyboard.brokensenchantoverhaul.network.WallJumpPayload;
-import brokenkeyboard.brokensenchantoverhaul.render.BarrierLayer;
-import brokenkeyboard.brokensenchantoverhaul.render.RenderHelper;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.advancements.critereon.EntitySubPredicate;
 import net.minecraft.advancements.critereon.ItemSubPredicate;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentLocationBasedEffect;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.asm.enumextension.EnumProxy;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RegisterRenderBuffersEvent;
-import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
-import net.neoforged.neoforge.event.entity.living.*;
-import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.entity.player.SweepAttackEvent;
-import net.neoforged.neoforge.event.level.BlockDropsEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
-import java.util.Map;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static brokenkeyboard.brokensenchantoverhaul.Constants.MOD_ID;
@@ -85,6 +46,7 @@ public class EnchantOverhaul {
     public static final Supplier<AttachmentType<Integer>> POWER_SHOT_TICKS = ATTACHMENT_TYPES.register("power_shot_ticks", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Integer>> BURN_STACKS = ATTACHMENT_TYPES.register("burn_stacks", () -> AttachmentType.builder(() -> 0).serialize(ExtraCodecs.NON_NEGATIVE_INT).build());
     public static final Supplier<AttachmentType<Integer>> BARRIER_AMOUNT = ATTACHMENT_TYPES.register("barrier_amount", () -> AttachmentType.builder(() -> 0).serialize(ExtraCodecs.NON_NEGATIVE_INT).build());
+    public static final Supplier<AttachmentType<Integer>> BARRIER_TIMESTAMP = ATTACHMENT_TYPES.register("barrier_timestamp", () -> AttachmentType.builder(() -> 0).build());
 
     public EnchantOverhaul(ModContainer container, IEventBus bus) {
         ModRegistry.bootstrap();
@@ -115,164 +77,14 @@ public class EnchantOverhaul {
         CommonClass.init();
     }
 
-    @EventBusSubscriber(modid = MOD_ID)
-    public static class Events {
-
-        @SubscribeEvent
-        public static void modifyDetection(LivingEvent.LivingVisibilityEvent event) {
-            Optional<Double> attribute = Optional.of(event.getEntity().getAttributeValue(ModRegistry.MONSTER_AWARENESS_RANGE));
-            attribute.ifPresent(event::modifyVisibility);
-        }
-
-        @SubscribeEvent
-        public static void onBlockDrops(BlockDropsEvent event) {
-            MiningHandler.handleBlockDrops(event.getDrops(), event.getLevel(), event.getState(), event.getPos(), event.getBreaker(), event.getTool());
-        }
-
-        @SubscribeEvent
-        public static void onEntityDrops(LivingDropsEvent event) {
-            if (event.getSource().getEntity() instanceof LivingEntity entity &&
-                    EnchantmentHelper.getEnchantmentLevel(entity.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(ModRegistry.SCAVENGER), entity) > 0) {
-                event.getDrops().forEach(itemEntity -> itemEntity.setData(SCAVENGER_LOOT, entity.getStringUUID()));
-            }
-        }
-
-        @SubscribeEvent
-        public static void itemPickupEvent(ItemEntityPickupEvent.Post event) {
-            Player player = event.getPlayer();
-            if (player.level() instanceof ServerLevel level && Optional.of(event.getItemEntity().getData(SCAVENGER_LOOT)).get().equals(player.getStringUUID())) {
-                CommonHandler.postLootPickup(level, player);
-            }
-        }
-
-        @SubscribeEvent
-        public static void equipmentChanged(LivingEquipmentChangeEvent event) {
-            ConditionalAttributeEffect.removeAttribute(event.getFrom(), event.getEntity(), event.getSlot());
-        }
-
-        @SubscribeEvent
-        public static void preHurtEvent(LivingDamageEvent.Pre event) {
-            event.setNewDamage(CommonHandler.handleBarrierDamage(event.getEntity(), event.getOriginalDamage()));
-        }
-
-        @SubscribeEvent
-        public static void entityUseEvent(LivingEntityUseItemEvent.Tick event) {
-            ItemStack useItem = event.getItem();
-            if (useItem.getItem() instanceof BowItem && EnchantmentHelper.getTagEnchantmentLevel(event.getEntity()
-                    .level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ModRegistry.BARRAGE), useItem) > 0) {
-                event.setDuration(event.getDuration() - 1);
-            }
-        }
-
-        @SubscribeEvent
-        public static void serverStart(ServerStartingEvent event) {
-            event.getServer().registryAccess().registryOrThrow(Registries.ENCHANTMENT).entrySet().forEach(enchantment ->
-                    ModRegistry.MAX_LEVELS.put(enchantment.getKey(), enchantment.getValue().getMaxLevel()));
-            ModRegistry.updateMaxLevels = false;
-        }
-
-        @SubscribeEvent
-        public static void isSweeping(SweepAttackEvent event) {
-            event.setSweeping(EnchantmentHelper.has(event.getEntity().getWeaponItem(), ModRegistry.SWEEPING_DAMAGE_BONUS));
-        }
-
-        @SubscribeEvent
-        public static void handleExcavatorEvent(BlockEvent.BreakEvent event) {
-            MiningHandler.handleExcavator(event.getPlayer(), event.getState(), event.getPlayer().level(), event.getPos());
-        }
-
-        @SubscribeEvent
-        public static void handleBreakSpeedEvent(PlayerEvent.BreakSpeed event) {
-            event.setNewSpeed(event.getOriginalSpeed() + MiningHandler.modifyMiningEfficiency(event.getEntity().getMainHandItem()));
-        }
-
-        @SubscribeEvent
-        public static void playerJoined(PlayerEvent.PlayerLoggedInEvent event) {
-            PacketDistributor.sendToPlayer((ServerPlayer) event.getEntity(), new EnchantmentSyncPayload(MAX_LEVELS));
-        }
-    }
-
-    @EventBusSubscriber(modid = MOD_ID)
-    public static class RegistryEvents {
-
-        @SubscribeEvent
-        public static void addAttributes(EntityAttributeModificationEvent event) {
-            event.getTypes().forEach(livingEntity -> {
-                if (!event.has(livingEntity, ModRegistry.HEALING_EFFICIENCY)) {
-                    event.add(livingEntity, ModRegistry.HEALING_EFFICIENCY);
-                }
-
-                if (!event.has(livingEntity, ModRegistry.POSITIVE_EFFECT_DURATION)) {
-                    event.add(livingEntity, ModRegistry.POSITIVE_EFFECT_DURATION);
-                }
-
-                if (!event.has(livingEntity, ModRegistry.NEGATIVE_EFFECT_DURATION)) {
-                    event.add(livingEntity, ModRegistry.NEGATIVE_EFFECT_DURATION);
-                }
-
-                if (!event.has(livingEntity, ModRegistry.MONSTER_AWARENESS_RANGE)) {
-                    event.add(livingEntity, ModRegistry.MONSTER_AWARENESS_RANGE);
-                }
-
-                if (!event.has(livingEntity, BARRIER_STRENGTH)) {
-                    event.add(livingEntity, BARRIER_STRENGTH);
-                }
-            });
-
-            if (!event.has(EntityType.PLAYER, ModRegistry.LOOTING_LEVEL)) {
-                event.add(EntityType.PLAYER, ModRegistry.LOOTING_LEVEL);
-            }
-        }
-
-        @SubscribeEvent
-        public static void register(final RegisterPayloadHandlersEvent event) {
-            final PayloadRegistrar registrar = event.registrar("1");
-            registrar.playToServer(WallJumpPayload.TYPE, WallJumpPayload.STREAM_CODEC, (data, context) -> context.enqueueWork(() ->
-                    CommonHandler.handleWallJump((ServerLevel) context.player().level(), (ServerPlayer) context.player())));
-
-            registrar.playToClient(EnchantmentSyncPayload.TYPE, EnchantmentSyncPayload.STREAM_CODEC, (data, context) -> {
-                Map<ResourceKey<Enchantment>, Integer> source = data.enchantments();
-                context.enqueueWork(() -> {
-                    MAX_LEVELS.clear();
-                    MAX_LEVELS.putAll(source);
-                });
-            });
-        }
-    }
-
-    @EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
-    public static class ClientEvents {
-
-        @SubscribeEvent
-        public static void armorLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
-            event.registerLayerDefinition(BarrierLayer.LAYER, () -> LayerDefinition.create(HumanoidModel.createMesh(new CubeDeformation(1.1F), 0F), 64, 64));
-        }
-
-        @SubscribeEvent
-        public static void addEntityLayers(EntityRenderersEvent.AddLayers event) {
-            addPlayerLayer(event, PlayerSkin.Model.WIDE);
-            addPlayerLayer(event, PlayerSkin.Model.SLIM);
-        }
-
-        @SuppressWarnings({"rawtypes", "unchecked"})
-        private static void addPlayerLayer(EntityRenderersEvent.AddLayers event, PlayerSkin.Model model) {
-            EntityRenderer<Player> renderer = event.getSkin(model);
-            if (renderer instanceof LivingEntityRenderer livingRenderer) {
-                livingRenderer.addLayer(new BarrierLayer(livingRenderer));
-            }
-        }
-
-        @SubscribeEvent
-        public static void registerRenderBuffers(RegisterRenderBuffersEvent event) {
-            event.registerRenderBuffer(RenderHelper.ALTERNATE_GLINT);
-            event.registerRenderBuffer(RenderHelper.ALTERNATE_GLINT_TRANSLUCENT);
-        }
-
-        @SubscribeEvent
-        private static void keyPressedEvent(InputEvent.Key event) {
-            if (Minecraft.getInstance().player instanceof LocalPlayer player && player.input.jumping && WallSlideEffect.shouldSlide(player.level(), player)) {
-                PacketDistributor.sendToServer(new WallJumpPayload());
-            }
-        }
-    }
+    public static final EnumProxy<Gui.HeartType> CUSTOM_HEART_TYPE_BARRIER = new EnumProxy<>(
+            Gui.HeartType.class,
+            location("hud/heart/barrier_full"),
+            location("hud/heart/barrier_full_blinking"),
+            location("hud/heart/barrier_half"),
+            location("hud/heart/barrier_half_blinking"),
+            location("hud/heart/barrier_hardcore_full"),
+            location("hud/heart/barrier_hardcore_full_blinking"),
+            location("hud/heart/barrier_hardcore_half"),
+            location("hud/heart/barrier_hardcore_half_blinking"));
 }

@@ -1,0 +1,10 @@
+@MethodsReturnNonnullByDefault
+@FieldsAreNonnullByDefault
+@ParametersAreNonnullByDefault
+
+package brokenkeyboard.brokensenchantoverhaul.network;
+
+import net.minecraft.FieldsAreNonnullByDefault;
+import net.minecraft.MethodsReturnNonnullByDefault;
+
+import javax.annotation.ParametersAreNonnullByDefault;

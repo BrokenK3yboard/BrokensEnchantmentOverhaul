@@ -11,7 +11,6 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.CombatTracker;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -37,32 +36,25 @@ import java.util.Optional;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
 
-    @Shadow
-    @Nullable
-    public abstract AttributeInstance getAttribute(Holder<Attribute> attribute);
-
-    @Shadow public abstract CombatTracker getCombatTracker();
+    @Shadow @Nullable public abstract AttributeInstance getAttribute(Holder<Attribute> attribute);
 
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;tickEffects(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;)V"))
     private void runConditionalAttributeEffect(CallbackInfo ci, @Local(ordinal = 0) ServerLevel level) {
         ConditionalAttributeEffect.updateAttribute(level ,(LivingEntity) (Object) this);
     }
 
-    @Inject(method = "aiStep", at = @At(value = "TAIL"))
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;detectEquipmentUpdates()V", shift = At.Shift.AFTER))
     private void updateBarrier(CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
+
         int barrierStrength = (int) entity.getAttributeValue(ModRegistry.BARRIER_STRENGTH);
 
         if (barrierStrength > 0) {
-            int timeSinceDamage = entity.tickCount - ((CombatTrackerAccessor) getCombatTracker()).getLastDamageTime();
+            int timeSinceDamage = entity.tickCount - Services.PLATFORM.getBarrierTimeStamp(entity);
 
-            if (timeSinceDamage > 0 && timeSinceDamage % 100 == 0) {
+            if (timeSinceDamage > 0 && timeSinceDamage % 160 == 0) {
                 int barrierAmount = Math.min(Services.PLATFORM.getBarrierAmount(entity) + 1, barrierStrength);
                 Services.PLATFORM.setBarrierAmount(entity, barrierAmount);
-
-                if (Services.PLATFORM.getBarrierAmount(entity) > 0 && !entity.hasEffect(ModRegistry.BARRIER_EFFECT)) {
-                    entity.addEffect(new MobEffectInstance(ModRegistry.BARRIER_EFFECT, -1, 0));
-                }
             }
         }
     }
@@ -76,6 +68,7 @@ public abstract class LivingEntityMixin {
             if (entity.getAttributeValue(ModRegistry.BARRIER_STRENGTH) < Services.PLATFORM.getBarrierAmount(entity)) {
                 Services.PLATFORM.setBarrierAmount(entity, (int) entity.getAttributeValue(ModRegistry.BARRIER_STRENGTH));
             }
+            Services.PLATFORM.setBarrierTimestamp(entity);
         }
     }
 

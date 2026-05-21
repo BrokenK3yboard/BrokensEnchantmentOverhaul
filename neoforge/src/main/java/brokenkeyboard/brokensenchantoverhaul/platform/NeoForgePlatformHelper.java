@@ -1,6 +1,8 @@
 package brokenkeyboard.brokensenchantoverhaul.platform;
 
 import brokenkeyboard.brokensenchantoverhaul.EnchantOverhaul;
+import brokenkeyboard.brokensenchantoverhaul.network.C2SBarrierSyncPayload;
+import brokenkeyboard.brokensenchantoverhaul.network.S2CBarrierSyncPayload;
 import brokenkeyboard.brokensenchantoverhaul.platform.services.IPlatformHelper;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.advancements.critereon.EntitySubPredicate;
@@ -9,6 +11,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,6 +22,7 @@ import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentLocationBasedEffect;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
 import java.util.Optional;
@@ -128,11 +132,33 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     @Override
     public void setBarrierAmount(LivingEntity entity, int amount) {
         entity.setData(EnchantOverhaul.BARRIER_AMOUNT, amount);
+
+        if (!entity.level().isClientSide()) {
+            if (entity instanceof ServerPlayer serverPlayer) {
+                PacketDistributor.sendToPlayer(serverPlayer, new S2CBarrierSyncPayload(serverPlayer.getId(), amount));
+            }
+            PacketDistributor.sendToPlayersTrackingEntity(entity, new S2CBarrierSyncPayload(entity.getId(), amount));
+        }
     }
 
     @Override
     public int getBarrierAmount(LivingEntity entity) {
         return Optional.of(entity.getData(EnchantOverhaul.BARRIER_AMOUNT)).orElse(0);
+    }
+
+    @Override
+    public void C2SBarrierSync(Entity entity) {
+        PacketDistributor.sendToServer(new C2SBarrierSyncPayload(entity.getId()));
+    }
+
+    @Override
+    public void setBarrierTimestamp(LivingEntity entity) {
+        entity.setData(EnchantOverhaul.BARRIER_TIMESTAMP, entity.tickCount);
+    }
+
+    @Override
+    public int getBarrierTimeStamp(LivingEntity entity) {
+        return Optional.of(entity.getData(EnchantOverhaul.BARRIER_TIMESTAMP)).orElse(0);
     }
 
     @Override

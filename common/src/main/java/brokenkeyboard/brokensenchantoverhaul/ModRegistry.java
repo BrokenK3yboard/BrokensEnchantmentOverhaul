@@ -1,7 +1,6 @@
 package brokenkeyboard.brokensenchantoverhaul;
 
 import brokenkeyboard.brokensenchantoverhaul.component.DamageTypeResist;
-import brokenkeyboard.brokensenchantoverhaul.effect.BarrierMobEffect;
 import brokenkeyboard.brokensenchantoverhaul.effect.EnchantmentMobEffect;
 import brokenkeyboard.brokensenchantoverhaul.enchantment.*;
 import brokenkeyboard.brokensenchantoverhaul.platform.Services;
@@ -110,7 +109,6 @@ public class ModRegistry {
 
     public static final Holder<MobEffect> BREACH_EFFECT = Services.PLATFORM.createEffectHolder("breach", new EnchantmentMobEffect(Enchantments.BREACH, 8028612));
     public static final Holder<MobEffect> SCAVENGER_EFFECT = Services.PLATFORM.createEffectHolder("scavenger", new EnchantmentMobEffect(SCAVENGER, 5525848));
-    public static final Holder<MobEffect> BARRIER_EFFECT = Services.PLATFORM.createEffectHolder("barrier", new BarrierMobEffect(BARRIER, 16775869));
 
     public static final Map<ResourceKey<Enchantment>, Integer> MAX_LEVELS = new Object2IntOpenHashMap<>();
 

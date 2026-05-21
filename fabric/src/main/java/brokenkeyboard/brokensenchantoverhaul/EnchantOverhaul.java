@@ -1,7 +1,7 @@
 package brokenkeyboard.brokensenchantoverhaul;
 
 import brokenkeyboard.brokensenchantoverhaul.enchantment.*;
-import brokenkeyboard.brokensenchantoverhaul.network.WallJumpPayload;
+import brokenkeyboard.brokensenchantoverhaul.network.*;
 import com.mojang.serialization.Codec;
 import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeConfigRegistry;
 import net.fabricmc.api.ModInitializer;
@@ -11,11 +11,15 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.neoforged.fml.config.ModConfig;
+
+import java.util.Optional;
 
 @SuppressWarnings("UnstableApiUsage")
 public class EnchantOverhaul implements ModInitializer {
@@ -25,6 +29,7 @@ public class EnchantOverhaul implements ModInitializer {
     public static final AttachmentType<Integer> POWER_SHOT_TICKS = AttachmentRegistry.createPersistent(ModRegistry.location("power_shot_ticks"), Codec.INT);
     public static final AttachmentType<Integer> BURN_STACKS = AttachmentRegistry.createPersistent(ModRegistry.location("burn_stacks"), ExtraCodecs.NON_NEGATIVE_INT);
     public static final AttachmentType<Integer> BARRIER_AMOUNT = AttachmentRegistry.createPersistent(ModRegistry.location("barrier_amount"), ExtraCodecs.NON_NEGATIVE_INT);
+    public static final AttachmentType<Integer> BARRIER_TIMESTAMP = AttachmentRegistry.createPersistent(ModRegistry.location("barrier_timestamp"), ExtraCodecs.NON_NEGATIVE_INT);
 
     @Override
     public void onInitialize() {
@@ -48,14 +53,26 @@ public class EnchantOverhaul implements ModInitializer {
             ModRegistry.updateMaxLevels = false;
         });
 
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            ServerPlayer player = handler.getPlayer();
+            ServerPlayNetworking.send(player, new S2CEnchantmentSyncPayload(ModRegistry.MAX_LEVELS));
+            ServerPlayNetworking.send(player, new S2CBarrierSyncPayload(player.getId(), Optional.ofNullable(player.getAttached(BARRIER_AMOUNT)).orElse(0)));
+        });
+
         PlayerBlockBreakEvents.AFTER.register((level, player, blockPos, blockState, blockEntity) ->
                 MiningHandler.handleExcavator(player, blockState, level, blockPos));
 
-        PayloadTypeRegistry.playC2S().register(WallJumpPayload.TYPE, WallJumpPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playS2C().register(S2CEnchantmentSyncPayload.TYPE, S2CEnchantmentSyncPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playS2C().register(S2CBarrierSyncPayload.TYPE, S2CBarrierSyncPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(C2SBarrierSyncPayload.TYPE, C2SBarrierSyncPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(C2SWallJumpPayload.TYPE, C2SWallJumpPayload.STREAM_CODEC);
 
-        ServerPlayNetworking.registerGlobalReceiver(WallJumpPayload.TYPE, (payload, context) ->
-                context.server().execute(() ->
-                        CommonHandler.handleWallJump(context.player().serverLevel(), context.player())));
+        ServerPlayNetworking.registerGlobalReceiver(C2SBarrierSyncPayload.TYPE, (payload, context) ->
+                context.server().execute(() -> ServerPayloadHandler.sendS2CAttachmentSync(payload.entityID(), context.player(), entity ->
+                        ServerPlayNetworking.send(context.player(), new S2CBarrierSyncPayload(entity.getId(), Optional.ofNullable(entity.getAttached(BARRIER_AMOUNT)).orElse(0))))));
+
+        ServerPlayNetworking.registerGlobalReceiver(C2SWallJumpPayload.TYPE, (payload, context) ->
+                context.server().execute(() -> ServerPayloadHandler.handleWallJump(context.player().serverLevel(), context.player())));
 
         // Use Fabric to bootstrap the Common mod.
         Constants.LOG.info("Hello Fabric world!");

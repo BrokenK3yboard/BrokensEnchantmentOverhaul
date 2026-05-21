@@ -1,12 +1,7 @@
 package brokenkeyboard.brokensenchantoverhaul;
 
-import brokenkeyboard.brokensenchantoverhaul.enchantment.WallSlideEffect;
 import brokenkeyboard.brokensenchantoverhaul.platform.Services;
-import net.minecraft.core.Holder;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -48,32 +43,13 @@ public class CommonHandler {
 
     public static float handleBarrierDamage(LivingEntity entity, float damage) {
         int barrierAmount = Services.PLATFORM.getBarrierAmount(entity);
+        Services.PLATFORM.setBarrierTimestamp(entity);
 
         if (barrierAmount > 0) {
             Services.PLATFORM.setBarrierAmount(entity, barrierAmount - 1);
             return 1;
         }
         return damage;
-    }
-
-    public static void handleWallJump(ServerLevel level, ServerPlayer player) {
-        Holder<Enchantment> holder = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ModRegistry.FRICTION);
-        if (WallSlideEffect.shouldSlide(level, player) && EnchantmentHelper.getEnchantmentLevel(holder, player) > 0) {
-            player.setDeltaMovement(player.getViewVector(1));
-            Services.PLATFORM.setWallSlideTicks(player, -1);
-            RandomSource random = level.random;
-            for (int i = 0; i < 20; ++i) {
-                double xOffset = random.nextGaussian() * 0.02D;
-                double yOffset = random.nextGaussian() * 0.02D;
-                double zOffset = random.nextGaussian() * 0.02D;
-                double bbWidth = player.getBbWidth();
-                level.sendParticles(ParticleTypes.POOF,
-                        player.getX() + (random.nextFloat() * bbWidth * 2.0F) - bbWidth - xOffset * 10.0D,
-                        player.getY() - yOffset * 10.0D,
-                        player.getZ() + (random.nextFloat() * bbWidth * 2.0F) - bbWidth - zOffset * 10.0D,
-                        1, xOffset, yOffset, zOffset, 0.0F);
-            }
-        }
     }
 
     public static float getSweepingEdgeBonus(List<LivingEntity> entities, Player attacker, Entity target, ItemStack weapon, DamageSource source, float damage) {

@@ -3,15 +3,12 @@ package brokenkeyboard.brokensenchantoverhaul.mixin;
 import brokenkeyboard.brokensenchantoverhaul.CommonHandler;
 import brokenkeyboard.brokensenchantoverhaul.EnchantOverhaul;
 import brokenkeyboard.brokensenchantoverhaul.ModRegistry;
-import brokenkeyboard.brokensenchantoverhaul.effect.EnchantmentMobEffect;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -28,9 +25,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -41,11 +37,9 @@ public class LivingEntityFabricMixin {
     @Shadow
     protected int useItemRemaining;
 
-    @Inject(method = "actuallyHurt", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/LivingEntity;getDamageAfterMagicAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F", shift = At.Shift.AFTER))
-    private void preHurt(DamageSource damageSource, float damageAmount, CallbackInfo cim, @Local(argsOnly = true, ordinal = 0) LocalFloatRef damage) {
-        LivingEntity entity = (LivingEntity) (Object) this;
-        damage.set(CommonHandler.handleBarrierDamage(entity, damageAmount));
+    @Inject(method = "getDamageAfterMagicAbsorb", at = @At(value = "RETURN", ordinal = 3), cancellable = true)
+    private void preHurt(DamageSource damageSource, float damageAmount, CallbackInfoReturnable<Float> cir) {
+        cir.setReturnValue(CommonHandler.handleBarrierDamage((LivingEntity) (Object) this, damageAmount));
     }
 
     @ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))
@@ -56,11 +50,6 @@ public class LivingEntityFabricMixin {
                 .add(ModRegistry.MONSTER_AWARENESS_RANGE)
                 .add(ModRegistry.BARRIER_STRENGTH);
         return original;
-    }
-
-    @WrapOperation(method = "removeAllEffects", at = @At(value = "INVOKE", target = "Ljava/util/Collection;iterator()Ljava/util/Iterator;"))
-    private Iterator<MobEffectInstance> cancelRemoveEnchantmentEffect(Collection<MobEffectInstance> collection, Operation<Iterator<MobEffectInstance>> original) {
-        return collection.stream().filter(mobEffectInstance -> !(mobEffectInstance.getEffect() instanceof EnchantmentMobEffect)).iterator();
     }
 
     @Inject(method = "updateUsingItem", at = @At(value = "HEAD"))

@@ -5,8 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "EnchantmentMenuNFMixin",
-    "ItemStackNFMixin",
-    "MobEffectInstanceNFMixin"
+    "ItemStackNFMixin"
   ],
   "client": [
   ],

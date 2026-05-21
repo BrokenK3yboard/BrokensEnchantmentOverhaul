@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "enum": "net/minecraft/client/gui/Gui$HeartType",
+      "name": "BROKENSENCHANTOVERHAUL_BARRIER",
+      "constructor": "(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;)V",
+      "parameters": {
+        "class": "brokenkeyboard/brokensenchantoverhaul/EnchantOverhaul",
+        "field": "CUSTOM_HEART_TYPE_BARRIER"
+      }
+    }
+  ]
+}

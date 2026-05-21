@@ -13,6 +13,7 @@ logoFile="${mod_id}.png" #optional
 credits="${credits}" #optional
 authors = "${mod_author}" #optional
 description = "${description}" #mandatory (Supports multiline text)
+enumExtensions="META-INF/enumextensions.json"
 
 [[mixins]]
 config = "${mod_id}.mixins.json"

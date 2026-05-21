@@ -2,9 +2,14 @@ package brokenkeyboard.brokensenchantoverhaul.platform;
 
 import brokenkeyboard.brokensenchantoverhaul.EnchantOverhaul;
 import brokenkeyboard.brokensenchantoverhaul.ModRegistry;
+import brokenkeyboard.brokensenchantoverhaul.network.C2SBarrierSyncPayload;
+import brokenkeyboard.brokensenchantoverhaul.network.S2CBarrierSyncPayload;
 import brokenkeyboard.brokensenchantoverhaul.platform.services.IPlatformHelper;
 import com.mojang.serialization.MapCodec;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancements.critereon.EntitySubPredicate;
 import net.minecraft.advancements.critereon.ItemSubPredicate;
@@ -13,6 +18,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -121,11 +127,36 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public void setBarrierAmount(LivingEntity entity, int amount) {
         entity.setAttached(EnchantOverhaul.BARRIER_AMOUNT, amount);
+
+        if (!entity.level().isClientSide()) {
+            if (entity instanceof ServerPlayer serverPlayer) {
+                ServerPlayNetworking.send(serverPlayer, new S2CBarrierSyncPayload(serverPlayer.getId(), amount));
+            }
+
+            for (ServerPlayer serverPlayer : PlayerLookup.tracking(entity)) {
+                ServerPlayNetworking.send(serverPlayer, new S2CBarrierSyncPayload(entity.getId(), amount));
+            }
+        }
     }
 
     @Override
     public int getBarrierAmount(LivingEntity entity) {
         return Optional.ofNullable(entity.getAttached(EnchantOverhaul.BARRIER_AMOUNT)).orElse(0);
+    }
+
+    @Override
+    public void C2SBarrierSync(Entity entity) {
+        ClientPlayNetworking.send(new C2SBarrierSyncPayload(entity.getId()));
+    }
+
+    @Override
+    public void setBarrierTimestamp(LivingEntity entity) {
+        entity.setAttached(EnchantOverhaul.BARRIER_TIMESTAMP, entity.tickCount);
+    }
+
+    @Override
+    public int getBarrierTimeStamp(LivingEntity entity) {
+        return Optional.ofNullable(entity.getAttached(EnchantOverhaul.BARRIER_TIMESTAMP)).orElse(0);
     }
 
     @Override

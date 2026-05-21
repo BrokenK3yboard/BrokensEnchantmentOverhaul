@@ -7,7 +7,6 @@
   "mixins": [
     "AbstractArrowMixin",
     "AnvilMenuMixin",
-    "CombatTrackerAccessor",
     "ConduitBlockEntityMixin",
     "CrossbowItemAccessor",
     "EnchantBookForEmeraldsMixin",
@@ -27,6 +26,8 @@
     "SetEnchantmentsFunctionMixin"
   ],
   "client": [
+    "ClientPacketMixin",
+    "GuiMixin",
     "EnchantmentScreenMixin",
     "ItemRendererMixin"
   ],

@@ -8,21 +8,19 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.enchantment.Enchantment;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public record EnchantmentSyncPayload(Map<ResourceKey<Enchantment>, Integer> enchantments) implements CustomPacketPayload {
+public record S2CEnchantmentSyncPayload(Map<ResourceKey<Enchantment>, Integer> enchantments) implements CustomPacketPayload {
 
-    public static final CustomPacketPayload.Type<EnchantmentSyncPayload> TYPE = new CustomPacketPayload.Type<>(ModRegistry.location("enchantment_sync"));
+    public static final CustomPacketPayload.Type<S2CEnchantmentSyncPayload> TYPE = new CustomPacketPayload.Type<>(ModRegistry.location("enchantment_sync"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, EnchantmentSyncPayload> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.map(ConcurrentHashMap::new, ResourceKey.streamCodec(Registries.ENCHANTMENT), ByteBufCodecs.INT), EnchantmentSyncPayload::enchantments,
-            EnchantmentSyncPayload::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, S2CEnchantmentSyncPayload> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.map(ConcurrentHashMap::new, ResourceKey.streamCodec(Registries.ENCHANTMENT), ByteBufCodecs.INT), S2CEnchantmentSyncPayload::enchantments,
+            S2CEnchantmentSyncPayload::new);
 
     @Override
-    @NotNull
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
