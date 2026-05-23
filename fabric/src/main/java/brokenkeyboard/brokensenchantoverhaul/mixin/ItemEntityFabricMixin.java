@@ -1,6 +1,6 @@
 package brokenkeyboard.brokensenchantoverhaul.mixin;
 
-import brokenkeyboard.brokensenchantoverhaul.CommonHandler;
+import brokenkeyboard.brokensenchantoverhaul.ModEnchantmentHelper;
 import brokenkeyboard.brokensenchantoverhaul.EnchantOverhaul;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -21,7 +21,7 @@ public class ItemEntityFabricMixin {
         if (player.level() instanceof ServerLevel level) {
             Optional<String> attachment = Optional.ofNullable(((ItemEntity) (Object) this).getAttached(EnchantOverhaul.SCAVENGER_LOOT));
             if (attachment.isPresent() && attachment.get().equals(player.getName().getString())) {
-                CommonHandler.postLootPickup(level, player);
+                ModEnchantmentHelper.postLootPickup(level, player);
             }
         }
     }

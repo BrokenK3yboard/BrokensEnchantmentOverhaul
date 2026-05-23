@@ -1,6 +1,6 @@
 package brokenkeyboard.brokensenchantoverhaul.mixin;
 
-import brokenkeyboard.brokensenchantoverhaul.MiningHandler;
+import brokenkeyboard.brokensenchantoverhaul.ModEnchantmentHelper;
 import brokenkeyboard.brokensenchantoverhaul.ModRegistry;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
@@ -37,6 +37,6 @@ public class PlayerFabricMixin {
 
     @WrapOperation(method = "getDestroySpeed", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getAttributeValue(Lnet/minecraft/core/Holder;)D"))
     private double modifyDestroySpeed(Player player, Holder<Attribute> holder, Operation<Double> original) {
-        return original.call(player, holder) + MiningHandler.modifyMiningEfficiency(player.getMainHandItem());
+        return original.call(player, holder) + ModEnchantmentHelper.modifyMiningEfficiency(player.getMainHandItem());
     }
 }

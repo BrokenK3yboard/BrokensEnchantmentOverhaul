@@ -9,10 +9,8 @@
   },
   "mixins": [
     "BlockFabricMixin",
-    "EnchantmentMenuFabricMixin",
     "ItemCombinerMenuAccessor",
     "ItemEntityFabricMixin",
-    "ItemStackFabricMixin",
     "LivingEntityFabricMixin",
     "PlayerFabricMixin"
   ],

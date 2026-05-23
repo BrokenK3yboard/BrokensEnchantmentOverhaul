@@ -33,7 +33,6 @@ public class EnchantOverhaul implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        ModRegistry.bootstrap();
         NeoForgeConfigRegistry.INSTANCE.register(Constants.MOD_ID, ModConfig.Type.COMMON, Config.SPEC);
         Registry.register(ModRegistry.PROTECTION_REGISTRY, ModRegistry.location("adaptive"), AdaptiveEffect.CODEC);
         Registry.register(ModRegistry.PROTECTION_REGISTRY, ModRegistry.location("deflect_damage"), DeflectDamageEffect.CODEC);
@@ -60,7 +59,7 @@ public class EnchantOverhaul implements ModInitializer {
         });
 
         PlayerBlockBreakEvents.AFTER.register((level, player, blockPos, blockState, blockEntity) ->
-                MiningHandler.handleExcavator(player, blockState, level, blockPos));
+                ModEnchantmentHelper.handleExcavator(player, blockState, level, blockPos));
 
         PayloadTypeRegistry.playS2C().register(S2CEnchantmentSyncPayload.TYPE, S2CEnchantmentSyncPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(S2CBarrierSyncPayload.TYPE, S2CBarrierSyncPayload.STREAM_CODEC);

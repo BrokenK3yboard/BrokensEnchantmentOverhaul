@@ -1,6 +1,6 @@
 package brokenkeyboard.brokensenchantoverhaul.mixin;
 
-import brokenkeyboard.brokensenchantoverhaul.CommonHandler;
+import brokenkeyboard.brokensenchantoverhaul.ModEnchantmentHelper;
 import brokenkeyboard.brokensenchantoverhaul.ModRegistry;
 import brokenkeyboard.brokensenchantoverhaul.platform.Services;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -34,13 +34,13 @@ public class AbstractArrowMixin {
             target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;modifyDamage(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;F)F"))
     private float modifyDamage(ServerLevel level, ItemStack tool, Entity entity, DamageSource damageSource, float damage, Operation<Float> original) {
         int powerShotTicks = Services.PLATFORM.getPowerShotTicks((AbstractArrow) (Object) this);
-        return original.call(level, tool, entity, damageSource, damage) + CommonHandler.getPowerShotDamage(firedFromWeapon, entity, powerShotTicks);
+        return original.call(level, tool, entity, damageSource, damage) + ModEnchantmentHelper.getPowerShotDamage(firedFromWeapon, entity, powerShotTicks);
     }
 
     @WrapOperation(method = "doKnockback", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;modifyKnockback(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;F)F"))
     private float modifyKnockback(ServerLevel level, ItemStack tool, Entity entity, DamageSource damageSource, float knockback, Operation<Float> original) {
         int powerShotTicks = Services.PLATFORM.getPowerShotTicks((AbstractArrow) (Object) this);
-        return original.call(level, tool, entity, damageSource, knockback) + CommonHandler.getPowerShotKnockback(firedFromWeapon, entity, powerShotTicks);
+        return original.call(level, tool, entity, damageSource, knockback) + ModEnchantmentHelper.getPowerShotKnockback(firedFromWeapon, entity, powerShotTicks);
     }
 }

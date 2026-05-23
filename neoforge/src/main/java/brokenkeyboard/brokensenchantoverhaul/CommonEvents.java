@@ -104,7 +104,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onBlockDrops(BlockDropsEvent event) {
-        MiningHandler.handleBlockDrops(event.getDrops(), event.getLevel(), event.getState(), event.getPos(), event.getBreaker(), event.getTool());
+        ModEnchantmentHelper.handleBlockDrops(event.getDrops(), event.getLevel(), event.getState(), event.getPos(), event.getBreaker(), event.getTool());
     }
 
     @SubscribeEvent
@@ -119,7 +119,7 @@ public class CommonEvents {
     public static void itemPickupEvent(ItemEntityPickupEvent.Post event) {
         Player player = event.getPlayer();
         if (player.level() instanceof ServerLevel level && Optional.of(event.getItemEntity().getData(EnchantOverhaul.SCAVENGER_LOOT)).get().equals(player.getStringUUID())) {
-            CommonHandler.postLootPickup(level, player);
+            ModEnchantmentHelper.postLootPickup(level, player);
         }
     }
 
@@ -130,7 +130,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void preHurtEvent(LivingDamageEvent.Pre event) {
-        event.setNewDamage(CommonHandler.handleBarrierDamage(event.getEntity(), event.getOriginalDamage()));
+        event.setNewDamage(ModEnchantmentHelper.handleBarrierDamage(event.getEntity(), event.getOriginalDamage()));
     }
 
     @SubscribeEvent
@@ -149,12 +149,12 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void handleExcavatorEvent(BlockEvent.BreakEvent event) {
-        MiningHandler.handleExcavator(event.getPlayer(), event.getState(), event.getPlayer().level(), event.getPos());
+        ModEnchantmentHelper.handleExcavator(event.getPlayer(), event.getState(), event.getPlayer().level(), event.getPos());
     }
 
     @SubscribeEvent
     public static void handleBreakSpeedEvent(PlayerEvent.BreakSpeed event) {
-        event.setNewSpeed(event.getOriginalSpeed() + MiningHandler.modifyMiningEfficiency(event.getEntity().getMainHandItem()));
+        event.setNewSpeed(event.getOriginalSpeed() + ModEnchantmentHelper.modifyMiningEfficiency(event.getEntity().getMainHandItem()));
     }
 
     @SubscribeEvent

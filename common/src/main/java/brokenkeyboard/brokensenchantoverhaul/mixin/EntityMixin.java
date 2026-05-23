@@ -1,6 +1,6 @@
 package brokenkeyboard.brokensenchantoverhaul.mixin;
 
-import brokenkeyboard.brokensenchantoverhaul.CommonHandler;
+import brokenkeyboard.brokensenchantoverhaul.ModEnchantmentHelper;
 import brokenkeyboard.brokensenchantoverhaul.ModRegistry;
 import brokenkeyboard.brokensenchantoverhaul.platform.Services;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -40,7 +40,7 @@ public class EntityMixin {
     @Inject(method = "shouldBlockExplode", at = @At(value = "RETURN"), cancellable = true)
     private void modifyBlockExplode(Explosion explosion, BlockGetter level, BlockPos pos, BlockState blockState, float explosionPower, CallbackInfoReturnable<Boolean> cir) {
         Entity explosionSource = (Entity) (Object) this;
-        List<LivingEntity> entities = explosionSource.level().getEntitiesOfClass(LivingEntity.class, new AABB(pos).inflate(4), CommonHandler.HAS_STABILIZE);
+        List<LivingEntity> entities = explosionSource.level().getEntitiesOfClass(LivingEntity.class, new AABB(pos).inflate(4), ModEnchantmentHelper.HAS_STABILIZE);
         if (!entities.isEmpty()) {
             cir.setReturnValue(false);
         }

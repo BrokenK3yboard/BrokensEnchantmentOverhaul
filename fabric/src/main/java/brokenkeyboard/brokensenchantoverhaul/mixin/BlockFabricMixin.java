@@ -1,6 +1,6 @@
 package brokenkeyboard.brokensenchantoverhaul.mixin;
 
-import brokenkeyboard.brokensenchantoverhaul.MiningHandler;
+import brokenkeyboard.brokensenchantoverhaul.ModEnchantmentHelper;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.core.BlockPos;
@@ -50,7 +50,7 @@ public class BlockFabricMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;spawnAfterBreak(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;Z)V"))
     private static void modifyDrops(BlockState state, Level level, BlockPos pos, BlockEntity blockEntity, Entity entity, ItemStack tool, CallbackInfo ci) {
         List<ItemEntity> drops = stopCapturingDrops();
-        MiningHandler.handleBlockDrops(drops, level, state, pos, entity, tool);
+        ModEnchantmentHelper.handleBlockDrops(drops, level, state, pos, entity, tool);
     }
 
     @WrapOperation(method = "popResource(Lnet/minecraft/world/level/Level;Ljava/util/function/Supplier;Lnet/minecraft/world/item/ItemStack;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"))

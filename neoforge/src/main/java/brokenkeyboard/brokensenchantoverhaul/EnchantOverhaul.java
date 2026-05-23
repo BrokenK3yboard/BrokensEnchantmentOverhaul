@@ -49,7 +49,6 @@ public class EnchantOverhaul {
     public static final Supplier<AttachmentType<Integer>> BARRIER_TIMESTAMP = ATTACHMENT_TYPES.register("barrier_timestamp", () -> AttachmentType.builder(() -> 0).build());
 
     public EnchantOverhaul(ModContainer container, IEventBus bus) {
-        ModRegistry.bootstrap();
         container.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         DATA_COMPONENTS.register(bus);
         ENCHANTMENT_COMPONENTS.register(bus);

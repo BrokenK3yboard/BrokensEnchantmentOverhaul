@@ -1,6 +1,6 @@
 package brokenkeyboard.brokensenchantoverhaul.mixin;
 
-import brokenkeyboard.brokensenchantoverhaul.CommonHandler;
+import brokenkeyboard.brokensenchantoverhaul.ModEnchantmentHelper;
 import brokenkeyboard.brokensenchantoverhaul.EnchantOverhaul;
 import brokenkeyboard.brokensenchantoverhaul.ModRegistry;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
@@ -39,7 +39,7 @@ public class LivingEntityFabricMixin {
 
     @Inject(method = "getDamageAfterMagicAbsorb", at = @At(value = "RETURN", ordinal = 3), cancellable = true)
     private void preHurt(DamageSource damageSource, float damageAmount, CallbackInfoReturnable<Float> cir) {
-        cir.setReturnValue(CommonHandler.handleBarrierDamage((LivingEntity) (Object) this, damageAmount));
+        cir.setReturnValue(ModEnchantmentHelper.handleBarrierDamage((LivingEntity) (Object) this, damageAmount));
     }
 
     @ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))

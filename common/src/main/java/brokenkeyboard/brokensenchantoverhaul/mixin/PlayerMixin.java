@@ -1,6 +1,6 @@
 package brokenkeyboard.brokensenchantoverhaul.mixin;
 
-import brokenkeyboard.brokensenchantoverhaul.CommonHandler;
+import brokenkeyboard.brokensenchantoverhaul.ModEnchantmentHelper;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -24,7 +24,7 @@ public class PlayerMixin {
                                        @Local(ordinal = 0) ItemStack weapon, @Share("bonusDamage") LocalFloatRef bonusDamage) {
         Player player = (Player) (Object) this;
         List<LivingEntity> entities = player.level().getEntitiesOfClass(LivingEntity.class, target.getBoundingBox().inflate(1.0F, 0.25F, 1.0F));
-        float newDamage = CommonHandler.getSweepingEdgeBonus(entities, player, target, weapon, source, damage);
+        float newDamage = ModEnchantmentHelper.getSweepingEdgeBonus(entities, player, target, weapon, source, damage);
         bonusDamage.set(newDamage);
         return original.call(target, source, newDamage);
     }
