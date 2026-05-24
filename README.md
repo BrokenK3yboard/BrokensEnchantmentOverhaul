@@ -19,19 +19,30 @@ Anvil changes:
 
 Enchantments:
 <details>
-<summary>Tools</summary>
-Tempered: Negates durability loss when mining natural non-resource blocks<br>
-Excavate: Tools mine in a 3x3 radius.<br>
+<summary>Axe</summary>
+Tempered: Harvesting most non-resource blocks costs no durability.<br>
 Silk Touch: No changes.<br>
+Fire Aspect: Attacks ignite targets, with consecutive hits increasing burn damage. Smelts item drops.<br>
 </details>
 
 <details>
-<summary>Axe</summary>
-Molten: Automatically smelts block and loot drops. Treasure enchantment.<br>
+<summary>Pickaxe</summary>
+Tempered: Harvesting most non-resource blocks costs no durability.<br>
+Silk Touch: No changes.<br>
+Excavate: Tools break blocks in a small radius.<br>
+</details>
+
+<details>
+<summary>Shovel</summary>
+Tempered: Harvesting most non-resource blocks costs no durability.<br>
+Silk Touch: No changes.<br>
+Excavate: Tools break blocks in a small radius.<br>
 </details>
 
 <details>
 <summary>Hoe</summary>
+Tempered: Harvesting most non-resource blocks costs no durability.<br>
+Silk Touch: No changes.<br>
 Harvest: Harvested crops have their yield increased and automatically replant.<br>
 </details>
  
@@ -39,13 +50,13 @@ Harvest: Harvested crops have their yield increased and automatically replant.<b
 <summary>Fishing Rod</summary>
  Grapple: Increases reeling strength. Reeling while the bobber is attached to a block pulls the user towards it.<br>
  Deep fryer: Cooks caught fish and sets reeled targets on fire.<br>
- Luck of the Sea: Additionally increases fishing speed.<br>
+ Luck of the Sea: Increases chance of treasure drops and fishing speed.<br>
 </details>
 
 <details>
 <summary>Helmet</summary>
 Filtered: Shortens harmful effect durations while extending beneficial ones.<br>
-Insight: Increases looting level and luck scaling with total armor enchantability.<br>
+Insight: Increases looting level scaling with total armor enchantability.<br>
 Dexterity: Prevents underwater mining slowdown and increases reach distance with tools.<br>
 </details>
 
@@ -62,22 +73,22 @@ Thorns: Chance to reflect a percentage of damage taken. Effect increased while a
 Rush: Increases damage resistance while at or below half health. Effect increased while sprinting.<br>
 Scavenger: Loot drops are pulled to the wearer and temporarily boost armor toughness.<br>
 Stabilize: Reduces knockback and prevents explosions from breaking nearby blocks.<br>
-Swift sneak: Additionally reduces monster awareness radius.<br>
+Swift sneak: Increases sneaking speed and reduces monster awareness radius.<br>
 </details>
 
 <details>
 <summary>Boots</summary>
-Agility: Increases step height and grants extra movement speed depending on total armor.<br>
+Agility: Improves mobility. Effects increased while any movement status boosts are active.<br>
 Friction: Allows sliding down and jumping off walls for a short duration.<br>
-Depth Strider: Additionally allows water-specific bonuses on land.<br>
-Soul Speed: Speed bonus is also active while at or below a quarter of health.<br>
+Depth Strider: Increases movement speed in water and allows use of water-specific bonuses on land.<br>
+Soul Speed: Increases movement speed on soul-infused blocks or while at or below a quarter health.<br>
 Frost Walker: No changes.
 </details>
 
 <details>
 <summary>Sword</summary>
-Sweeping Edge: Sweeping attacks deal extra damage for each target hit.<br>
-Smite: Extra damage is also applied to targets with negative status effects.<br>
+Sweeping Edge: Enables sweeping attacks which deal extra damage for each target hit.<br>
+Smite: Attacks deal extra damage to undead and targets suffering from negative status effects.<br>
 Fire Aspect: Additional strikes on burning targets increases burn damage, up to 3.<br>
 </details>
 
@@ -104,7 +115,7 @@ Riptide: No changes.<br>
 
 <details>
 <summary>Mace</summary>
-Breach: Fully reworked; Smash attacks boost armor piercing and speed of the next few attacks. Weapon glows red while this bonus is active.<br>
+Breach: Smash attacks temporarily boost armor piercing and attack speed. Weapon glows red while this is active.<br>
 Blacksmith: Removes durability loss. Smash attack kills repair a random equipped item.<br>
 Density: No changes.<br>
 Wind burst: No changes.<br>
@@ -138,8 +149,17 @@ Curse of Vanishing<br>
 Configuration:
 
  * Enchantments can be changed with datapacks. It is possible to revert changes made to vanilla enchantments in this manner.
- * This mod contains some tags which can be modified with datapacks.  * Anvil and enchantment costs can be changed in the config file.
+ * Anvil and enchantment costs can be changed in the config file.
  * There is an experimental config option which disables the core enchantment and anvil changes for extended customization. Intended for datapack developers who know what they are doing.
+
+Tags:
+ * `tempered_affects`: Controls which blocks can be harvested without a durability cost by their corresponding tool.
+ * `tool_efficiency_bonus`: Controls which items gain a mining speed (efficiency) bonus when enchanted.
+ * `weapon_durability_bonus`: Controls which items gain a durability (unbreaking) bonus when enchanted.
+ * `removed_enchantments`: Controls which enchantments are disabled.
+ * `exclusive_set/fishing`: Controls fishing rod enchantment exclusivity. Has no effect unless the `OVERHAUL_ENCHANTMENTS` config setting is disabled.
+ * `exclusive_set/leggings`: Controls legging enchantment exclusivity. Has no effect unless the `OVERHAUL_ENCHANTMENTS` config setting is disabled.
+ * `enchantable/excavate`: Items in this tag are compatible with the Excavate enchantment.
 
 Credits:
 
