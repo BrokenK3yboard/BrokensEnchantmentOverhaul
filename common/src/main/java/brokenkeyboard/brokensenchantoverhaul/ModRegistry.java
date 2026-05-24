@@ -178,4 +178,6 @@ public class ModRegistry {
     public static ResourceLocation location(String name) {
         return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name);
     }
+
+    public static void bootstrap() {}
 }

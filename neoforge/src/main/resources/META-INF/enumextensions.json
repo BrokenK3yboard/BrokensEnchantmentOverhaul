@@ -5,7 +5,7 @@
       "name": "BROKENSENCHANTOVERHAUL_BARRIER",
       "constructor": "(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;)V",
       "parameters": {
-        "class": "brokenkeyboard/brokensenchantoverhaul/EnchantOverhaul",
+        "class": "brokenkeyboard/brokensenchantoverhaul/ClientEvents",
         "field": "CUSTOM_HEART_TYPE_BARRIER"
       }
     }

@@ -76,6 +76,7 @@ public class CommonEvents {
             context.enqueueWork(() -> {
                 MAX_LEVELS.clear();
                 MAX_LEVELS.putAll(source);
+                ModRegistry.updateMaxLevels = false;
             });
         });
 

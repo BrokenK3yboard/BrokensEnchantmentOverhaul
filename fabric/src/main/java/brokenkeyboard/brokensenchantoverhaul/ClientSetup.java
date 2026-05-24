@@ -63,6 +63,7 @@ public class ClientSetup implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(S2CEnchantmentSyncPayload.TYPE, (payload, context) -> {
             MAX_LEVELS.clear();
             MAX_LEVELS.putAll(payload.enchantments());
+            ModRegistry.updateMaxLevels = false;
         });
 
         ClientPlayNetworking.registerGlobalReceiver(S2CBarrierSyncPayload.TYPE, (payload, context) -> {

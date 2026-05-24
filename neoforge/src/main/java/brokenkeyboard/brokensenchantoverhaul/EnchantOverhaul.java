@@ -5,7 +5,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.advancements.critereon.EntitySubPredicate;
 import net.minecraft.advancements.critereon.ItemSubPredicate;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.effect.MobEffect;
@@ -15,7 +14,6 @@ import net.minecraft.world.item.enchantment.effects.EnchantmentLocationBasedEffe
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.common.asm.enumextension.EnumProxy;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -49,6 +47,7 @@ public class EnchantOverhaul {
     public static final Supplier<AttachmentType<Integer>> BARRIER_TIMESTAMP = ATTACHMENT_TYPES.register("barrier_timestamp", () -> AttachmentType.builder(() -> 0).build());
 
     public EnchantOverhaul(ModContainer container, IEventBus bus) {
+        ModRegistry.bootstrap();
         container.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         DATA_COMPONENTS.register(bus);
         ENCHANTMENT_COMPONENTS.register(bus);
@@ -75,15 +74,4 @@ public class EnchantOverhaul {
         Constants.LOG.info("Hello NeoForge world!");
         CommonClass.init();
     }
-
-    public static final EnumProxy<Gui.HeartType> CUSTOM_HEART_TYPE_BARRIER = new EnumProxy<>(
-            Gui.HeartType.class,
-            location("hud/heart/barrier_full"),
-            location("hud/heart/barrier_full_blinking"),
-            location("hud/heart/barrier_half"),
-            location("hud/heart/barrier_half_blinking"),
-            location("hud/heart/barrier_hardcore_full"),
-            location("hud/heart/barrier_hardcore_full_blinking"),
-            location("hud/heart/barrier_hardcore_half"),
-            location("hud/heart/barrier_hardcore_half_blinking"));
 }

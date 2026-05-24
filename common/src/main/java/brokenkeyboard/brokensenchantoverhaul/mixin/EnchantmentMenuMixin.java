@@ -34,13 +34,9 @@ public class EnchantmentMenuMixin {
     @Shadow @Final private RandomSource random;
 
     // Modify experience cost of enchantment
-    @ModifyVariable(method = "clickMenuButton", ordinal = 1, at = @At(value = "STORE", ordinal = 0))
-    private int modifyCost(int value, @Local(ordinal = 0, argsOnly = true) int ref) {
-        if (Config.OVERHAUL_ENCHANTMENTS.get()) {
-            EnchantmentMenu menu = (EnchantmentMenu) (Object) this;
-            return menu.costs[ref];
-        }
-        return value;
+    @ModifyVariable(method = "clickMenuButton", at = @At(value = "STORE"), ordinal = 1)
+    private int modifyCost(int value) {
+        return Config.OVERHAUL_ENCHANTMENTS.get() ? Config.ENCHANTMENT_COST.get() : value;
     }
 
     @WrapOperation(method = "getEnchantmentList", at = @At(value = "INVOKE",
@@ -68,7 +64,7 @@ public class EnchantmentMenuMixin {
     // Modify the listed cost of an enchantment
     @WrapOperation(method = {"lambda$slotsChanged$0", "method_17411"}, at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getEnchantmentCost(Lnet/minecraft/util/RandomSource;IILnet/minecraft/world/item/ItemStack;)I"))
-    private int modifyCost(RandomSource random, int enchantNum, int power, ItemStack stack, Operation<Integer> original) {
+    private int modifyListedExperienceCost(RandomSource random, int enchantNum, int power, ItemStack stack, Operation<Integer> original) {
         return Config.OVERHAUL_ENCHANTMENTS.get() ? Config.ENCHANTMENT_COST.get() : original.call(random, enchantNum, power, stack);
     }
 
@@ -83,7 +79,7 @@ public class EnchantmentMenuMixin {
 
     @WrapOperation(method = {"lambda$clickMenuButton$1", "method_17410"}, at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/entity/player/Player;onEnchantmentPerformed(Lnet/minecraft/world/item/ItemStack;I)V"))
-    private void modifyExperienceCost(Player player, ItemStack stack, int levelCost, Operation<Void> original, @Local(argsOnly = true) Level level, @Local(argsOnly = true) BlockPos blockPos) {
+    private void applyBookshelfExperienceBonus(Player player, ItemStack stack, int levelCost, Operation<Void> original, @Local(argsOnly = true) Level level, @Local(argsOnly = true) BlockPos blockPos) {
         int bookshelves = 0;
 
         for (BlockPos blockPos1 : EnchantingTableBlock.BOOKSHELF_OFFSETS) {

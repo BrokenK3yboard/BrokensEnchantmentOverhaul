@@ -5,6 +5,7 @@ import brokenkeyboard.brokensenchantoverhaul.network.C2SWallJumpPayload;
 import brokenkeyboard.brokensenchantoverhaul.render.BarrierLayer;
 import brokenkeyboard.brokensenchantoverhaul.render.RenderHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -16,15 +17,28 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.asm.enumextension.EnumProxy;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RegisterRenderBuffersEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import static brokenkeyboard.brokensenchantoverhaul.Constants.MOD_ID;
+import static brokenkeyboard.brokensenchantoverhaul.ModRegistry.location;
 
 @EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
 public class ClientEvents {
+
+    public static final EnumProxy<Gui.HeartType> CUSTOM_HEART_TYPE_BARRIER = new EnumProxy<>(
+            Gui.HeartType.class,
+            location("hud/heart/barrier_full"),
+            location("hud/heart/barrier_full_blinking"),
+            location("hud/heart/barrier_half"),
+            location("hud/heart/barrier_half_blinking"),
+            location("hud/heart/barrier_hardcore_full"),
+            location("hud/heart/barrier_hardcore_full_blinking"),
+            location("hud/heart/barrier_hardcore_half"),
+            location("hud/heart/barrier_hardcore_half_blinking"));
 
     @SubscribeEvent
     public static void armorLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
