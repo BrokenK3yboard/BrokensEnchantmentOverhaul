@@ -4,12 +4,15 @@ import brokenkeyboard.brokensenchantoverhaul.Config;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.IdMap;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.EnchantmentMenu;
 import net.minecraft.world.item.ItemStack;
@@ -79,14 +82,24 @@ public class EnchantmentMenuMixin {
 
     @WrapOperation(method = {"lambda$clickMenuButton$1", "method_17410"}, at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/entity/player/Player;onEnchantmentPerformed(Lnet/minecraft/world/item/ItemStack;I)V"))
-    private void applyBookshelfExperienceBonus(Player player, ItemStack stack, int levelCost, Operation<Void> original, @Local(argsOnly = true) Level level, @Local(argsOnly = true) BlockPos blockPos) {
-        int bookshelves = 0;
+    private void applyBookshelfExperienceBonus(Player player, ItemStack stack, int levelCost, Operation<Void> original, @Local(argsOnly = true) Level level, @Local(argsOnly = true) BlockPos blockPos,
+                                               @Share("consumeResource") LocalBooleanRef consumeResources) {
+        if (Config.OVERHAUL_ENCHANTMENTS.get()) {
+            int bookshelves = 0;
 
-        for (BlockPos blockPos1 : EnchantingTableBlock.BOOKSHELF_OFFSETS) {
-            if (EnchantingTableBlock.isValidBookShelf(level, blockPos, blockPos1)) {
-                bookshelves++;
+            for (BlockPos blockPos1 : EnchantingTableBlock.BOOKSHELF_OFFSETS) {
+                if (EnchantingTableBlock.isValidBookShelf(level, blockPos, blockPos1)) {
+                    bookshelves++;
+                }
             }
+            consumeResources.set(random.nextDouble() < 0.01 * bookshelves);
         }
-        original.call(player, stack, random.nextDouble() < 0.01 * bookshelves ? 0 : levelCost);
+        original.call(player, stack, consumeResources.get() ? 0 : levelCost);
+    }
+
+    @WrapOperation(method = {"lambda$clickMenuButton$1", "method_17410"}, at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/item/ItemStack;consume(ILnet/minecraft/world/entity/LivingEntity;)V"))
+    private void applyBookshelfLapisBonus(ItemStack stack, int amount, LivingEntity entity, Operation<Void> original, @Share("consumeResource") LocalBooleanRef consumeResources) {
+        original.call(stack, Config.OVERHAUL_ENCHANTMENTS.get() && consumeResources.get() ? 0 : amount, entity);
     }
 }
