@@ -8,11 +8,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.enchantment.EnchantedItemInUse;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
 
-public record DeflectDamageEffect(LevelBasedValue amount, LevelBasedValue baseDamage) implements ConditionalProtectionEffect {
+public record DeflectDamageEffect(LevelBasedValue amount) implements ConditionalProtectionEffect {
 
     public static final MapCodec<DeflectDamageEffect> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            LevelBasedValue.CODEC.fieldOf("amount").forGetter(DeflectDamageEffect::amount),
-            LevelBasedValue.CODEC.fieldOf("baseDamage").forGetter(DeflectDamageEffect::baseDamage)
+            LevelBasedValue.CODEC.fieldOf("amount").forGetter(DeflectDamageEffect::amount)
     ).apply(instance, DeflectDamageEffect::new));
 
     @Override

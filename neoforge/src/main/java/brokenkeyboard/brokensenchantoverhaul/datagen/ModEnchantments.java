@@ -168,19 +168,19 @@ public class ModEnchantments {
                         8,
                         EquipmentSlotGroup.ARMOR))
                 .withEffect(ModRegistry.CONDITIONAL_PROTECTION,
-                        new DeflectDamageEffect(LevelBasedValue.constant(8F), LevelBasedValue.constant(2F)),
+                        new DeflectDamageEffect(LevelBasedValue.constant(8F)),
                         AllOfCondition.allOf(
                                 LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.DIRECT_ATTACKER,
                                         EntityPredicate.Builder.entity().subPredicate(IsLowHealthPredicate.isLowHealth(0.5F))),
                                 LootItemRandomChanceCondition.randomChance(
-                                        EnchantmentLevelProvider.forEnchantmentLevel(LevelBasedValue.perLevel(0.25F, 0.1F)))))
+                                        EnchantmentLevelProvider.forEnchantmentLevel(LevelBasedValue.perLevel(0.3F, 0.1F)))))
                 .withEffect(ModRegistry.CONDITIONAL_PROTECTION,
-                        new DeflectDamageEffect(LevelBasedValue.constant(6F), LevelBasedValue.constant(1F)),
+                        new DeflectDamageEffect(LevelBasedValue.constant(5F)),
                         AllOfCondition.allOf(
                                 LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.DIRECT_ATTACKER,
                                         EntityPredicate.Builder.entity().subPredicate(IsLowHealthPredicate.isLowHealth(0.5F))).invert(),
                                 LootItemRandomChanceCondition.randomChance(
-                                        EnchantmentLevelProvider.forEnchantmentLevel(LevelBasedValue.perLevel(0.15F, 0.05F))))));
+                                        EnchantmentLevelProvider.forEnchantmentLevel(LevelBasedValue.perLevel(0.2F, 0.1F))))));
 
         register(context, ModRegistry.RUSH, Enchantment.enchantment(
                 Enchantment.definition(leggings, 5, 3,

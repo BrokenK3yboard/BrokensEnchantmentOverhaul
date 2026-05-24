@@ -8,8 +8,7 @@
       {
         "effect": {
           "type": "brokensenchantoverhaul:deflect_damage",
-          "amount": 8.0,
-          "baseDamage": 2.0
+          "amount": 8.0
         },
         "requirements": {
           "condition": "minecraft:all_of",
@@ -29,7 +28,7 @@
                 "type": "minecraft:enchantment_level",
                 "amount": {
                   "type": "minecraft:linear",
-                  "base": 0.25,
+                  "base": 0.3,
                   "per_level_above_first": 0.1
                 }
               },
@@ -41,8 +40,7 @@
       {
         "effect": {
           "type": "brokensenchantoverhaul:deflect_damage",
-          "amount": 6.0,
-          "baseDamage": 1.0
+          "amount": 5.0
         },
         "requirements": {
           "condition": "minecraft:all_of",
@@ -65,8 +63,8 @@
                 "type": "minecraft:enchantment_level",
                 "amount": {
                   "type": "minecraft:linear",
-                  "base": 0.15,
-                  "per_level_above_first": 0.05
+                  "base": 0.2,
+                  "per_level_above_first": 0.1
                 }
               },
               "condition": "minecraft:random_chance"

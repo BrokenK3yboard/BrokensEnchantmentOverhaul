@@ -1,4 +1,4 @@
-// 1.21.1	2026-05-16T16:45:01.355203053	Registries
+// 1.21.1	2026-05-24T10:57:51.248586434	Registries
 f95d8c725961dc45cc25a379727ee90899a62af2 data/brokensenchantoverhaul/damage_type/arrow_multishot.json
 7f637742bcc13f0c2c9d543a90ea771cf4d9a4a0 data/brokensenchantoverhaul/enchantment/adaptive.json
 7b796b36dca81ab10f07e156c41e1cf171ddefc3 data/brokensenchantoverhaul/enchantment/agility.json
@@ -30,4 +30,4 @@ a9667222013101d1c02991db5722cc7abcd6faa1 data/minecraft/enchantment/smite.json
 acad72604746db7113f380c514b8d6f41831883f data/minecraft/enchantment/soul_speed.json
 0ace05b4f0d18b08f4fa70a95c16a9140210ff24 data/minecraft/enchantment/sweeping_edge.json
 5aaeffc5121ce881b206640b6c9a34093c205519 data/minecraft/enchantment/swift_sneak.json
-266303afcb32aa4efe48f43388ae6627561c1637 data/minecraft/enchantment/thorns.json
+2be2b8395096b615e2afe462c3b7814a35260601 data/minecraft/enchantment/thorns.json
