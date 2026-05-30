@@ -4,6 +4,7 @@ import brokenkeyboard.brokensenchantoverhaul.enchantment.WallSlideEffect;
 import brokenkeyboard.brokensenchantoverhaul.network.C2SWallJumpPayload;
 import brokenkeyboard.brokensenchantoverhaul.network.S2CBarrierSyncPayload;
 import brokenkeyboard.brokensenchantoverhaul.network.S2CEnchantmentSyncPayload;
+import brokenkeyboard.brokensenchantoverhaul.network.S2CDetectedBlocks;
 import brokenkeyboard.brokensenchantoverhaul.render.BarrierLayer;
 import com.google.common.collect.ImmutableList;
 import fuzs.extensibleenums.api.v2.core.EnumAppender;
@@ -70,6 +71,13 @@ public class ClientSetup implements ClientModInitializer {
             Entity entity = context.player().level().getEntity(payload.entityID());
             if (entity != null) {
                 entity.setAttached(EnchantOverhaul.BARRIER_AMOUNT, payload.amount());
+            }
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(S2CDetectedBlocks.TYPE, (payload, context) -> {
+            Entity entity = context.player().level().getEntity(payload.entityID());
+            if (entity != null) {
+                entity.setAttached(EnchantOverhaul.BLOCKS_DETECTED, payload.nearBlocks());
             }
         });
     }

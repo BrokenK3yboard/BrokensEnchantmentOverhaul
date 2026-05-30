@@ -95,6 +95,13 @@ public class CommonEvents {
                 entity.setData(EnchantOverhaul.BARRIER_AMOUNT, payload.amount());
             }
         });
+
+        registrar.playToClient(S2CDetectedBlocks.TYPE, S2CDetectedBlocks.STREAM_CODEC, (payload, context) -> {
+            Entity entity = context.player().level().getEntity(payload.entityID());
+            if (entity != null) {
+                entity.setData(EnchantOverhaul.BLOCKS_DETECTED, payload.nearBlocks());
+            }
+        });
     }
 
     @SubscribeEvent
@@ -131,7 +138,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void preHurtEvent(LivingDamageEvent.Pre event) {
-        event.setNewDamage(ModEnchantmentHelper.handleBarrierDamage(event.getEntity(), event.getOriginalDamage()));
+        event.setNewDamage(ModEnchantmentHelper.handleBarrierDamage(event.getEntity(), event.getNewDamage()));
     }
 
     @SubscribeEvent

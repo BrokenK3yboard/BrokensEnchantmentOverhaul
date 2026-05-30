@@ -47,6 +47,8 @@ public class ModRegistry {
     public static final Registry<MapCodec<? extends HookPullEffect>> HOOK_PULL_REGISTRY = Services.PLATFORM.createRegistry(HOOK_PULL_EFFECT);
 
     public static final TagKey<Block> TEMPERED_AFFECTS = TagKey.create(Registries.BLOCK, location("tempered_affects"));
+    public static final TagKey<Block> PROSPECTING_DETECTS = TagKey.create(Registries.BLOCK, location("prospecting_detects"));
+    public static final TagKey<Block> SPELUNKER_DETECTS = TagKey.create(Registries.BLOCK, location("spelunker_detects"));
     public static final TagKey<Item> WEAPON_DURABILITY_BONUS = TagKey.create(Registries.ITEM, location("weapon_durability_bonus"));
     public static final TagKey<Item> TOOL_EFFICIENCY_BONUS = TagKey.create(Registries.ITEM, location("tool_efficiency_bonus"));
     public static final TagKey<Item> EXCAVATE_ENCHANTABLE = TagKey.create(Registries.ITEM, location("enchantable/excavate"));
@@ -60,8 +62,8 @@ public class ModRegistry {
                     .setSentiment(Attribute.Sentiment.POSITIVE).setSyncable(true));
 
     public static final Holder<Attribute> LOOTING_LEVEL = Services.PLATFORM.createAttribute("generic.looting_level",
-            new RangedAttribute("attribute.name.generic.looting_level", 0, 0, 1024).
-                    setSentiment(Attribute.Sentiment.POSITIVE).setSyncable(true));
+            new RangedAttribute("attribute.name.generic.looting_level", 0, 0, 1024)
+                    .setSentiment(Attribute.Sentiment.POSITIVE).setSyncable(true));
 
     public static final Holder<Attribute> POSITIVE_EFFECT_DURATION = Services.PLATFORM.createAttribute("generic.positive_effect_duration",
             new RangedAttribute("attribute.name.generic.positive_effect_duration", 1, 0, 1024)
@@ -97,6 +99,8 @@ public class ModRegistry {
     public static final ResourceKey<Enchantment> TEMPERED = ResourceKey.create(Registries.ENCHANTMENT, location("tempered"));
     public static final ResourceKey<Enchantment> EXCAVATE = ResourceKey.create(Registries.ENCHANTMENT, location("excavate"));
     public static final ResourceKey<Enchantment> HARVEST = ResourceKey.create(Registries.ENCHANTMENT, location("harvest"));
+    public static final ResourceKey<Enchantment> PROSPECTING = ResourceKey.create(Registries.ENCHANTMENT, location("prospecting"));
+    public static final ResourceKey<Enchantment> SPELUNKER = ResourceKey.create(Registries.ENCHANTMENT, location("spelunker"));
 
     public static final ResourceKey<Enchantment> POWER_SHOT = ResourceKey.create(Registries.ENCHANTMENT, location("power_shot"));
     public static final ResourceKey<Enchantment> BARRAGE = ResourceKey.create(Registries.ENCHANTMENT, location("barrage"));
@@ -162,6 +166,7 @@ public class ModRegistry {
                     builder.persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
 
     static {
+        Services.PLATFORM.createLocationComponent("detect_blocks", DetectBlocksEffect.CODEC);
         Services.PLATFORM.createEntityEffectComponent("return_arrows", ReturnArrowEffect.CODEC);
         Services.PLATFORM.createEntityEffectComponent("burn_stack", BurnStackEffect.CODEC);
         Services.PLATFORM.createEntityEffectComponent("volley", VolleyEffect.CODEC);

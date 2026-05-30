@@ -50,6 +50,8 @@ public class ModEnchantments {
         HolderSet.Named<Item> tools = context.lookup(Registries.ITEM).getOrThrow(ItemTags.MINING_LOOT_ENCHANTABLE);
         HolderSet.Named<Item> sword = context.lookup(Registries.ITEM).getOrThrow(ItemTags.SWORD_ENCHANTABLE);
         HolderSet.Named<Item> hoe = context.lookup(Registries.ITEM).getOrThrow(ItemTags.HOES);
+        HolderSet.Named<Item> pickaxe = context.lookup(Registries.ITEM).getOrThrow(ItemTags.PICKAXES);
+        HolderSet.Named<Item> shovel = context.lookup(Registries.ITEM).getOrThrow(ItemTags.SHOVELS);
         HolderSet.Named<Item> bow = context.lookup(Registries.ITEM).getOrThrow(ItemTags.BOW_ENCHANTABLE);
         HolderSet.Named<Item> crossbow = context.lookup(Registries.ITEM).getOrThrow(ItemTags.CROSSBOW_ENCHANTABLE);
         HolderSet.Named<Item> fishing = context.lookup(Registries.ITEM).getOrThrow(ItemTags.FISHING_ENCHANTABLE);
@@ -304,6 +306,16 @@ public class ModEnchantments {
                 .withEffect(ModRegistry.AREA_MINING));
 
         register(context, ModRegistry.HARVEST, createSingleLevelEnch(hoe, 8, mining_exclusive).exclusiveWith(mining_exclusive));
+
+        register(context, ModRegistry.PROSPECTING, createSingleLevelEnch(pickaxe, 8, mining_exclusive).exclusiveWith(mining_exclusive)
+                .withEffect(EnchantmentEffectComponents.LOCATION_CHANGED,
+                        new DetectBlocksEffect(LevelBasedValue.constant(5), ModRegistry.PROSPECTING_DETECTS))
+                .withEffect(ModRegistry.GLINT_OVERRIDE));
+
+        register(context, ModRegistry.SPELUNKER, createSingleLevelEnch(shovel, 8, mining_exclusive).exclusiveWith(mining_exclusive)
+                .withEffect(EnchantmentEffectComponents.LOCATION_CHANGED,
+                        new DetectBlocksEffect(LevelBasedValue.constant(5), ModRegistry.SPELUNKER_DETECTS))
+                .withEffect(ModRegistry.GLINT_OVERRIDE));
 
         register(context, ModRegistry.POWER_SHOT, Enchantment.enchantment(
                 Enchantment.definition(bow, 10, 5,

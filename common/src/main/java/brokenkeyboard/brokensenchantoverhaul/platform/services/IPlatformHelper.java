@@ -72,4 +72,6 @@ public interface IPlatformHelper {
     void setBarrierTimestamp(LivingEntity entity);
     int getBarrierTimeStamp(LivingEntity entity);
     void markScavengerLoot(ItemEntity entity, Entity breaker);
+    void setDetectedBlocksNearby(LivingEntity entity, boolean nearBlocks);
+    boolean getDetectedBlocksNearby(LivingEntity entity);
 }

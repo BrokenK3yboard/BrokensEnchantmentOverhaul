@@ -28,6 +28,8 @@ public class EnchantProvider extends EnchantmentTagsProvider {
                 .add(ModRegistry.POWER_SHOT).add(ModRegistry.BARRAGE)
                 .add(ModRegistry.VOLLEY)
                 .add(ModRegistry.EXCAVATE).add(ModRegistry.TEMPERED)
+                .add(ModRegistry.PROSPECTING)
+                .add(ModRegistry.SPELUNKER)
                 .add(ModRegistry.HARVEST)
                 .add(ModRegistry.GRAPPLE).add(ModRegistry.DEEP_FRYER)
                 .add(ModRegistry.BLACKSMITH);

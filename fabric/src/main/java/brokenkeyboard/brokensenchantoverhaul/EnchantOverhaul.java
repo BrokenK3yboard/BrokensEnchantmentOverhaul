@@ -30,6 +30,7 @@ public class EnchantOverhaul implements ModInitializer {
     public static final AttachmentType<Integer> BURN_STACKS = AttachmentRegistry.createPersistent(ModRegistry.location("burn_stacks"), ExtraCodecs.NON_NEGATIVE_INT);
     public static final AttachmentType<Integer> BARRIER_AMOUNT = AttachmentRegistry.createPersistent(ModRegistry.location("barrier_amount"), ExtraCodecs.NON_NEGATIVE_INT);
     public static final AttachmentType<Integer> BARRIER_TIMESTAMP = AttachmentRegistry.createPersistent(ModRegistry.location("barrier_timestamp"), ExtraCodecs.NON_NEGATIVE_INT);
+    public static final AttachmentType<Boolean> BLOCKS_DETECTED = AttachmentRegistry.createPersistent(ModRegistry.location("blocks_detected"), Codec.BOOL);
 
     @Override
     public void onInitialize() {
@@ -64,6 +65,7 @@ public class EnchantOverhaul implements ModInitializer {
 
         PayloadTypeRegistry.playS2C().register(S2CEnchantmentSyncPayload.TYPE, S2CEnchantmentSyncPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(S2CBarrierSyncPayload.TYPE, S2CBarrierSyncPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playS2C().register(S2CDetectedBlocks.TYPE, S2CDetectedBlocks.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(C2SBarrierSyncPayload.TYPE, C2SBarrierSyncPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(C2SWallJumpPayload.TYPE, C2SWallJumpPayload.STREAM_CODEC);
 

@@ -4,6 +4,7 @@ import brokenkeyboard.brokensenchantoverhaul.EnchantOverhaul;
 import brokenkeyboard.brokensenchantoverhaul.ModRegistry;
 import brokenkeyboard.brokensenchantoverhaul.network.C2SBarrierSyncPayload;
 import brokenkeyboard.brokensenchantoverhaul.network.S2CBarrierSyncPayload;
+import brokenkeyboard.brokensenchantoverhaul.network.S2CDetectedBlocks;
 import brokenkeyboard.brokensenchantoverhaul.platform.services.IPlatformHelper;
 import com.mojang.serialization.MapCodec;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -162,5 +163,25 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public void markScavengerLoot(ItemEntity entity, Entity breaker) {
         entity.setAttached(EnchantOverhaul.SCAVENGER_LOOT, breaker.getName().getString());
+    }
+
+    @Override
+    public void setDetectedBlocksNearby(LivingEntity entity, boolean nearBlocks) {
+        entity.setAttached(EnchantOverhaul.BLOCKS_DETECTED, nearBlocks);
+
+        if (!entity.level().isClientSide()) {
+            if (entity instanceof ServerPlayer serverPlayer) {
+                ServerPlayNetworking.send(serverPlayer, new S2CDetectedBlocks(serverPlayer.getId(), nearBlocks));
+            }
+
+            for (ServerPlayer serverPlayer : PlayerLookup.tracking(entity)) {
+                ServerPlayNetworking.send(serverPlayer, new S2CDetectedBlocks(serverPlayer.getId(), nearBlocks));
+            }
+        }
+    }
+
+    @Override
+    public boolean getDetectedBlocksNearby(LivingEntity entity) {
+        return Optional.ofNullable(entity.getAttached(EnchantOverhaul.BLOCKS_DETECTED)).orElse(false);
     }
 }

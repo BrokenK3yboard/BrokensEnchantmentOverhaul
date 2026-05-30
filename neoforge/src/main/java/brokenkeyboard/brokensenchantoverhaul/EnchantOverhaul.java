@@ -45,6 +45,7 @@ public class EnchantOverhaul {
     public static final Supplier<AttachmentType<Integer>> BURN_STACKS = ATTACHMENT_TYPES.register("burn_stacks", () -> AttachmentType.builder(() -> 0).serialize(ExtraCodecs.NON_NEGATIVE_INT).build());
     public static final Supplier<AttachmentType<Integer>> BARRIER_AMOUNT = ATTACHMENT_TYPES.register("barrier_amount", () -> AttachmentType.builder(() -> 0).serialize(ExtraCodecs.NON_NEGATIVE_INT).build());
     public static final Supplier<AttachmentType<Integer>> BARRIER_TIMESTAMP = ATTACHMENT_TYPES.register("barrier_timestamp", () -> AttachmentType.builder(() -> 0).build());
+    public static final Supplier<AttachmentType<Boolean>> BLOCKS_DETECTED = ATTACHMENT_TYPES.register("blocks_detected", () -> AttachmentType.builder(() -> false).build());
 
     public EnchantOverhaul(ModContainer container, IEventBus bus) {
         ModRegistry.bootstrap();

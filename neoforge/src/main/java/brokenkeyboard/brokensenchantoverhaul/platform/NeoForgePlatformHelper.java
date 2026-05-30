@@ -3,6 +3,7 @@ package brokenkeyboard.brokensenchantoverhaul.platform;
 import brokenkeyboard.brokensenchantoverhaul.EnchantOverhaul;
 import brokenkeyboard.brokensenchantoverhaul.network.C2SBarrierSyncPayload;
 import brokenkeyboard.brokensenchantoverhaul.network.S2CBarrierSyncPayload;
+import brokenkeyboard.brokensenchantoverhaul.network.S2CDetectedBlocks;
 import brokenkeyboard.brokensenchantoverhaul.platform.services.IPlatformHelper;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.advancements.critereon.EntitySubPredicate;
@@ -164,5 +165,22 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     @Override
     public void markScavengerLoot(ItemEntity entity, Entity breaker) {
         entity.setData(EnchantOverhaul.SCAVENGER_LOOT, breaker.getStringUUID());
+    }
+
+    @Override
+    public void setDetectedBlocksNearby(LivingEntity entity, boolean nearBlocks) {
+        entity.setData(EnchantOverhaul.BLOCKS_DETECTED, nearBlocks);
+
+        if (!entity.level().isClientSide()) {
+            if (entity instanceof ServerPlayer serverPlayer) {
+                PacketDistributor.sendToPlayer(serverPlayer, new S2CDetectedBlocks(serverPlayer.getId(), nearBlocks));
+            }
+            PacketDistributor.sendToPlayersTrackingEntity(entity, new S2CDetectedBlocks(entity.getId(), nearBlocks));
+        }
+    }
+
+    @Override
+    public boolean getDetectedBlocksNearby(LivingEntity entity) {
+        return entity.getData(EnchantOverhaul.BLOCKS_DETECTED);
     }
 }
