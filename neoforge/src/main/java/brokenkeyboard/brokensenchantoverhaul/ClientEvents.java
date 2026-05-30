@@ -6,14 +6,14 @@ import brokenkeyboard.brokensenchantoverhaul.render.BarrierLayer;
 import brokenkeyboard.brokensenchantoverhaul.render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.*;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.PlayerSkin;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EntityType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -25,6 +25,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 import static brokenkeyboard.brokensenchantoverhaul.Constants.MOD_ID;
 import static brokenkeyboard.brokensenchantoverhaul.ModRegistry.location;
+import static brokenkeyboard.brokensenchantoverhaul.render.BarrierLayer.LAYER;
 
 @EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
 public class ClientEvents {
@@ -46,16 +47,23 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void addEntityLayers(EntityRenderersEvent.AddLayers event) {
-        addPlayerLayer(event, PlayerSkin.Model.WIDE);
-        addPlayerLayer(event, PlayerSkin.Model.SLIM);
-    }
-
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static void addPlayerLayer(EntityRenderersEvent.AddLayers event, PlayerSkin.Model model) {
-        EntityRenderer<Player> renderer = event.getSkin(model);
-        if (renderer instanceof LivingEntityRenderer livingRenderer) {
-            livingRenderer.addLayer(new BarrierLayer(livingRenderer));
+    public static void addEntityLayers(EntityRenderersEvent.AddLayers event) {
+        for (PlayerSkin.Model type : event.getSkins()) {
+            PlayerRenderer playerRenderer = event.getSkin(type);
+            if (playerRenderer != null) {
+                playerRenderer.addLayer(new BarrierLayer<>(playerRenderer, new HumanoidModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(LAYER))));
+            }
+        }
+
+        for (EntityType<?> entityType : event.getEntityTypes()) {
+            if (event.getRenderer(entityType) instanceof AbstractZombieRenderer<?, ?> zombieRenderer) {
+                zombieRenderer.addLayer(new BarrierLayer(zombieRenderer, new ZombieModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(LAYER))));
+            } else if (event.getRenderer(entityType) instanceof SkeletonRenderer<?> skeletonRenderer) {
+                skeletonRenderer.addLayer(new BarrierLayer(skeletonRenderer, new SkeletonModel(Minecraft.getInstance().getEntityModels().bakeLayer(LAYER))));
+            } else if (event.getRenderer(entityType) instanceof PiglinRenderer piglinRenderer) {
+                piglinRenderer.addLayer(new BarrierLayer(piglinRenderer, new HumanoidModel(Minecraft.getInstance().getEntityModels().bakeLayer(LAYER))));
+            }
         }
     }
 

@@ -13,23 +13,23 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 import static brokenkeyboard.brokensenchantoverhaul.ModRegistry.MAX_LEVELS;
 import static brokenkeyboard.brokensenchantoverhaul.ModRegistry.location;
+import static brokenkeyboard.brokensenchantoverhaul.render.BarrierLayer.LAYER;
 
 public class ClientSetup implements ClientModInitializer {
 
@@ -37,7 +37,7 @@ public class ClientSetup implements ClientModInitializer {
     @SuppressWarnings("UnstableApiUsage")
     public void onInitializeClient() {
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register(this::addEntityLayers);
-        EntityModelLayerRegistry.registerModelLayer(BarrierLayer.LAYER, () -> LayerDefinition.create(HumanoidModel.createMesh(new CubeDeformation(1.1F), 0F), 64, 64));
+        EntityModelLayerRegistry.registerModelLayer(LAYER, () -> LayerDefinition.create(HumanoidModel.createMesh(new CubeDeformation(1.1F), 0F), 64, 64));
 
         try {
             ImmutableList.Builder<EnumAppender.FieldAccess> builder = heartTypeBuilder();
@@ -95,10 +95,21 @@ public class ClientSetup implements ClientModInitializer {
         return builder;
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public void addEntityLayers(EntityType<? extends LivingEntity> entity, LivingEntityRenderer<?, ?> renderer, LivingEntityFeatureRendererRegistrationCallback.RegistrationHelper helper, EntityRendererProvider.Context context) {
         if (renderer.getModel() instanceof PlayerModel) {
-            helper.register(new BarrierLayer<>((RenderLayerParent<LivingEntity, PlayerModel<LivingEntity>>) renderer));
+            helper.register(new BarrierLayer<>((RenderLayerParent<Player, PlayerModel<Player>>) renderer, new HumanoidModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(LAYER))));
+        }
+
+        switch (renderer) {
+            case AbstractZombieRenderer<?, ?> zombieRenderer ->
+                    helper.register(new BarrierLayer(zombieRenderer, new ZombieModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(LAYER))));
+            case SkeletonRenderer<?> skeletonRenderer ->
+                    helper.register(new BarrierLayer<>(skeletonRenderer, new SkeletonModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(LAYER))));
+            case PiglinRenderer piglinRenderer ->
+                    helper.register(new BarrierLayer<>(piglinRenderer, new HumanoidModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(LAYER))));
+            default -> {
+            }
         }
     }
 }
