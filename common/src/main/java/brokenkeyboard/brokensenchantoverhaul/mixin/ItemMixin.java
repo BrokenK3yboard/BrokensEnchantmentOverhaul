@@ -18,6 +18,6 @@ public class ItemMixin {
     @WrapOperation(method = "mineBlock", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/item/ItemStack;hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V"))
     private void checkTempering(ItemStack stack, int amount, LivingEntity entity, EquipmentSlot slot, Operation<Void> original, @Local(argsOnly = true) BlockState state) {
-        original.call(stack, ModEnchantmentHelper.temperedAffects(entity.level().registryAccess(), stack, state) ? 0 : amount, entity, slot);
+        original.call(stack, ModEnchantmentHelper.preventDamageTempered(entity.level().registryAccess(), stack, state) ? 0 : amount, entity, slot);
     }
 }

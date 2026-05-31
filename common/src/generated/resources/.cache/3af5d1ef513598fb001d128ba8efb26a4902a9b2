@@ -1,4 +1,4 @@
-// 1.21.1	2026-05-29T15:11:38.890640427	Tags for minecraft:block mod id brokensenchantoverhaul
-bd2bd01737e8b1458f37f228bdf905c2eb39e309 data/brokensenchantoverhaul/tags/block/prospecting_detects.json
-ad578f1b4f845f020d18257b00fa2f408d3b9e17 data/brokensenchantoverhaul/tags/block/spelunker_detects.json
-807bc8e19bd858acb26409ce08e27fc0e9515cd6 data/brokensenchantoverhaul/tags/block/tempered_affects.json
+// 1.21.1	2026-05-30T19:42:39.91752165	Tags for minecraft:block mod id brokensenchantoverhaul
+b63c0c21ed55a8876e26cca3527e0f3948c4b1ab data/brokensenchantoverhaul/tags/block/damage_tempered.json
+1b4b355bdab71a36da8c582e8a117581ae2a37ed data/brokensenchantoverhaul/tags/block/prospecting_detects.json
+fc45e7f1af0572a7b38d3b1111030cdd0f5d03ed data/brokensenchantoverhaul/tags/block/spelunker_detects.json

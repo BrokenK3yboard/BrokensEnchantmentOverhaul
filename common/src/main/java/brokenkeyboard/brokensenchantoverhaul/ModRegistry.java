@@ -46,7 +46,7 @@ public class ModRegistry {
     public static final Registry<MapCodec<? extends ConditionalAttributeEffect>> ATTRIBUTE_REGISTRY = Services.PLATFORM.createRegistry(CONDITIONAL_ATTRIBUTE_EFFECT);
     public static final Registry<MapCodec<? extends HookPullEffect>> HOOK_PULL_REGISTRY = Services.PLATFORM.createRegistry(HOOK_PULL_EFFECT);
 
-    public static final TagKey<Block> TEMPERED_AFFECTS = TagKey.create(Registries.BLOCK, location("tempered_affects"));
+    public static final TagKey<Block> DAMAGE_TEMPERED = TagKey.create(Registries.BLOCK, location("damage_tempered"));
     public static final TagKey<Block> PROSPECTING_DETECTS = TagKey.create(Registries.BLOCK, location("prospecting_detects"));
     public static final TagKey<Block> SPELUNKER_DETECTS = TagKey.create(Registries.BLOCK, location("spelunker_detects"));
     public static final TagKey<Item> WEAPON_DURABILITY_BONUS = TagKey.create(Registries.ITEM, location("weapon_durability_bonus"));

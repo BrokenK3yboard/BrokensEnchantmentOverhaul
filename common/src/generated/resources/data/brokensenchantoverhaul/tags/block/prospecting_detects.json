@@ -7,7 +7,12 @@
     "#minecraft:diamond_ores",
     "#minecraft:emerald_ores",
     "#minecraft:lapis_ores",
+    "#c:ores/redstone",
     "#c:ores/quartz",
-    "minecraft:chest"
+    "minecraft:small_amethyst_bud",
+    "minecraft:medium_amethyst_bud",
+    "minecraft:large_amethyst_bud",
+    "minecraft:amethyst_cluster",
+    "minecraft:budding_amethyst"
   ]
 }

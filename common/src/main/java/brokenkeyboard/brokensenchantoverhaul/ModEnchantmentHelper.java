@@ -96,9 +96,9 @@ public class ModEnchantmentHelper {
         }
     }
 
-    public static boolean temperedAffects(HolderLookup.Provider provider, ItemStack stack, BlockState state) {
+    public static boolean preventDamageTempered(HolderLookup.Provider provider, ItemStack stack, BlockState state) {
         Holder<Enchantment> enchantment = provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ModRegistry.TEMPERED);
-        return EnchantmentHelper.getItemEnchantmentLevel(enchantment, stack) > 0 && state.is(ModRegistry.TEMPERED_AFFECTS) && isProperTool(state, stack);
+        return EnchantmentHelper.getItemEnchantmentLevel(enchantment, stack) > 0 && !state.is(ModRegistry.DAMAGE_TEMPERED) && isProperTool(state, stack);
     }
 
     private static boolean isProperTool(BlockState state, ItemStack stack) {
