@@ -29,15 +29,15 @@ Fire Aspect: Attacks ignite targets, with consecutive hits increasing burn damag
 <summary>Pickaxe</summary>
 Tempered: Harvesting most non-resource blocks costs no durability.<br>
 Silk Touch: No changes.<br>
-Excavate: Tools break blocks in a small radius.<br>
-Prospecting: Tools glow red if there are ores nearby.<br>
+Excavate: The tool breaks blocks in a small radius.<br>
+Prospecting: The tool glows red if there are nearby ores.<br>
 </details>
 
 <details>
 <summary>Shovel</summary>
 Tempered: Harvesting most non-resource blocks costs no durability.<br>
 Silk Touch: No changes.<br>
-Excavate: Tools break blocks in a small radius.<br>
+Excavate: The tool breaks blocks in a small radius.<br>
 Spelunker: The tool glows red if any suspicious sand, gravel, treasure, or spawners are nearby.<br>
 </details>
 
@@ -155,13 +155,13 @@ Configuration:
  * There is an experimental config option which disables the core enchantment and anvil changes for extended customization. Intended for datapack developers who know what they are doing.
 
 Tags:
- * `tempered_affects`: Controls which blocks can be harvested without a durability cost by their corresponding tool.
- * `tool_efficiency_bonus`: Controls which items gain a mining speed (efficiency) bonus when enchanted.
- * `weapon_durability_bonus`: Controls which items gain a durability (unbreaking) bonus when enchanted.
- * `removed_enchantments`: Controls which enchantments are disabled.
- * `exclusive_set/fishing`: Controls fishing rod enchantment exclusivity. Has no effect unless the `OVERHAUL_ENCHANTMENTS` config setting is disabled.
- * `exclusive_set/leggings`: Controls legging enchantment exclusivity. Has no effect unless the `OVERHAUL_ENCHANTMENTS` config setting is disabled.
- * `enchantable/excavate`: Items in this tag are compatible with the Excavate enchantment.
+ * `brokensenchantoverhaul:damage_tempered`: Controls which blocks cost durability when harvested with a tool enchanted with Tempering, provided it is the correct tool.
+ * `brokensenchantoverhaul:tool_efficiency_bonus`: Controls which items gain a mining speed (efficiency) bonus when enchanted.
+ * `brokensenchantoverhaul:weapon_durability_bonus`: Controls which items gain a durability (unbreaking) bonus when enchanted.
+ * `brokensenchantoverhaul:removed_enchantments`: Controls which enchantments are disabled.
+ * `brokensenchantoverhaul:exclusive_set/fishing`: Controls fishing rod enchantment exclusivity. Has no effect unless the `OVERHAUL_ENCHANTMENTS` config setting is disabled.
+ * `brokensenchantoverhaul:exclusive_set/leggings`: Controls legging enchantment exclusivity. Has no effect unless the `OVERHAUL_ENCHANTMENTS` config setting is disabled.
+ * `brokensenchantoverhaul:enchantable/excavate`: Items in this tag are compatible with the Excavate enchantment.
 
 Credits:
 

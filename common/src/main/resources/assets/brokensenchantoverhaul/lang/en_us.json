@@ -37,7 +37,7 @@
   "enchantment.brokensenchantoverhaul.harvest": "Harvest",
   "enchantment.brokensenchantoverhaul.harvest.desc": "Harvested crops are automatically replanted and have their yield increased.",
   "enchantment.brokensenchantoverhaul.prospecting": "Prospecting",
-  "enchantment.brokensenchantoverhaul.prospecting.desc": "The tool glows red if there are ores nearby.",
+  "enchantment.brokensenchantoverhaul.prospecting.desc": "The tool glows red if there are nearby ores.",
   "enchantment.brokensenchantoverhaul.spelunker": "Spelunker",
   "enchantment.brokensenchantoverhaul.spelunker.desc": "The tool glows red if any suspicious sand, gravel, treasure, or spawners are nearby.",
   "enchantment.brokensenchantoverhaul.power_shot": "Power Shot",
