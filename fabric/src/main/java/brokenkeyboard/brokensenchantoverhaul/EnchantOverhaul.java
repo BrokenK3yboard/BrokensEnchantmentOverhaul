@@ -14,7 +14,6 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.neoforged.fml.config.ModConfig;
@@ -48,11 +47,7 @@ public class EnchantOverhaul implements ModInitializer {
         ServerEntityEvents.EQUIPMENT_CHANGE.register((livingEntity, equipmentSlot, previous, next) ->
                 ConditionalAttributeEffect.removeAttribute(previous, livingEntity, equipmentSlot));
 
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-                server.registryAccess().registryOrThrow(Registries.ENCHANTMENT).entrySet().forEach(enchantment ->
-                        ModRegistry.MAX_LEVELS.put(enchantment.getKey(), enchantment.getValue().getMaxLevel()));
-            ModRegistry.updateMaxLevels = false;
-        });
+        ServerLifecycleEvents.SERVER_STARTING.register(ModRegistry::onServerStart);
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayer player = handler.getPlayer();

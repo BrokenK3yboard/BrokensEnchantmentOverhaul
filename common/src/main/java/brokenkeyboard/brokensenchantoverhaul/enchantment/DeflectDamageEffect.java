@@ -2,7 +2,6 @@ package brokenkeyboard.brokensenchantoverhaul.enchantment;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.enchantment.EnchantedItemInUse;
@@ -15,7 +14,7 @@ public record DeflectDamageEffect(LevelBasedValue amount) implements Conditional
     ).apply(instance, DeflectDamageEffect::new));
 
     @Override
-    public float apply(ServerLevel level, int enchantLevel, EnchantedItemInUse item, LivingEntity user, float damageAmount, DamageSource source, float damageProtection) {
+    public float apply(int enchantLevel, EnchantedItemInUse item, LivingEntity user, float damageAmount, DamageSource source, float damageProtection) {
         if (source.getEntity() instanceof LivingEntity attacker) {
             float reduction = amount.calculate(enchantLevel) * 0.04F;
             float damage = damageAmount * reduction;

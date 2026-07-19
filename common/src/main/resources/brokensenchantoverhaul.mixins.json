@@ -7,6 +7,7 @@
   "mixins": [
     "AbstractArrowMixin",
     "AnvilMenuMixin",
+    "ArmorItemMixin",
     "ConduitBlockEntityMixin",
     "CrossbowItemAccessor",
     "EnchantBookForEmeraldsMixin",
@@ -23,12 +24,13 @@
     "LivingEntityMixin",
     "PlayerMixin",
     "ProjectileWeaponItemMixin",
-    "SetEnchantmentsFunctionMixin"
+    "SetEnchantmentsFunctionMixin",
+    "TieredItemMixin"
   ],
   "client": [
     "ClientPacketMixin",
-    "GuiMixin",
     "EnchantmentScreenMixin",
+    "GuiMixin",
     "ItemRendererMixin"
   ],
   "server": [],

@@ -20,7 +20,7 @@ public interface ConditionalProtectionEffect {
 
     Codec<ConditionalProtectionEffect> CODEC = ModRegistry.PROTECTION_REGISTRY.byNameCodec().dispatch(ConditionalProtectionEffect::codec, Function.identity());
 
-    float apply(ServerLevel level, int enchantLevel, EnchantedItemInUse item, LivingEntity user, float damageAmount, DamageSource source, float damageProtection);
+    float apply(int enchantLevel, EnchantedItemInUse item, LivingEntity user, float damageAmount, DamageSource source, float damageProtection);
 
     MapCodec<? extends ConditionalProtectionEffect> codec();
 
@@ -35,7 +35,7 @@ public interface ConditionalProtectionEffect {
 
             enchantHolder.value().getEffects(ModRegistry.CONDITIONAL_PROTECTION).forEach(effect -> {
                 if (effect.matches(Enchantment.damageContext(level, enchantLevel, entity, source))) {
-                    mutableFloat.setValue(effect.effect().apply(level, enchantLevel, item, entity, damageAmount, source, mutableFloat.floatValue()));
+                    mutableFloat.setValue(effect.effect().apply(enchantLevel, item, entity, damageAmount, source, mutableFloat.floatValue()));
                 }
             });
         });

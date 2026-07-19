@@ -167,9 +167,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void serverStart(ServerStartingEvent event) {
-        event.getServer().registryAccess().registryOrThrow(Registries.ENCHANTMENT).entrySet().forEach(enchantment ->
-                ModRegistry.MAX_LEVELS.put(enchantment.getKey(), enchantment.getValue().getMaxLevel()));
-        ModRegistry.updateMaxLevels = false;
+        ModRegistry.onServerStart(event.getServer());
     }
 
     @SubscribeEvent

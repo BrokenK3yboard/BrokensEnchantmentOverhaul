@@ -2,6 +2,8 @@ package brokenkeyboard.brokensenchantoverhaul;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 
+import java.util.List;
+
 public class Config {
 
     public static final ModConfigSpec SPEC;
@@ -12,6 +14,8 @@ public class Config {
     public static ModConfigSpec.IntValue ENCHANTED_ITEM_FULL_COST;
     public static ModConfigSpec.IntValue ANVIL_RENAME_COST;
     public static ModConfigSpec.BooleanValue TRIDENT_BUILTIN_LOYALTY;
+    public static ModConfigSpec.ConfigValue<List<String>> TIER_ENCHANTABILITY_OVERRIDE;
+    public static ModConfigSpec.ConfigValue<List<String>> ARMOR_ENCHANTABILITY_OVERRIDE;
 
     static {
         ModConfigSpec.Builder configBuilder = new ModConfigSpec.Builder();
@@ -54,5 +58,13 @@ public class Config {
         TRIDENT_BUILTIN_LOYALTY = builder
                 .comment("When enabled, thrown tridents will return to their owners without the need for the Loyalty Enchantment")
                 .define("Tridents have builtin Loyalty", true);
+
+        TIER_ENCHANTABILITY_OVERRIDE = builder
+                .comment("Overrides the enchantment value of tool and weapon material tiers. Format is tier=value. Minimum value is 1, maximum value is 25.")
+                .define("Tiered item enchantment value overrides", List.of());
+
+        ARMOR_ENCHANTABILITY_OVERRIDE = builder
+                .comment("Overrides the enchantment value of armor materials. Format is namespace:material=value. Minimum value is 1, maximum value is 25.")
+                .define("Armor enchantment value overrides", List.of("minecraft:leather=21", "minecraft:chainmail=18", "minecraft:iron=15", "minecraft:netherite=10"));
     }
 }

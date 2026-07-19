@@ -16,6 +16,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageType;
@@ -115,6 +116,8 @@ public class ModRegistry {
     public static final Holder<MobEffect> SCAVENGER_EFFECT = Services.PLATFORM.createEffectHolder("scavenger", new EnchantmentMobEffect(SCAVENGER, 5525848));
 
     public static final Map<ResourceKey<Enchantment>, Integer> MAX_LEVELS = new Object2IntOpenHashMap<>();
+    public static final Map<String, Integer> TIER_ENCHANTABILITY_OVERRIDE = new Object2IntOpenHashMap<>();
+    public static final Map<String, Integer> ARMOR_ENCHANTABILITY_OVERRIDE = new Object2IntOpenHashMap<>();
 
     public static boolean updateMaxLevels = true;
 
@@ -178,6 +181,26 @@ public class ModRegistry {
         Services.PLATFORM.createEntitySubPredicate("has_negative", HasNegativeEffectPredicate.CODEC);
         Services.PLATFORM.createEntitySubPredicate("is_low_health", IsLowHealthPredicate.CODEC);
         Services.PLATFORM.createEntitySubPredicate("entity_killed", EntityKilledPredicate.CODEC);
+    }
+
+    public static void onServerStart(MinecraftServer server) {
+        server.registryAccess().registryOrThrow(Registries.ENCHANTMENT).entrySet().forEach(enchantment ->
+                ModRegistry.MAX_LEVELS.put(enchantment.getKey(), enchantment.getValue().getMaxLevel()));
+        ModRegistry.updateMaxLevels = false;
+
+        Config.TIER_ENCHANTABILITY_OVERRIDE.get().forEach(path -> {
+            if (path.matches(Constants.STRING_EQUAL_INT_REGEX)) {
+                String [] split = path.split(Constants.EQUALS);
+                ModRegistry.TIER_ENCHANTABILITY_OVERRIDE.put(split[0].toLowerCase(), Math.clamp(Integer.parseInt(split[1]), 1, 25));
+            }
+        });
+
+        Config.ARMOR_ENCHANTABILITY_OVERRIDE.get().forEach(path -> {
+            if (path.matches(Constants.STRING_EQUAL_INT_REGEX)) {
+                String [] split = path.split(Constants.EQUALS);
+                ModRegistry.ARMOR_ENCHANTABILITY_OVERRIDE.put(split[0].toLowerCase(), Math.clamp(Integer.parseInt(split[1]), 1, 25));
+            }
+        });
     }
 
     public static ResourceLocation location(String name) {

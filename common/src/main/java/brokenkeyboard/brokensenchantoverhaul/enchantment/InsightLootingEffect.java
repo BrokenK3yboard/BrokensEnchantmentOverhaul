@@ -42,6 +42,6 @@ public record InsightLootingEffect() implements ConditionalAttributeEffect {
                 enchantmentValue += armor.getMaterial().value().enchantmentValue();
             }
         }
-        return 1 + Math.floor(enchantmentValue / 24);
+        return Math.max(1, Math.floor(enchantmentValue / 25));
     }
 }
