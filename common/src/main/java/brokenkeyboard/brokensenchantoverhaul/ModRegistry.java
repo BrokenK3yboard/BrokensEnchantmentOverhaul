@@ -82,6 +82,9 @@ public class ModRegistry {
             new RangedAttribute("attribute.name.generic.barrier_strength", 0, 0, 2048)
                     .setSentiment(Attribute.Sentiment.POSITIVE).setSyncable(true));
 
+    public static final Holder<Attribute> SWEEPING_DAMAGE_BONUS = Services.PLATFORM.createAttribute("generic.sweeping_damage_bonus",
+            new RangedAttribute("attribute.name.generic.sweeping_damage_bonus", 0, 0, 8));
+
     public static final ResourceKey<Enchantment> FILTERED = ResourceKey.create(Registries.ENCHANTMENT, location("filtered"));
     public static final ResourceKey<Enchantment> INSIGHT = ResourceKey.create(Registries.ENCHANTMENT, location("insight"));
     public static final ResourceKey<Enchantment> DEXTERITY = ResourceKey.create(Registries.ENCHANTMENT, location("dexterity"));
@@ -162,10 +165,6 @@ public class ModRegistry {
 
     public static final DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>> POWER_SHOT_KNOCKBACK = Services.PLATFORM
             .createEnchantmentComponent("power_shot_knockback", builder ->
-                    builder.persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
-
-    public static final DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>> SWEEPING_DAMAGE_BONUS = Services.PLATFORM
-            .createEnchantmentComponent("sweeping_damage_multiplier", builder ->
                     builder.persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
 
     static {

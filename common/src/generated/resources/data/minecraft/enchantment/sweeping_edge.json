@@ -4,16 +4,16 @@
     "translate": "enchantment.minecraft.sweeping_edge"
   },
   "effects": {
-    "brokensenchantoverhaul:sweeping_damage_multiplier": [
+    "minecraft:attributes": [
       {
-        "effect": {
-          "type": "minecraft:multiply",
-          "factor": {
-            "type": "minecraft:linear",
-            "base": 2.0,
-            "per_level_above_first": 1.0
-          }
-        }
+        "amount": {
+          "type": "minecraft:linear",
+          "base": 2.0,
+          "per_level_above_first": 1.0
+        },
+        "attribute": "brokensenchantoverhaul:generic.sweeping_damage_bonus",
+        "id": "minecraft:enchantment.sweeping_edge",
+        "operation": "add_value"
       }
     ]
   },

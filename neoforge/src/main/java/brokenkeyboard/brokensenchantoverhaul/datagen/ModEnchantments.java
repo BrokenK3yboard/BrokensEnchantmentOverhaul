@@ -476,8 +476,12 @@ public class ModEnchantments {
                         Enchantment.dynamicCost(20, 9),
                         4,
                         EquipmentSlotGroup.MAINHAND))
-                .withEffect(ModRegistry.SWEEPING_DAMAGE_BONUS,
-                        new MultiplyValue(LevelBasedValue.perLevel(2F, 1F))));
+                .withEffect(EnchantmentEffectComponents.ATTRIBUTES,
+                        new EnchantmentAttributeEffect(
+                                ResourceLocation.withDefaultNamespace("enchantment.sweeping_edge"),
+                                ModRegistry.SWEEPING_DAMAGE_BONUS,
+                                LevelBasedValue.perLevel(2F, 1F),
+                                AttributeModifier.Operation.ADD_VALUE)));
 
         register(context, Enchantments.SMITE, Enchantment.enchantment(
                 Enchantment.definition(sword, 5, 5,

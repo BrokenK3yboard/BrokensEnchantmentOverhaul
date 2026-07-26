@@ -7,11 +7,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.EnchantmentTags;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -130,22 +128,6 @@ public class ModEnchantmentHelper {
         if (barrierAmount > 0) {
             Services.PLATFORM.setBarrierAmount(entity, barrierAmount - 1);
             return 1;
-        }
-        return damage;
-    }
-
-    public static float getSweepingEdgeBonus(List<LivingEntity> entities, Player attacker, Entity target, ItemStack weapon, DamageSource source, float damage) {
-        MutableFloat damageBonus = new MutableFloat(damage);
-        if (attacker.level() instanceof ServerLevel level) {
-            EnchantmentHelper.runIterationOnItem(weapon, (enchantHolder, enchantLevel) ->
-                    enchantHolder.value().getEffects(ModRegistry.SWEEPING_DAMAGE_BONUS).forEach(effect -> {
-                        if (effect.matches(Enchantment.damageContext(level, enchantLevel, target, source))) {
-                            long entityCount = entities.stream().filter(target1 -> !target1.is(attacker) && !target1.isAlliedTo(attacker) &&
-                                    (!(target1 instanceof ArmorStand) || !((ArmorStand) target1).isMarker()) && attacker.distanceToSqr(target1) < 9.0D).count();
-                            damageBonus.add(effect.effect().process(enchantLevel, attacker.getRandom(), entityCount - 1));
-                        }
-                    }));
-            return damageBonus.floatValue() + 2;
         }
         return damage;
     }
