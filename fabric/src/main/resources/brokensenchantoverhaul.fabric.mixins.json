@@ -9,6 +9,7 @@
   },
   "mixins": [
     "BlockFabricMixin",
+    "EntityFabricMixin",
     "ItemCombinerMenuAccessor",
     "ItemEntityFabricMixin",
     "LivingEntityFabricMixin",
