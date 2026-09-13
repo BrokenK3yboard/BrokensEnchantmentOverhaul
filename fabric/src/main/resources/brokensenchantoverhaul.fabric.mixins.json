@@ -12,6 +12,7 @@
     "EntityFabricMixin",
     "ItemCombinerMenuAccessor",
     "ItemEntityFabricMixin",
+    "ItemStackFabricMixin",
     "LivingEntityFabricMixin",
     "PlayerFabricMixin"
   ],

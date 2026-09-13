@@ -1,6 +1,7 @@
 package brokenkeyboard.brokensenchantoverhaul;
 
 import brokenkeyboard.brokensenchantoverhaul.component.DamageTypeResist;
+import brokenkeyboard.brokensenchantoverhaul.effect.GenericMobEffect;
 import brokenkeyboard.brokensenchantoverhaul.effect.EnchantmentMobEffect;
 import brokenkeyboard.brokensenchantoverhaul.enchantment.*;
 import brokenkeyboard.brokensenchantoverhaul.platform.Services;
@@ -27,8 +28,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
+import net.minecraft.world.item.enchantment.effects.RemoveBinomial;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
@@ -117,6 +120,7 @@ public class ModRegistry {
 
     public static final Holder<MobEffect> BREACH_EFFECT = Services.PLATFORM.createEffectHolder("breach", new EnchantmentMobEffect(Enchantments.BREACH, 8028612));
     public static final Holder<MobEffect> SCAVENGER_EFFECT = Services.PLATFORM.createEffectHolder("scavenger", new EnchantmentMobEffect(SCAVENGER, 5525848));
+    public static final Holder<MobEffect> BLACKSMITH_EFFECT = Services.PLATFORM.createEffectHolder("blacksmith", new GenericMobEffect(5525848));
 
     public static final Map<ResourceKey<Enchantment>, Integer> MAX_LEVELS = new Object2IntOpenHashMap<>();
     public static final Map<String, Integer> TIER_ENCHANTABILITY_OVERRIDE = new Object2IntOpenHashMap<>();
@@ -181,6 +185,8 @@ public class ModRegistry {
         Services.PLATFORM.createEntitySubPredicate("is_low_health", IsLowHealthPredicate.CODEC);
         Services.PLATFORM.createEntitySubPredicate("entity_killed", EntityKilledPredicate.CODEC);
     }
+
+    public static final RemoveBinomial BLACKSMITH_DURABILITY_BONUS = new RemoveBinomial(LevelBasedValue.constant(0.5F));
 
     public static void onServerStart(MinecraftServer server) {
         server.registryAccess().registryOrThrow(Registries.ENCHANTMENT).entrySet().forEach(enchantment ->

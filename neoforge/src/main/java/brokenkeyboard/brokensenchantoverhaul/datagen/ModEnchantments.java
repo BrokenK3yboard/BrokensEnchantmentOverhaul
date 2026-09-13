@@ -372,7 +372,9 @@ public class ModEnchantments {
                 .withEffect(EnchantmentEffectComponents.POST_ATTACK,
                         EnchantmentTarget.ATTACKER,
                         EnchantmentTarget.ATTACKER,
-                        new RepairEquippedItem(LevelBasedValue.constant(8)),
+                        new ApplyMobEffect(HolderSet.direct(ModRegistry.BLACKSMITH_EFFECT),
+                                LevelBasedValue.constant(30F), LevelBasedValue.constant(30F),
+                                LevelBasedValue.constant(0F), LevelBasedValue.constant(0F)),
                         AllOfCondition.allOf(
                             LootItemEntityPropertyCondition.hasProperties(
                                     LootContext.EntityTarget.THIS,

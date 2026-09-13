@@ -4,6 +4,7 @@
   "package": "brokenkeyboard.brokensenchantoverhaul.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "ItemStackNeoforgeMixin"
   ],
   "client": [
   ],

@@ -16,8 +16,12 @@
       {
         "affected": "attacker",
         "effect": {
-          "type": "brokensenchantoverhaul:repair_equipped_item",
-          "repair": 8.0
+          "type": "minecraft:apply_mob_effect",
+          "max_amplifier": 0.0,
+          "max_duration": 30.0,
+          "min_amplifier": 0.0,
+          "min_duration": 30.0,
+          "to_apply": "brokensenchantoverhaul:blacksmith"
         },
         "enchanted": "attacker",
         "requirements": {
