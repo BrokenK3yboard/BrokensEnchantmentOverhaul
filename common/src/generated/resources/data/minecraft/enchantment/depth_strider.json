@@ -4,7 +4,7 @@
     "translate": "enchantment.minecraft.depth_strider"
   },
   "effects": {
-    "brokensenchantoverhaul:change_water_effects": {},
+    "brokensenchantoverhaul:depth_strider_splash_water_bonus": {},
     "minecraft:attributes": [
       {
         "amount": {
@@ -20,27 +20,64 @@
     "minecraft:location_changed": [
       {
         "effect": {
-          "type": "minecraft:attribute",
-          "amount": {
-            "type": "minecraft:linear",
-            "base": 0.2,
-            "per_level_above_first": 0.2
-          },
-          "attribute": "minecraft:generic.movement_speed",
-          "id": "minecraft:enchantment.depth_strider_land_speed",
-          "operation": "add_multiplied_base"
+          "type": "minecraft:apply_mob_effect",
+          "max_amplifier": 0.0,
+          "max_duration": 15.0,
+          "min_amplifier": 0.0,
+          "min_duration": 15.0,
+          "to_apply": "brokensenchantoverhaul:depth_strider"
         },
         "requirements": {
-          "condition": "minecraft:entity_properties",
-          "entity": "this",
-          "predicate": {
-            "effects": {
-              "minecraft:dolphins_grace": {}
+          "condition": "minecraft:any_of",
+          "terms": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "movement_affected_by": {
+                  "block": {
+                    "blocks": "minecraft:water"
+                  }
+                }
+              }
             },
-            "flags": {
-              "is_swimming": false
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "flags": {
+                  "is_swimming": true
+                }
+              }
+            },
+            {
+              "condition": "minecraft:all_of",
+              "terms": [
+                {
+                  "condition": "minecraft:entity_properties",
+                  "entity": "this",
+                  "predicate": {
+                    "location": {
+                      "can_see_sky": true
+                    }
+                  }
+                },
+                {
+                  "condition": "minecraft:any_of",
+                  "terms": [
+                    {
+                      "condition": "minecraft:weather_check",
+                      "thundering": true
+                    },
+                    {
+                      "condition": "minecraft:weather_check",
+                      "raining": true
+                    }
+                  ]
+                }
+              ]
             }
-          }
+          ]
         }
       }
     ]

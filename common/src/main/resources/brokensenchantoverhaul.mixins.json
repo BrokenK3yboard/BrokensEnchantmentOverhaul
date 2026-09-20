@@ -25,6 +25,7 @@
     "PlayerMixin",
     "ProjectileWeaponItemMixin",
     "SetEnchantmentsFunctionMixin",
+    "ThrownPotionMixin",
     "TieredItemMixin"
   ],
   "client": [

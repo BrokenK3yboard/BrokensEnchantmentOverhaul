@@ -1,5 +1,6 @@
 package brokenkeyboard.brokensenchantoverhaul.effect;
 
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.effect.MobEffect;
@@ -15,6 +16,11 @@ public class EnchantmentMobEffect extends MobEffect {
 
     public EnchantmentMobEffect(ResourceKey<Enchantment> enchantment, int color) {
         super(MobEffectCategory.NEUTRAL, color);
+        this.ENCHANTMENT = enchantment;
+    }
+
+    public EnchantmentMobEffect(ResourceKey<Enchantment> enchantment, int color, ParticleOptions particleType) {
+        super(MobEffectCategory.NEUTRAL, color, particleType);
         this.ENCHANTMENT = enchantment;
     }
 

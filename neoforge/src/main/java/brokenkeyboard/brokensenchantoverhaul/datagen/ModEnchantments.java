@@ -393,18 +393,7 @@ public class ModEnchantments {
                 EquipmentSlotGroup.MAINHAND))
                 .exclusiveWith(trident_exclusive)
                 .withEffect(EnchantmentEffectComponents.DAMAGE,
-                        new AddValue(LevelBasedValue.perLevel(2F)),
-                        AnyOfCondition.anyOf(
-                                LootItemEntityPropertyCondition.hasProperties(
-                                        LootContext.EntityTarget.THIS,
-                                        EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setSwimming(true))),
-                                AllOfCondition.allOf(
-                                        LootItemEntityPropertyCondition.hasProperties(
-                                                LootContext.EntityTarget.THIS,
-                                                EntityPredicate.Builder.entity().located(LocationPredicate.Builder.location().setCanSeeSky(true))),
-                                        AnyOfCondition.anyOf(
-                                                WeatherCheck.weather().setThundering(true),
-                                                WeatherCheck.weather().setRaining(true))))));
+                        new AddValue(LevelBasedValue.perLevel(2F)), isInWaterOrRain()));
 
         register(context, Enchantments.CHANNELING, Enchantment.enchantment(
                 Enchantment.definition(trident, 1, 1,
@@ -551,33 +540,20 @@ public class ModEnchantments {
                                 LevelBasedValue.perLevel(0.33333334F),
                                 AttributeModifier.Operation.ADD_VALUE))
                 .withEffect(EnchantmentEffectComponents.LOCATION_CHANGED,
-                        new EnchantmentAttributeEffect(
-                                ResourceLocation.withDefaultNamespace("enchantment.depth_strider_land_speed"),
-                                Attributes.MOVEMENT_SPEED,
-                                LevelBasedValue.perLevel(0.2F),
-                                AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
-                                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
-                                        EntityPredicate.Builder.entity()
-                                                .flags(EntityFlagsPredicate.Builder.flags().setSwimming(false))
-                                                .effects(MobEffectsPredicate.Builder.effects().and(MobEffects.DOLPHINS_GRACE))))
-                .withEffect(ModRegistry.CHANGE_WATER_EFFECTS));
-
-        EntityPredicate.Builder soul_speed_sand = EntityPredicate.Builder.entity().periodicTick(5)
-                .flags(EntityFlagsPredicate.Builder.flags().setIsFlying(false).setOnGround(true))
-                .moving(MovementPredicate.horizontalSpeed(MinMaxBounds.Doubles.atLeast(1.0E-5F)))
-                .movementAffectedBy(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.SOUL_SPEED_BLOCKS)));
-
-        EntityPredicate.Builder soul_speed_health = EntityPredicate.Builder.entity().periodicTick(5)
-                .flags(EntityFlagsPredicate.Builder.flags().setIsFlying(false).setOnGround(true))
-                .moving(MovementPredicate.horizontalSpeed(MinMaxBounds.Doubles.atLeast(1.0E-5F)))
-                .subPredicate(new IsLowHealthPredicate(0.25F));
+                        new ApplyMobEffect(
+                                HolderSet.direct(ModRegistry.DEPTH_STRIDER),
+                                LevelBasedValue.constant(15F), LevelBasedValue.constant(15F),
+                                LevelBasedValue.constant(0F), LevelBasedValue.constant(0F)),
+                        isInWaterOrRain())
+                .withEffect(ModRegistry.DEPTH_STRIDER_SPLASH_WATER_BONUS));
 
         LootItemCondition.Builder soul_sand_speed = AllOfCondition.allOf(
                 InvertedLootItemCondition.invert(
                         LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
                                 EntityPredicate.Builder.entity().vehicle(EntityPredicate.Builder.entity()))),
                 AnyOfCondition.anyOf(
-                        AllOfCondition.allOf(EnchantmentActiveCheck.enchantmentActiveCheck(),
+                        AllOfCondition.allOf(
+                                EnchantmentActiveCheck.enchantmentActiveCheck(),
                                 LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
                                         EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setIsFlying(false))),
                                 AnyOfCondition.anyOf(
@@ -630,8 +606,8 @@ public class ModEnchantments {
                                 SpawnParticlesEffect.fixedVelocity(ConstantFloat.of(0.1F)),
                                 ConstantFloat.of(1.0F)),
                         AnyOfCondition.anyOf(
-                                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, soul_speed_sand),
-                                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, soul_speed_health)))
+                                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, soulSpeedOnSoulSand()),
+                                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, soulSpeedLowHealth())))
                 .withEffect(EnchantmentEffectComponents.TICK,
                         new PlaySoundEffect(
                                 SoundEvents.SOUL_ESCAPE,
@@ -639,8 +615,8 @@ public class ModEnchantments {
                                 UniformFloat.of(0.6F, 1.0F)),
                         AllOfCondition.allOf(LootItemRandomChanceCondition.randomChance(0.35F),
                                 AnyOfCondition.anyOf(
-                                        LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, soul_speed_sand),
-                                        LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, soul_speed_health)))));
+                                        LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, soulSpeedOnSoulSand()),
+                                        LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, soulSpeedLowHealth())))));
     }
 
     public static Enchantment.Builder createSingleLevelEnch(HolderSet.Named<Item> holder, int cost, HolderSet<Enchantment> exclusive) {
@@ -651,6 +627,37 @@ public class ModEnchantments {
     public static Enchantment.Builder createArrowEnch(HolderSet.Named<Item> holder, HolderSet<Enchantment> exclusive) {
         return Enchantment.enchantment(Enchantment.definition(holder, 1, 1,
                 Enchantment.constantCost(20), Enchantment.constantCost(50), 8, EquipmentSlotGroup.MAINHAND, EquipmentSlotGroup.OFFHAND)).exclusiveWith(exclusive);
+    }
+
+    public static EntityPredicate.Builder soulSpeedOnSoulSand() {
+        return EntityPredicate.Builder.entity().periodicTick(5)
+                .flags(EntityFlagsPredicate.Builder.flags().setIsFlying(false).setOnGround(true))
+                .moving(MovementPredicate.horizontalSpeed(MinMaxBounds.Doubles.atLeast(1.0E-5F)))
+                .movementAffectedBy(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.SOUL_SPEED_BLOCKS)));
+    }
+
+    public static EntityPredicate.Builder soulSpeedLowHealth() {
+        return EntityPredicate.Builder.entity().periodicTick(5)
+                .flags(EntityFlagsPredicate.Builder.flags().setIsFlying(false).setOnGround(true))
+                .moving(MovementPredicate.horizontalSpeed(MinMaxBounds.Doubles.atLeast(1.0E-5F)))
+                .subPredicate(new IsLowHealthPredicate(0.25F));
+    }
+
+    public static AnyOfCondition.Builder isInWaterOrRain() {
+        return AnyOfCondition.anyOf(
+                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
+                        EntityPredicate.Builder.entity().movementAffectedBy(
+                                LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(Blocks.WATER)))),
+                LootItemEntityPropertyCondition.hasProperties(
+                        LootContext.EntityTarget.THIS,
+                        EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setSwimming(true))),
+                AllOfCondition.allOf(
+                        LootItemEntityPropertyCondition.hasProperties(
+                                LootContext.EntityTarget.THIS,
+                                EntityPredicate.Builder.entity().located(LocationPredicate.Builder.location().setCanSeeSky(true))),
+                        AnyOfCondition.anyOf(
+                                WeatherCheck.weather().setThundering(true),
+                                WeatherCheck.weather().setRaining(true))));
     }
 
     private static void register(BootstrapContext<Enchantment> registry, ResourceKey<Enchantment> key, Enchantment.Builder builder) {

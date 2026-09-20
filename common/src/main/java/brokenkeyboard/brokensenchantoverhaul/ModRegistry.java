@@ -14,6 +14,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -28,10 +29,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
-import net.minecraft.world.item.enchantment.effects.RemoveBinomial;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
@@ -120,7 +119,8 @@ public class ModRegistry {
 
     public static final Holder<MobEffect> BREACH_EFFECT = Services.PLATFORM.createEffectHolder("breach", new EnchantmentMobEffect(Enchantments.BREACH, 8028612));
     public static final Holder<MobEffect> SCAVENGER_EFFECT = Services.PLATFORM.createEffectHolder("scavenger", new EnchantmentMobEffect(SCAVENGER, 5525848));
-    public static final Holder<MobEffect> BLACKSMITH_EFFECT = Services.PLATFORM.createEffectHolder("blacksmith", new GenericMobEffect(5525848));
+    public static final Holder<MobEffect> DEPTH_STRIDER = Services.PLATFORM.createEffectHolder("depth_strider", new EnchantmentMobEffect(Enchantments.DEPTH_STRIDER, 4159204, ParticleTypes.FALLING_WATER));
+    public static final Holder<MobEffect> BLACKSMITH_EFFECT = Services.PLATFORM.createEffectHolder("blacksmith", new GenericMobEffect(5592405));
 
     public static final Map<ResourceKey<Enchantment>, Integer> MAX_LEVELS = new Object2IntOpenHashMap<>();
     public static final Map<String, Integer> TIER_ENCHANTABILITY_OVERRIDE = new Object2IntOpenHashMap<>();
@@ -136,8 +136,8 @@ public class ModRegistry {
             .createEnchantmentComponent("stabilize_radius", builder ->
                     builder.persistent(Unit.CODEC));
 
-    public static final DataComponentType<Unit> CHANGE_WATER_EFFECTS = Services.PLATFORM
-            .createEnchantmentComponent("change_water_effects", builder ->
+    public static final DataComponentType<Unit> DEPTH_STRIDER_SPLASH_WATER_BONUS = Services.PLATFORM
+            .createEnchantmentComponent("depth_strider_splash_water_bonus", builder ->
                     builder.persistent(Unit.CODEC));
 
     public static final DataComponentType<Unit> AREA_MINING = Services.PLATFORM
@@ -178,15 +178,13 @@ public class ModRegistry {
         Services.PLATFORM.createEntityEffectComponent("volley", VolleyEffect.CODEC);
         Services.PLATFORM.createEntityEffectComponent("scavenger_magnet", ScavengerMagnetEffect.CODEC);
         Services.PLATFORM.createEntityEffectComponent("wall_slide", WallSlideEffect.CODEC);
-        Services.PLATFORM.createEntityEffectComponent("repair_equipped_item", RepairEquippedItem.CODEC);
+        Services.PLATFORM.createEntityEffectComponent("repair_equipped_item", RepairEquippedItemEffect.CODEC);
 
         Services.PLATFORM.createEntitySubPredicate("arrow_pickup", PickupArrowPredicate.CODEC);
         Services.PLATFORM.createEntitySubPredicate("has_negative", HasNegativeEffectPredicate.CODEC);
         Services.PLATFORM.createEntitySubPredicate("is_low_health", IsLowHealthPredicate.CODEC);
         Services.PLATFORM.createEntitySubPredicate("entity_killed", EntityKilledPredicate.CODEC);
     }
-
-    public static final RemoveBinomial BLACKSMITH_DURABILITY_BONUS = new RemoveBinomial(LevelBasedValue.constant(0.5F));
 
     public static void onServerStart(MinecraftServer server) {
         server.registryAccess().registryOrThrow(Registries.ENCHANTMENT).entrySet().forEach(enchantment ->

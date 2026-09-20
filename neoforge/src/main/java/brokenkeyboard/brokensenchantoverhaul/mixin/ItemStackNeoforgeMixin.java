@@ -1,5 +1,6 @@
 package brokenkeyboard.brokensenchantoverhaul.mixin;
 
+import brokenkeyboard.brokensenchantoverhaul.ModEnchantmentHelper;
 import brokenkeyboard.brokensenchantoverhaul.ModRegistry;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -17,7 +18,7 @@ public class ItemStackNeoforgeMixin {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;processDurabilityChange(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;I)I"))
     private int applyBlacksmithDurabilityBonus(ServerLevel level, ItemStack stack, int damage, Operation<Integer> original, @Local(argsOnly = true)LivingEntity entity) {
-        int durabilityDamage = entity != null && entity.hasEffect(ModRegistry.BLACKSMITH_EFFECT) ? (int) ModRegistry.BLACKSMITH_DURABILITY_BONUS.process(1, level.getRandom(), damage) : damage;
+        int durabilityDamage = entity != null && entity.hasEffect(ModRegistry.BLACKSMITH_EFFECT) ? (int) ModEnchantmentHelper.BLACKSMITH_DURABILITY_BONUS.process(1, level.getRandom(), damage) : damage;
         return original.call(level, stack, durabilityDamage);
     }
 }

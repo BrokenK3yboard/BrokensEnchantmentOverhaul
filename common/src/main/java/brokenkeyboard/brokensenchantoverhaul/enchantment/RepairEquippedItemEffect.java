@@ -14,10 +14,10 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 
-public record RepairEquippedItem(LevelBasedValue repair) implements EnchantmentEntityEffect {
+public record RepairEquippedItemEffect(LevelBasedValue repair) implements EnchantmentEntityEffect {
 
-    public static final MapCodec<RepairEquippedItem> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            LevelBasedValue.CODEC.fieldOf("repair").forGetter(RepairEquippedItem::repair)).apply(instance, RepairEquippedItem::new));
+    public static final MapCodec<RepairEquippedItemEffect> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            LevelBasedValue.CODEC.fieldOf("repair").forGetter(RepairEquippedItemEffect::repair)).apply(instance, RepairEquippedItemEffect::new));
 
     @Override
     public void apply(ServerLevel level, int enchantLevel, EnchantedItemInUse item, Entity entity, Vec3 vec3) {

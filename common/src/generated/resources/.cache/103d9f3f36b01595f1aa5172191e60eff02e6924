@@ -1,4 +1,4 @@
-// 1.21.1	2026-09-12T18:01:03.648805993	Registries
+// 1.21.1	2026-09-20T01:07:49.998189703	Registries
 f95d8c725961dc45cc25a379727ee90899a62af2 data/brokensenchantoverhaul/damage_type/arrow_multishot.json
 7f637742bcc13f0c2c9d543a90ea771cf4d9a4a0 data/brokensenchantoverhaul/enchantment/adaptive.json
 7b796b36dca81ab10f07e156c41e1cf171ddefc3 data/brokensenchantoverhaul/enchantment/agility.json
@@ -24,10 +24,10 @@ fb613a2eda339e5713e583d1c8ef6ea0ec4c7f29 data/brokensenchantoverhaul/enchantment
 f7d196044e18313800a0481dbd3b0e34a3058d22 data/brokensenchantoverhaul/enchantment/volley.json
 92897b77c295b8aac813eba9dfcc3e8b8f5fc2a3 data/minecraft/enchantment/breach.json
 9a5af085d4c26a42b744f79ce944b4d40abbb5c2 data/minecraft/enchantment/channeling.json
-784a90c4ff6e9f87f3b8c99b218919f4f94b0694 data/minecraft/enchantment/depth_strider.json
+8d564b9c9e25eb0ae52485d62b97fe6fb3c7a61b data/minecraft/enchantment/depth_strider.json
 156ae6f8bdd8818756880d83cd3a7e5d4b75c6a3 data/minecraft/enchantment/fire_aspect.json
 255325325d26c469cc13a047e12f1c79a04bb4af data/minecraft/enchantment/flame.json
-e00898eec760f5c28f744d902d1cc10fab1dcad1 data/minecraft/enchantment/impaling.json
+d3e48f0c7a570732f396ca1d0d96878bea5ac0da data/minecraft/enchantment/impaling.json
 a9667222013101d1c02991db5722cc7abcd6faa1 data/minecraft/enchantment/smite.json
 acad72604746db7113f380c514b8d6f41831883f data/minecraft/enchantment/soul_speed.json
 d00dacd3fa4aaa5887cfbebebf513b76edf55d25 data/minecraft/enchantment/sweeping_edge.json

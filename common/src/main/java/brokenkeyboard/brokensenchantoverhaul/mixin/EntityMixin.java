@@ -7,7 +7,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.state.BlockState;
@@ -48,7 +47,7 @@ public class EntityMixin {
 
     @Inject(method = "isInWaterOrRain", at = @At("RETURN"), cancellable = true)
     private void checkDepthStrider(CallbackInfoReturnable<Boolean> cir) {
-        if ((Entity) (Object) this instanceof LivingEntity entity && EnchantmentHelper.getRandomItemWith(ModRegistry.CHANGE_WATER_EFFECTS, entity, stack -> true).isPresent()) {
+        if ((Entity) (Object) this instanceof LivingEntity entity && entity.hasEffect(ModRegistry.DEPTH_STRIDER)) {
             cir.setReturnValue(true);
         }
     }

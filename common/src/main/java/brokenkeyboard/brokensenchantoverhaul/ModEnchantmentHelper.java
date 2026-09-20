@@ -4,6 +4,7 @@ import brokenkeyboard.brokensenchantoverhaul.platform.Services;
 import net.minecraft.core.*;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.EnchantmentTags;
@@ -20,18 +21,21 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.LevelBasedValue;
+import net.minecraft.world.item.enchantment.effects.RemoveBinomial;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import static brokenkeyboard.brokensenchantoverhaul.ModRegistry.HARVEST;
@@ -39,8 +43,15 @@ import static brokenkeyboard.brokensenchantoverhaul.ModRegistry.SCAVENGER;
 
 public class ModEnchantmentHelper {
 
-    private static final HashSet<UUID> ACTIVE_MINERS = new HashSet<>();
+    private static final HashSet<UUID> EXCAVATOR_USERS = new HashSet<>();
     public static final Predicate<LivingEntity> HAS_STABILIZE = entity -> EnchantmentHelper.getRandomItemWith(ModRegistry.EXPLOSION_DEFUSE, entity, stack -> true).isPresent();
+
+    private static final Map<ResourceKey<Enchantment>, BiPredicate<LivingEntity, ItemStack>> GLINT_OVERRIDES = Map.of(
+            Enchantments.BREACH, (entity, stack) -> entity.hasEffect(ModRegistry.BREACH_EFFECT),
+            ModRegistry.POWER_SHOT, (entity, stack) -> entity.getUseItem().equals(stack) && stack.getUseDuration(entity) - entity.getUseItemRemainingTicks() >= 60,
+            ModRegistry.PROSPECTING, (entity, stack) -> Services.PLATFORM.getDetectedBlocksNearby(entity),
+            ModRegistry.SPELUNKER, (entity, stack) -> Services.PLATFORM.getDetectedBlocksNearby(entity));
+    public static final RemoveBinomial BLACKSMITH_DURABILITY_BONUS = new RemoveBinomial(LevelBasedValue.constant(0.5F));
 
     public static float modifyMiningEfficiency(ItemStack tool) {
         if (!Config.OVERHAUL_ENCHANTMENTS.get() || !tool.isEnchanted() || !tool.is(ModRegistry.TOOL_EFFICIENCY_BONUS)) return 0;
@@ -49,7 +60,7 @@ public class ModEnchantmentHelper {
     }
 
     public static void handleExcavator(Player player, BlockState state, Level level, BlockPos pos) {
-        if (!(player instanceof ServerPlayer serverPlayer && !ACTIVE_MINERS.contains(serverPlayer.getUUID()))) return;
+        if (!(player instanceof ServerPlayer serverPlayer && !EXCAVATOR_USERS.contains(serverPlayer.getUUID()))) return;
 
         ItemStack stack = serverPlayer.getMainHandItem();
         if (!(EnchantmentHelper.has(stack, ModRegistry.AREA_MINING) && isProperTool(state,stack))) return;
@@ -59,7 +70,7 @@ public class ModEnchantmentHelper {
 
         Direction direction = blockHit.getDirection();
         UUID uuid = serverPlayer.getUUID();
-        ACTIVE_MINERS.add(uuid);
+        EXCAVATOR_USERS.add(uuid);
 
         for (BlockPos currentPos : getBlocks(pos, direction)) {
             BlockState currentState = level.getBlockState(currentPos);
@@ -67,7 +78,7 @@ public class ModEnchantmentHelper {
                 serverPlayer.gameMode.destroyBlock(currentPos);
             }
         }
-        ACTIVE_MINERS.remove(uuid);
+        EXCAVATOR_USERS.remove(uuid);
     }
 
     public static void handleBlockDrops(List<ItemEntity> list, Level level, BlockState state, BlockPos pos, Entity breaker, ItemStack tool) {
@@ -152,5 +163,19 @@ public class ModEnchantmentHelper {
                 enchantHolder.value().getEffects(ModRegistry.POWER_SHOT_KNOCKBACK).forEach(effect ->
                         knockback.setValue(effect.effect().process(enchantLevel, target.getRandom(), powerShotTicks))));
         return knockback.floatValue();
+    }
+
+    public static boolean overrideGlint(ItemStack stack, @Nullable LivingEntity entity) {
+        if (entity == null) return false;
+        MutableBoolean bool = new MutableBoolean(false);
+
+        EnchantmentHelper.runIterationOnItem(stack, (enchantHolder, enchantLevel) -> {
+            if (bool.isTrue()) return;
+            if (enchantHolder.value().effects().has(ModRegistry.GLINT_OVERRIDE) && GLINT_OVERRIDES.getOrDefault(enchantHolder.unwrap().left().orElse(null),
+                    (livingEntity, itemStack) -> false).test(entity, stack)) {
+                bool.setTrue();
+            }
+        });
+        return bool.getValue();
     }
 }

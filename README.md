@@ -82,7 +82,7 @@ Swift sneak: Increases sneaking speed and reduces monster awareness radius.<br>
 <summary>Boots</summary>
 Agility: Improves mobility. Effects increased while any movement status boosts are active.<br>
 Friction: Allows sliding down and jumping off walls for a short duration.<br>
-Depth Strider: Increases movement speed in water and allows use of water-specific bonuses on land.<br>
+Depth Strider: Increases movement speed in water and temporarily allows use of water-specific bonuses on land.<br>
 Soul Speed: Increases movement speed on soul-infused blocks or while at or below a quarter health.<br>
 Frost Walker: No changes.
 </details>
@@ -118,7 +118,7 @@ Riptide: No changes.<br>
 <details>
 <summary>Mace</summary>
 Breach: Smash attacks temporarily boost armor piercing and attack speed. Weapon glows red while this is active.<br>
-Blacksmith: Removes durability loss. Smash attack kills repair a random equipped item.<br>
+Blacksmith: Removes durability loss. Smash attack kills temporarily reduce durability loss of all equipped items.<br>
 Density: No changes.<br>
 Wind burst: No changes.<br>
 </details>
