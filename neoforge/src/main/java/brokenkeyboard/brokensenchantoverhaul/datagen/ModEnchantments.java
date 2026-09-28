@@ -245,53 +245,7 @@ public class ModEnchantments {
                                 AttributeModifier.Operation.ADD_VALUE))
                 .withEffect(ModRegistry.EXPLOSION_DEFUSE));
 
-        AnyOfCondition.Builder agilityCondition = AnyOfCondition.anyOf(
-                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
-                        EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(MobEffects.MOVEMENT_SPEED))),
-                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
-                        EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(MobEffects.JUMP))));
-
-        register(context, ModRegistry.AGILITY, Enchantment.enchantment(
-                Enchantment.definition(boots, 2, 3,
-                        Enchantment.dynamicCost(10, 10),
-                        Enchantment.dynamicCost(25, 10),
-                        4,
-                        EquipmentSlotGroup.FEET))
-                .exclusiveWith(boots_exclusive)
-                .withEffect(EnchantmentEffectComponents.ATTRIBUTES,
-                        new EnchantmentAttributeEffect(
-                                ModRegistry.location("enchantment.agility_speed"),
-                                Attributes.MOVEMENT_SPEED,
-                                LevelBasedValue.constant(0.05F),
-                                AttributeModifier.Operation.ADD_MULTIPLIED_BASE))
-                .withEffect(EnchantmentEffectComponents.ATTRIBUTES,
-                        new EnchantmentAttributeEffect(
-                                ModRegistry.location("enchantment.agility_step_height"),
-                                Attributes.STEP_HEIGHT,
-                                LevelBasedValue.constant(0.5F),
-                                AttributeModifier.Operation.ADD_VALUE))
-                .withEffect(EnchantmentEffectComponents.ATTRIBUTES,
-                        new EnchantmentAttributeEffect(
-                                ModRegistry.location("enchantment.jump_strength"),
-                                Attributes.JUMP_STRENGTH,
-                                LevelBasedValue.constant(0.3F),
-                                AttributeModifier.Operation.ADD_MULTIPLIED_BASE))
-                .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE,
-                        new FixedAttributeEffect(
-                                ModRegistry.location("enchantment.agility_speed_active"),
-                                Attributes.MOVEMENT_SPEED,
-                                LevelBasedValue.perLevel(0.025F),
-                                AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
-                        agilityCondition)
-                .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE,
-                        new FixedAttributeEffect(
-                                ModRegistry.location("enchantment.agility_jump_strength_active"),
-                                Attributes.JUMP_STRENGTH,
-                                LevelBasedValue.perLevel(0.1F),
-                                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),
-                        agilityCondition));
-
-        register(context, ModRegistry.FRICTION, Enchantment.enchantment(
+        register(context, ModRegistry.CLIFF_CRAWLER, Enchantment.enchantment(
                         Enchantment.definition(boots, 1, 3,
                                 Enchantment.dynamicCost(10, 10),
                                 Enchantment.dynamicCost(25, 10),
@@ -525,6 +479,32 @@ public class ModEnchantments {
                                 ModRegistry.MONSTER_AWARENESS_RANGE,
                                 LevelBasedValue.perLevel(-0.2F, -0.1F),
                                 AttributeModifier.Operation.ADD_VALUE)));
+
+        register(context, Enchantments.FEATHER_FALLING, Enchantment.enchantment(
+                Enchantment.definition(boots, 5, 4,
+                        Enchantment.dynamicCost(5, 6),
+                        Enchantment.dynamicCost(11, 6), 2,
+                        EquipmentSlotGroup.ARMOR))
+                .withEffect(EnchantmentEffectComponents.DAMAGE_PROTECTION,
+                        new AddValue(LevelBasedValue.perLevel(3.0F)),
+                        DamageSourceCondition.hasDamageSource(
+                                DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(DamageTypeTags.IS_FALL))
+                                        .tag(TagPredicate.isNot(DamageTypeTags.BYPASSES_INVULNERABILITY))))
+                .withEffect(EnchantmentEffectComponents.LOCATION_CHANGED,
+                        new EnchantmentAttributeEffect(
+                                ResourceLocation.withDefaultNamespace("enchantment.feather_falling"),
+                                Attributes.GRAVITY,
+                                LevelBasedValue.constant(-0.98F),
+                                AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                        AllOfCondition.allOf(
+                                LootItemEntityPropertyCondition.hasProperties(
+                                        LootContext.EntityTarget.THIS,
+                                        EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setIsFlying(false).setCrouching(true))
+                                                .moving(MovementPredicate.fallDistance(MinMaxBounds.Doubles.atLeast(3F)))),
+                                InvertedLootItemCondition.invert(
+                                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
+                                        EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(MobEffects.SLOW_FALLING))))
+                        )));
 
         register(context, Enchantments.DEPTH_STRIDER, Enchantment.enchantment(
                 Enchantment.definition(boots, 2, 3,

@@ -24,7 +24,7 @@ public class EnchantProvider extends EnchantmentTagsProvider {
                 .add(ModRegistry.FILTERED).add(ModRegistry.INSIGHT).add(ModRegistry.DEXTERITY)
                 .add(ModRegistry.VITALITY).add(ModRegistry.BARRIER).add(ModRegistry.ADAPTIVE)
                 .add(ModRegistry.SCAVENGER).add(ModRegistry.STABILIZE).add(ModRegistry.RUSH)
-                .add(ModRegistry.AGILITY).add(ModRegistry.FRICTION)
+                .add(ModRegistry.CLIFF_CRAWLER)
                 .add(ModRegistry.POWER_SHOT).add(ModRegistry.BARRAGE)
                 .add(ModRegistry.VOLLEY)
                 .add(ModRegistry.EXCAVATE).add(ModRegistry.TEMPERED)
@@ -43,8 +43,7 @@ public class EnchantProvider extends EnchantmentTagsProvider {
                 .add(ModRegistry.GRAPPLE).add(ModRegistry.DEEP_FRYER);
 
         tag(ModRegistry.REMOVED_ENCHANTMENTS)
-                .add(Enchantments.PROTECTION).add(Enchantments.FIRE_PROTECTION).add(Enchantments.BLAST_PROTECTION)
-                .add(Enchantments.PROJECTILE_PROTECTION).add(Enchantments.FEATHER_FALLING)
+                .add(Enchantments.PROTECTION).add(Enchantments.FIRE_PROTECTION).add(Enchantments.BLAST_PROTECTION).add(Enchantments.PROJECTILE_PROTECTION)
                 .add(Enchantments.UNBREAKING).add(Enchantments.EFFICIENCY).add(Enchantments.MENDING)
                 .add(Enchantments.FORTUNE).add(Enchantments.LOOTING)
                 .add(Enchantments.SHARPNESS).add(Enchantments.KNOCKBACK).add(Enchantments.BANE_OF_ARTHROPODS)

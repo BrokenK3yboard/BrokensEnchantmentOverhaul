@@ -30,7 +30,7 @@ public class ServerPayloadHandler {
     }
 
     public static void handleWallJump(ServerLevel level, ServerPlayer player) {
-        Holder<Enchantment> holder = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ModRegistry.FRICTION);
+        Holder<Enchantment> holder = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ModRegistry.CLIFF_CRAWLER);
 
         if (WallSlideEffect.shouldSlide(level, player) && EnchantmentHelper.getEnchantmentLevel(holder, player) > 0) {
             player.setDeltaMovement(player.getViewVector(1));

@@ -12,6 +12,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantedItemInUse;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -39,10 +40,8 @@ public interface ConditionalAttributeEffect {
         boolean hasModifier = entity.getAttributes().hasModifier(attribute(), slotID);
         double value = getModifierValue(enchantLevel, item.itemStack(), entity);
 
-        if (value > 0 && (!hasModifier || entity.getAttributes().getModifierValue(attribute(), slotID) != value)) {
+        if ((!hasModifier || entity.getAttributes().getModifierValue(attribute(), slotID) != value)) {
             entity.getAttributes().addTransientAttributeModifiers(ConditionalAttributeEffect.attributeMap(attribute(), slotID, value, operation()));
-        } else if (hasModifier && value == 0) {
-            entity.getAttributes().removeAttributeModifiers(ConditionalAttributeEffect.attributeMap(attribute(), slotID, entity.getAttributes().getModifierValue(attribute(), slotID), operation()));
         }
     }
 

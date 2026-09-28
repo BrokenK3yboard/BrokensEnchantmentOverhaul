@@ -80,9 +80,9 @@ Swift sneak: Increases sneaking speed and reduces monster awareness radius.<br>
 
 <details>
 <summary>Boots</summary>
-Agility: Improves mobility. Effects increased while any movement status boosts are active.<br>
-Friction: Allows sliding down and jumping off walls for a short duration.<br>
-Depth Strider: Increases movement speed in water and temporarily allows use of water-specific bonuses on land.<br>
+Feather Falling: Reduces fall damage. Sneaking in midair reduces the effects of gravity. <br>
+Cliff Crawler: Allows sliding down and jumping off walls for a short duration.<br>
+Depth Strider: Increases movement speed in water. Temporarily allows use of water-specific bonuses on land after leaving water or using a splash water bottle.<br>
 Soul Speed: Increases movement speed on soul-infused blocks or while at or below a quarter health.<br>
 Frost Walker: No changes.
 </details>
@@ -124,10 +124,9 @@ Wind burst: No changes.<br>
 </details>
 
 <details>
-<summary>Removed Enchantments</summary>
+<summary>Disabled Enchantments</summary>
 Protection<br>
 Fire/Blast/Projectile Protection<br>
-Feather falling<br>
 Unbreaking<br>
 Efficiency<br>
 Mending<br>
@@ -146,6 +145,11 @@ Lure<br>
 Loyalty (Trident returns to user by default)<br>
 Curse of Binding<br>
 Curse of Vanishing<br>
+</details>
+
+<details>
+<summary>Legacy Features</summary>
+Agility: Improves mobility. Effects increased while any movement status boosts are active. Added in version 0.1.0, removed in version 0.4.0.
 </details>
 
 Configuration:

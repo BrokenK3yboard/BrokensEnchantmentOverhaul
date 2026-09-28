@@ -99,8 +99,7 @@ public class ModRegistry {
     public static final ResourceKey<Enchantment> SCAVENGER = ResourceKey.create(Registries.ENCHANTMENT, location("scavenger"));
     public static final ResourceKey<Enchantment> STABILIZE = ResourceKey.create(Registries.ENCHANTMENT, location("stabilize"));
 
-    public static final ResourceKey<Enchantment> AGILITY = ResourceKey.create(Registries.ENCHANTMENT, location("agility"));
-    public static final ResourceKey<Enchantment> FRICTION = ResourceKey.create(Registries.ENCHANTMENT, location("friction"));
+    public static final ResourceKey<Enchantment> CLIFF_CRAWLER = ResourceKey.create(Registries.ENCHANTMENT, location("cliff_crawler"));
 
     public static final ResourceKey<Enchantment> TEMPERED = ResourceKey.create(Registries.ENCHANTMENT, location("tempered"));
     public static final ResourceKey<Enchantment> EXCAVATE = ResourceKey.create(Registries.ENCHANTMENT, location("excavate"));

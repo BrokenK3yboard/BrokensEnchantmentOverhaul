@@ -1,7 +1,7 @@
 {
   "anvil_cost": 8,
   "description": {
-    "translate": "enchantment.brokensenchantoverhaul.friction"
+    "translate": "enchantment.brokensenchantoverhaul.cliff_crawler"
   },
   "effects": {
     "minecraft:tick": [
