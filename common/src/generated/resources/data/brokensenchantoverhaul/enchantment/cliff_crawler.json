@@ -10,8 +10,8 @@
           "type": "brokensenchantoverhaul:wall_slide",
           "slideTime": {
             "type": "minecraft:linear",
-            "base": 60.0,
-            "per_level_above_first": 40.0
+            "base": 120.0,
+            "per_level_above_first": 60.0
           }
         }
       }

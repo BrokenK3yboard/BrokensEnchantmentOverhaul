@@ -263,7 +263,7 @@ public class ModEnchantments {
                                 8,
                                 EquipmentSlotGroup.FEET))
                 .withEffect(EnchantmentEffectComponents.TICK,
-                        new WallSlideEffect(LevelBasedValue.perLevel(60, 40))));
+                        new WallSlideEffect(LevelBasedValue.perLevel(120, 60))));
 
         register(context, ModRegistry.TEMPERED, createSingleLevelEnch(tools, 8, mining_exclusive).exclusiveWith(mining_exclusive));
 
