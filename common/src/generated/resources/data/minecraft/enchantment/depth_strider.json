@@ -22,9 +22,9 @@
         "effect": {
           "type": "minecraft:apply_mob_effect",
           "max_amplifier": 0.0,
-          "max_duration": 15.0,
+          "max_duration": 10.0,
           "min_amplifier": 0.0,
-          "min_duration": 15.0,
+          "min_duration": 10.0,
           "to_apply": "brokensenchantoverhaul:depth_strider"
         },
         "requirements": {

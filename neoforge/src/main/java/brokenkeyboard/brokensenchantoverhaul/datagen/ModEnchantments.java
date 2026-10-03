@@ -105,11 +105,22 @@ public class ModEnchantments {
                                 Attributes.SUBMERGED_MINING_SPEED,
                                 LevelBasedValue.constant(4.0F),
                                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
-                .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE,
-                        new FixedAttributeEffect(ModRegistry.location("enchantment.dexterity_range"),
+                .withEffect(EnchantmentEffectComponents.ATTRIBUTES,
+                        new EnchantmentAttributeEffect(ModRegistry.location("enchantment.dexterity_range_base"),
                                 Attributes.BLOCK_INTERACTION_RANGE,
                                 LevelBasedValue.constant(1F),
-                                AttributeModifier.Operation.ADD_VALUE)));
+                                AttributeModifier.Operation.ADD_VALUE))
+                .withEffect(ModRegistry.CONDITIONAL_ATTRIBUTE,
+                        new FixedAttributeEffect(ModRegistry.location("enchantment.dexterity_range_bonus"),
+                                Attributes.BLOCK_INTERACTION_RANGE,
+                                LevelBasedValue.constant(2F),
+                                AttributeModifier.Operation.ADD_VALUE),
+                        AnyOfCondition.anyOf(
+                                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
+                                        EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(MobEffects.DIG_SPEED))),
+                                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
+                                        EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(MobEffects.CONDUIT_POWER))))
+                ));
 
         register(context, ModRegistry.VITALITY, Enchantment.enchantment(
                 Enchantment.definition(chestplate, 10, 4,
@@ -191,20 +202,20 @@ public class ModEnchantments {
                         2,
                         EquipmentSlotGroup.ARMOR))
                 .exclusiveWith(leggings_exclusive)
-                .withEffect(EnchantmentEffectComponents.DAMAGE_PROTECTION, new AddValue(LevelBasedValue.constant(2F)),
+                .withEffect(EnchantmentEffectComponents.DAMAGE_PROTECTION, new AddValue(LevelBasedValue.perLevel(1F)),
                         AllOfCondition.allOf(
                                 DamageSourceCondition.hasDamageSource(
                                         DamageSourcePredicate.Builder.damageType().tag(TagPredicate.isNot(DamageTypeTags.BYPASSES_INVULNERABILITY))),
                                 LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
-                                        EntityPredicate.Builder.entity().subPredicate(new IsLowHealthPredicate(0.5F)))))
-                .withEffect(EnchantmentEffectComponents.DAMAGE_PROTECTION, new AddValue(LevelBasedValue.perLevel(2F, 1F)),
+                                        EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setSprinting(true)))))
+                .withEffect(EnchantmentEffectComponents.DAMAGE_PROTECTION, new AddValue(LevelBasedValue.perLevel(1F)),
                         AllOfCondition.allOf(
                                 DamageSourceCondition.hasDamageSource(
                                         DamageSourcePredicate.Builder.damageType().tag(TagPredicate.isNot(DamageTypeTags.BYPASSES_INVULNERABILITY))),
                                 LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
-                                        EntityPredicate.Builder.entity().subPredicate(new IsLowHealthPredicate(0.5F))),
+                                        EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setSprinting(true))),
                                 LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS,
-                                        EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setSprinting(true))))));
+                                        EntityPredicate.Builder.entity().subPredicate(new IsLowHealthPredicate(0.5F))))));
 
         register(context, ModRegistry.SCAVENGER, Enchantment.enchantment(
                 Enchantment.definition(leggings, 5, 2,
@@ -522,7 +533,7 @@ public class ModEnchantments {
                 .withEffect(EnchantmentEffectComponents.LOCATION_CHANGED,
                         new ApplyMobEffect(
                                 HolderSet.direct(ModRegistry.DEPTH_STRIDER),
-                                LevelBasedValue.constant(15F), LevelBasedValue.constant(15F),
+                                LevelBasedValue.constant(10F), LevelBasedValue.constant(10F),
                                 LevelBasedValue.constant(0F), LevelBasedValue.constant(0F)),
                         isInWaterOrRain())
                 .withEffect(ModRegistry.DEPTH_STRIDER_SPLASH_WATER_BONUS));

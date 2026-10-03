@@ -8,10 +8,33 @@
       {
         "effect": {
           "type": "brokensenchantoverhaul:fixed_attribute_effect",
-          "amount": 1.0,
+          "amount": 2.0,
           "attribute": "minecraft:player.block_interaction_range",
-          "id": "brokensenchantoverhaul:enchantment.dexterity_range",
+          "id": "brokensenchantoverhaul:enchantment.dexterity_range_bonus",
           "operation": "add_value"
+        },
+        "requirements": {
+          "condition": "minecraft:any_of",
+          "terms": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "effects": {
+                  "minecraft:haste": {}
+                }
+              }
+            },
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "effects": {
+                  "minecraft:conduit_power": {}
+                }
+              }
+            }
+          ]
         }
       }
     ],
@@ -21,6 +44,12 @@
         "attribute": "minecraft:player.submerged_mining_speed",
         "id": "brokensenchantoverhaul:enchantment.dexterity_mining",
         "operation": "add_multiplied_total"
+      },
+      {
+        "amount": 1.0,
+        "attribute": "minecraft:player.block_interaction_range",
+        "id": "brokensenchantoverhaul:enchantment.dexterity_range_base",
+        "operation": "add_value"
       }
     ]
   },

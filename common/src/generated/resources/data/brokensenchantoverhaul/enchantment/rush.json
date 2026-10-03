@@ -8,41 +8,9 @@
       {
         "effect": {
           "type": "minecraft:add",
-          "value": 2.0
-        },
-        "requirements": {
-          "condition": "minecraft:all_of",
-          "terms": [
-            {
-              "condition": "minecraft:damage_source_properties",
-              "predicate": {
-                "tags": [
-                  {
-                    "expected": false,
-                    "id": "minecraft:bypasses_invulnerability"
-                  }
-                ]
-              }
-            },
-            {
-              "condition": "minecraft:entity_properties",
-              "entity": "this",
-              "predicate": {
-                "type_specific": {
-                  "type": "brokensenchantoverhaul:is_low_health",
-                  "amount": 0.5
-                }
-              }
-            }
-          ]
-        }
-      },
-      {
-        "effect": {
-          "type": "minecraft:add",
           "value": {
             "type": "minecraft:linear",
-            "base": 2.0,
+            "base": 1.0,
             "per_level_above_first": 1.0
           }
         },
@@ -64,10 +32,35 @@
               "condition": "minecraft:entity_properties",
               "entity": "this",
               "predicate": {
-                "type_specific": {
-                  "type": "brokensenchantoverhaul:is_low_health",
-                  "amount": 0.5
+                "flags": {
+                  "is_sprinting": true
                 }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "minecraft:linear",
+            "base": 1.0,
+            "per_level_above_first": 1.0
+          }
+        },
+        "requirements": {
+          "condition": "minecraft:all_of",
+          "terms": [
+            {
+              "condition": "minecraft:damage_source_properties",
+              "predicate": {
+                "tags": [
+                  {
+                    "expected": false,
+                    "id": "minecraft:bypasses_invulnerability"
+                  }
+                ]
               }
             },
             {
@@ -76,6 +69,16 @@
               "predicate": {
                 "flags": {
                   "is_sprinting": true
+                }
+              }
+            },
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "type_specific": {
+                  "type": "brokensenchantoverhaul:is_low_health",
+                  "amount": 0.5
                 }
               }
             }

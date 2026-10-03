@@ -59,7 +59,7 @@ Harvest: Harvested crops have their yield increased and automatically replant.<b
 <summary>Helmet</summary>
 Filtered: Shortens harmful effect durations while extending beneficial ones.<br>
 Insight: Increases looting level scaling with total armor enchantability.<br>
-Dexterity: Prevents underwater mining slowdown and increases reach distance with tools.<br>
+Dexterity: Prevents underwater mining speed reduction. Increases reach distance; effect tripled if affected by haste or conduit power.<br>
 </details>
 
 <details>
@@ -72,7 +72,7 @@ Thorns: Chance to reflect a percentage of damage taken. Effect increased while a
 
 <details>
 <summary>Leggings</summary>
-Rush: Increases damage resistance while at or below half health. Effect increased while sprinting.<br>
+Rush: Increases damage resistance while sprinting. Effect doubled while at or below half health.<br>
 Scavenger: Loot drops are pulled to the wearer and temporarily boost armor toughness.<br>
 Stabilize: Reduces knockback and prevents explosions from breaking nearby blocks.<br>
 Swift sneak: Increases sneaking speed and reduces monster awareness radius.<br>
@@ -82,7 +82,7 @@ Swift sneak: Increases sneaking speed and reduces monster awareness radius.<br>
 <summary>Boots</summary>
 Feather Falling: Reduces fall damage. Sneaking in midair reduces the effects of gravity. <br>
 Cliff Crawler: Allows sliding down and jumping off walls for a short duration.<br>
-Depth Strider: Increases movement speed in water. Temporarily allows use of water-specific bonuses on land after leaving water or using a splash water bottle.<br>
+Depth Strider: Increases movement speed in water. Temporarily allows use of water-specific bonuses after leaving water or using a splash water bottle.<br>
 Soul Speed: Increases movement speed on soul-infused blocks or while at or below a quarter health.<br>
 Frost Walker: No changes.
 </details>
@@ -157,6 +157,7 @@ Configuration:
  * Enchantments can be changed with datapacks. It is possible to revert changes made to vanilla enchantments in this manner.
  * Anvil and enchantment costs can be changed in the config file.
  * There is an experimental config option which disables the core enchantment and anvil changes for extended customization. Intended for datapack developers who know what they are doing.
+ * The enchantment value of tool and armor tiers can be adjusted. This can be done to adjust materials added by other mods.
 
 Tags:
  * `brokensenchantoverhaul:damage_tempered`: Controls which blocks cost durability when harvested with a tool enchanted with Tempering, provided it is the correct tool.
